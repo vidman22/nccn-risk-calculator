@@ -1,0 +1,163 @@
+/* 
+    orange ffa41b
+    darkblue 000839
+    blue 005082
+    lightblue 00a8cc
+*/
+
+
+.AppFormContainer {
+    width: 80%;
+    margin: 40px auto;
+    padding: 40px;
+    height: auto;
+    min-height: 440px;
+    border: 1px, solid, #ccc;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 16px 8px #eee;
+}
+
+.ListWrapper {
+    width: 100%;
+    height: 60vh;
+    min-height: 440px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+   
+}
+
+.InputWrapper {
+    width: 45%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4px 4px;
+    padding: 8px 0px;
+    border-bottom: 1px solid #eee;
+}
+
+.InputWrapper:last-child{
+    border-bottom: none;
+}
+
+.InputWrapper input {
+    padding: 0 8px;
+    height: 37px;
+    width: 70px;
+    font-size: 25px;
+}
+
+.InputWrapper select {
+    width: 90px;
+    padding: 4px 2px;
+    font-size: 25px;
+}
+
+.InputWrapper label {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.LabelIconWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.LabelIconWrapper span {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -120px;
+    opacity: 0;
+    transition: opacity 300ms;
+}
+
+.LabelIconWrapper span::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color:  transparent transparent #555 transparent;
+}
+
+.LabelIconWrapper:hover span {
+    visibility: visible;
+    opacity: 1;
+}
+.LabelIconWrapper:hover .fa-info-circle {
+    color: #555;
+}
+
+.SubmitButton,
+.ClearButton{
+    background-color: #0858B8;
+    color: #fff;
+    padding: 10px 16px;
+    margin: 4px 0 4px 4px;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: large;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 8px 6px #eee;
+}
+.SubmitButton:hover{
+    box-shadow: none;
+}
+.ClearButton:hover{
+    box-shadow: none;
+}
+.SubmitButton:focus{
+    text-decoration: none;
+}
+.ClearButton{
+    background-color: #fff;
+    color: black;
+    border: 1px solid #ccc;
+}
+.SubmitButton:hover{
+    box-shadow: none;
+}
+.SubmitButton:focus{
+    text-decoration: none;
+}
+
+.fa-info-circle {
+    margin-right: 12px;
+    color: #ccc;
+}
+
+@media only screen and (max-width: 1050px){
+    .AppFormContainer{
+        height: 100%;
+    }
+    .ListWrapper{
+        width: 100%;
+        min-height: 100%;
+        flex-wrap: nowrap;
+    }
+    .InputWrapper {
+        width: 100%;
+    }
+}
