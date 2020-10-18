@@ -1,0 +1,63 @@
+export const formData = {
+    age: {
+        value: 0,
+        initialValue: 0,
+        type: "number",
+        validation: {
+            touched: false,
+            error: "",
+            msg: "",
+        },
+        label: "Age",
+        min: '0',
+        max: '100',
+        placeholder: "0",
+        description: "The patient's age",
+    },
+    psa: {
+        value: 0,
+        initialValue: 0,
+        type: "number",
+        validation: {
+            touched: false,
+            error: "",
+            msg: "",
+        },
+        label: "PSA",
+        min: '0',
+        max: '10000',
+        placeholder: "0",
+        description: "The latest PSA score: this ranges from 0-10,000",
+    },
+    clinicalStage: {
+        value: 'T1c',
+        initialValue: '',
+        type: "select",
+        options: ['T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4', 'N', 'M'],
+        validation: {
+            touched: false,
+            error: "",
+            msg: "",
+        },
+        label: "Clinical Stage",
+        min: '0',
+        max: '5',
+        placeholder: "0",
+        description: "What is the clinical stage? Select from the dropdown.",
+    },
+    prostateSize: {
+        value: 10,
+        initialValue: 10,
+        type: "number",
+        validation: {
+            touched: false,
+            error: "",
+            msg: "",
+        },
+        label: "Prostate Size",
+        min: '10',
+        max: '200',
+        placeholder: "10",
+        description: "What is the size of the prostate?",
+    }
+}

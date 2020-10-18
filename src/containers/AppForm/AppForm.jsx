@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import Analysis from '../components/Analysis';
+import Analysis from '../../components/Analysis';
+import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { defaultValue } from './FormDefault';
+import { formData } from '../../data/formData';
 import './AppForm.css';
 
 export default function AppForm() {
-    const [form, setForm] = useState(defaultValue);
+    const [form, setForm] = useState(formData);
     const [result, setResult ] = useState({
         gleasonSum: '',
         psaDensity: '',
@@ -64,6 +65,7 @@ export default function AppForm() {
     return (
         <div className="Container">
             <h1>NCCN Score Calculator</h1>
+            <CoreDataTable />
             <div className="AppFormContainer">
                 <form 
                     onSubmit={handleSubmit}
@@ -94,7 +96,6 @@ export default function AppForm() {
                                         ))}
                                     </select>
                                 </div>
-
                             )
                         }
                         return (
@@ -133,8 +134,6 @@ export default function AppForm() {
                             className="SubmitButton"
                         >Submit</button>
                     </div>
-
-
                 </form>
                 {result.psaDensity && (
                     <Analysis result={result} />
