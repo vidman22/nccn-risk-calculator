@@ -6,6 +6,11 @@
     margin: auto;
 }
 
+.CoreDataHeader{
+    width: 14%;
+    margin: 0 auto;
+    padding: 0;
+}
 
 /* {tw`flex flex-row border-b border-gray-600 items-end bg-white z-50`} */
 
@@ -13,8 +18,8 @@
     display: flex;
     background-color: #fff;
     z-index: 99;
-    /* border: 1px solid; */
     border-bottom: 1px solid slategray;
+    margin: 18px 0 8px 0;
 }
 
 .CoreDataContainer {
@@ -32,6 +37,12 @@
 .CoreRow {
     display: flex;
     flex-direction: row;
+}
+
+
+.FormLabel h2{
+    padding: 0;
+    margin: 0;
 }
 
 .CoreCell {

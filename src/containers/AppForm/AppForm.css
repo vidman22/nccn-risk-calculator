@@ -12,7 +12,6 @@
     margin: 40px auto;
     padding: 40px;
     height: auto;
-    min-height: 440px;
     border: 1px, solid, #ccc;
     background-color: #fff;
     border-radius: 8px;
@@ -22,8 +21,8 @@
 .ListWrapper {
     width: 100%;
     max-width: 100%;
-    height: 30vh;
-    min-height: 400;
+    height: 20vh;
+    max-height: 200;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -44,9 +43,9 @@
     border-bottom: 1px solid #eee;
 }
 
-.InputWrapper:last-child{
+/* .InputWrapper:last-child{
     border-bottom: none;
-}
+} */
 
 .InputWrapper input {
     padding: 0 8px;
@@ -56,7 +55,7 @@
 }
 
 .InputWrapper select {
-    width: 90px;
+    width: 100px;
     padding: 4px 2px;
     font-size: 25px;
 }
@@ -123,7 +122,22 @@
     border: none;
     cursor: pointer;
     box-shadow: 0 0 8px 6px #eee;
+
 }
+.AnotherWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.ButtonWrapper{
+    width: 45%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 5% 8px 0;
+}
+
 .SubmitButton:hover{
     box-shadow: none;
 }

@@ -33,10 +33,13 @@ export default function Analysis({ result }) {
             <h3>Analysis</h3>
             <div className="ResultContainer">
                 <p>
-                    <span>Percentage of Cores Positive: </span>{result.corePercentagePositive}
+                    <span>Percentage of Cores Positive: </span>{result.corePercentagePositive}%
                 </p>
                 <p>
                     <span>Max Grade Group: </span>{result.maxGradeGroup}
+                </p>
+                <p>
+                    <span>Max Gleason Sum: </span>{result.maxGleasonSum}
                 </p>
                 <p>
                     <span>Max Primary: </span>{result.maxPrimary}

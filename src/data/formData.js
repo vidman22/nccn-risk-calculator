@@ -17,6 +17,7 @@ export const formData = {
     psa: {
         value: 0,
         initialValue: 0,
+        step: 'any',
         type: "number",
         validation: {
             touched: false,
@@ -45,21 +46,21 @@ export const formData = {
         placeholder: "0",
         description: "What is the clinical stage? Select from the dropdown.",
     },
-    totalCores: {
-        value: 0,
-        initialValue: 0,
-        type: "number",
-        validation: {
-            touched: false,
-            error: "",
-            msg: "",
-        },
-        label: "Total Cores",
-        min: '0',
-        max: '40',
-        placeholder: "0",
-        description: "How many cores were taken?",
-    },
+    // totalCores: {
+    //     value: 0,
+    //     initialValue: 0,
+    //     type: "number",
+    //     validation: {
+    //         touched: false,
+    //         error: "",
+    //         msg: "",
+    //     },
+    //     label: "Total Cores",
+    //     min: '0',
+    //     max: '40',
+    //     placeholder: "0",
+    //     description: "How many cores were taken?",
+    // },
     // coresPositive: {
     //     value: 0,
     //     initialValue: 0,
@@ -88,6 +89,6 @@ export const formData = {
         min: '10',
         max: '200',
         placeholder: "10",
-        description: "What is the size of the prostate?",
+        description: "Input the size of the prostate in millimeters",
     }
 }

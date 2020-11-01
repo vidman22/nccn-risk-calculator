@@ -24,7 +24,7 @@ export const coreData = {
         },
         min: '1',
         max: '42',
-        placeholder: "1mm",
+        placeholder: "",
         disabled: false,
     },
     percentageInvolved: {
@@ -38,7 +38,7 @@ export const coreData = {
         },
         min: '0',
         max: '100',
-        placeholder: "1mm",
+        placeholder: "",
         disabled: false,
     },
     gleasonPrimary: {
@@ -52,7 +52,7 @@ export const coreData = {
         },
         min: 3,
         max: 5,
-        placeholder: "0",
+        placeholder: "",
         disabled: false,
     },
     gleasonSecondary: {
@@ -66,7 +66,7 @@ export const coreData = {
         },
         min: 3,
         max: 5,
-        placeholder: "0",
+        placeholder: "",
         disabled: false,
     },
     gleasonSum: {
@@ -80,7 +80,7 @@ export const coreData = {
         },
         min: 6,
         max: 10,
-        placeholder: 0,
+        placeholder: "",
         disabled: true,
     },
     gradeGroup: {
@@ -94,7 +94,18 @@ export const coreData = {
         },
         min: 1,
         max: 5,
-        placeholder: 1,
+        placeholder: "",
         disabled: true,
     },
 }
+
+export const coreHeaders = [
+    {name: 'Index', description: 'The core\'s index'},
+    {name: 'Core ID', description: 'This is the arbitrary label from the lab, not needed for calculation'},
+    {name: 'Length', description: 'The length of the core in millimeters'},
+    {name: '% Involved', description: 'The percentage of the core that shows abnormality'},
+    {name: 'Primary', description: 'This is the Gleason Primary score of the core'},
+    {name: 'Secondary', description: 'The is the Gleason Secondary score of the core'},
+    {name: 'Sum', description: 'This is the auto-calculated sum of the Primary and Secondary'},
+    {name: 'Grade Group', description: 'This is the auto-calculated Grade Group score from the Gleason scores'},
+]

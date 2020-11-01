@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../../components/PlusIcon/PlusIcon';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import DeleteIcon from '../../components/DeleteIcon/DeleteIcon';
 import './CoreDataTable.css';
 import { gradeGroupTable } from '../../data/gradeGroup';
+import { coreHeaders } from '../../data/coreData';
 
-export default function CoreDataTable({addCore, removeCore, setCores, cores}) {
+export default function CoreDataTable({ addCore, removeCore, setCores, cores }) {
     const [scrollPosition, setSrollPosition] = useState(0);
 
     // const clearCores = () => {
@@ -58,35 +61,28 @@ export default function CoreDataTable({addCore, removeCore, setCores, cores}) {
 
     return (
         <div className="CoreDataContainer">
-            <h2>Positive Core Data</h2>
+            <div className="LabelIconWrapper CoreDataHeader">
+                <FontAwesomeIcon icon={faInfoCircle} />
+                <label className="FormLabel">
+                    <h2>Core Data</h2>
+                </label>
+                <span>Enter all cores tested, even the negative ones</span>
+            </div>
             <div className="CoreDataTable">
                 <div
-                    style={scrollPosition > 200 ? { position: 'fixed', top: 0, width: '1200px' } : {}}
+                    // style={scrollPosition > 200 ? { position: 'fixed', top: 0, width: '1200px' } : {}}
                     className="TableHeader">
-                    <div className="TableColLabel">
-                        <p>Index</p>
-                    </div>
-                    <div className="TableColLabel">
-                        <p>Core ID</p>
-                    </div>
-                    <div className="TableColLabel">
-                        <p>Length</p>
-                    </div>
-                    <div className="TableColLabel">
-                        <p>% Involved</p>
-                    </div>
-                    <div className="TableColLabel">
-                        <p>Primary</p>
-                    </div>
-                    <div className="TableColLabel">
-                        <p>Secondary</p>
-                    </div>
-                    <div className="TableColLabel">
-                        <p>Sum</p>
-                    </div>
-                    <div className="TableColLabel">
-                        <p>Grade Group</p>
-                    </div>
+                    {coreHeaders.map((cr, index) => (
+                        <div key={index} className="TableColLabel">
+                            <div className="LabelIconWrapper">
+                                <FontAwesomeIcon icon={faInfoCircle} />
+                                <label className="FormLabel">
+                                    {cr.name}
+                                </label>
+                                <span>{cr.description}</span>
+                            </div>
+                        </div>
+                    ))}
                 </div>
                 <div className="CoreDataBody">
                     {cores && cores.map((core, rowIndex) =>
@@ -123,7 +119,7 @@ export default function CoreDataTable({addCore, removeCore, setCores, cores}) {
                 <div>
                     <Icon onClick={() => addCore()} icon={faPlusCircle} />
                 </div>
-                    {/* <button
+                {/* <button
                         type="button"
                         onClick={clearCores}
                         className="ClearButton"
