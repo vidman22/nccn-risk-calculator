@@ -28,6 +28,7 @@ export default function Analysis({ result }) {
                 return 'NA';
         };
     }
+    console.log("result", result);
     return (
         <div className="AnalysisContainer">
             <h3>Analysis</h3>
@@ -36,19 +37,25 @@ export default function Analysis({ result }) {
                     <span>Percentage of Cores Positive: </span>{result.corePercentagePositive}%
                 </p>
                 <p>
-                    <span>Max Grade Group: </span>{result.maxGradeGroup}
+                    <span>Highest Involved Percentage: </span>{result.maxInvolvedPercentage}%
                 </p>
                 <p>
-                    <span>Max Gleason Sum: </span>{result.maxGleasonSum}
+                    <span>PSA Density: </span>{result.psaDensity}
                 </p>
                 <p>
                     <span>Max Primary: </span>{result.maxPrimary}
                 </p>
                 <p>
-                    <span>Number of Cores with Grade Group {">"} 3: </span>{result.ggFourAndFiveCount}
+                    <span>Max Secondary: </span>{result.maxSecondary}
                 </p>
                 <p>
-                    <span>PSA Density: </span>{result.psaDensity}
+                    <span>Max Gleason Sum: </span>{result.maxGleasonSum}
+                </p>
+                <p>
+                    <span>Number of Cores with 4/5 Grade Group: </span>{result.ggFourAndFiveCount}
+                </p>
+                <p>
+                    <span>Max Grade Group: </span>{result.maxGradeGroup}
                 </p>
                 <p>
                     <span>Risk: </span>{risk()}

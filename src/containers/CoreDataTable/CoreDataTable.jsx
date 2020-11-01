@@ -21,10 +21,13 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }) 
     };
 
     const calculateGradeGroup = (gleasonPrimary, gleasonSecondary) => {
+        if (gleasonPrimary < 3 || gleasonSecondary < 3) {
+            return '0';
+        }
         const gradeGroup = gradeGroupTable.find(row => (row.gleasonPrimary === gleasonPrimary && row.gleasonSecondary === gleasonSecondary));
 
         if (!gradeGroup) {
-            return;
+            return '0';
         }
         return gradeGroup.gradeGroup;
     }
@@ -36,6 +39,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }) 
         const newCore = { ...newCores[index] };
         const newElement = { ...newCore[name] };
         newElement.value = newElement.type === "number" ? parseInt(value) : value;
+
         newCore[name] = newElement;
         const newGleasonSum = { ...newCore.gleasonSum }
         const newGradeGroup = { ...newCore.gradeGroup }
@@ -102,7 +106,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }) 
                                             className="FormInput"
                                             name={k}
                                             disabled={obj.disabled}
-                                            min={obj.min || ''}
+                                            min={obj.min || '0'}
                                             max={obj.max || ''}
                                             type={obj.type}
                                             placeholder={obj.placeholder}

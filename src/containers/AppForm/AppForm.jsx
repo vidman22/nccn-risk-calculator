@@ -20,10 +20,12 @@ export default function AppForm() {
     const [form, setForm] = useState(formData);
     const [result, setResult] = useState({
         corePercentagePositive: '',
+        maxInvolvedPercentage: '',
         psaDensity: '',
         maxGradeGroup: '',
         maxGleasonSum: '',
         maxPrimary: '',
+        maxSecondary: '',
         ggFourAndFiveCount: '',
         risk: '',
     });
@@ -66,10 +68,12 @@ export default function AppForm() {
         setForm(newForm);
         setResult({
             corePercentagePositive: '',
+            maxInvolvedPercentage: '',
             psaDensity: '',
             maxGradeGroup: '',
             maxGleasonSum: '',
             maxPrimary: '',
+            maxSecondary: '',
             ggFourAndFiveCount: '',
             risk: '',
         });
@@ -82,29 +86,28 @@ export default function AppForm() {
         let psaDensity = 'NA';
         const totalCoresPositive = getTotalCoresPositive();
         const totalCores = cores.length;
-        console.log("totalCoresPositive", totalCoresPositive);
-        console.log("totalCores", totalCores);
+
         if (totalCores && totalCoresPositive) {
             corePercentagePositive = Math.round(totalCoresPositive / totalCores * 100);
         }
         if (form.psa.value && form.prostateSize.value) {
             psaDensity = Math.round(form.psa.value / form.prostateSize.value * 100) / 100;
         }
-        console.log("psaDensity", psaDensity);
-        console.log("corePercentagePositive", corePercentagePositive);
 
         const maxPrimary = getMaxPrimary();
+
+        const maxSecondary = getMaxSecondary();
 
         const maxGradeGroup = getMaxGradeGroup();
 
         const ggFourAndFiveCount = getCountGGFourOrFive();
 
-        const maxPercentPositive = getMaxPercentPositive();
+        const maxInvolvedPercentage = getMaxInvolvedPercentage();
 
         const maxGleasonSum = getMaxGleasonSum();
 
 
-        let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxPercentPositive);
+        let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
 
         if (risk === INTERMEDIATE_RISK) {
             risk = calculateIntermediateRisk(maxGradeGroup);
@@ -112,10 +115,12 @@ export default function AppForm() {
 
         setResult({
             corePercentagePositive,
+            maxInvolvedPercentage,
             psaDensity,
             maxGleasonSum,
             maxGradeGroup,
             maxPrimary,
+            maxSecondary,
             ggFourAndFiveCount,
             risk,
         });
@@ -148,7 +153,7 @@ export default function AppForm() {
     }
 
     const getMaxGradeGroup = () => {
-        let maxGG = 1;
+        let maxGG = 0;
 
         cores.forEach(cr => {
             if (cr.gradeGroup.value > maxGG) {
@@ -161,7 +166,7 @@ export default function AppForm() {
     };
 
     const getMaxGleasonSum = () => {
-        let maxGS = 1;
+        let maxGS = 0;
 
         cores.forEach(cr => {
             if (cr.gleasonSum.value > maxGS) {
@@ -173,7 +178,7 @@ export default function AppForm() {
     }
 
     const getMaxPrimary = () => {
-        let maxPrimary = 1;
+        let maxPrimary = 0;
 
         cores.forEach(cr => {
             if (cr.gleasonPrimary.value > maxPrimary) {
@@ -184,16 +189,28 @@ export default function AppForm() {
         return maxPrimary;
     }
 
-    const getMaxPercentPositive = () => {
-        let maxPercentPositive = 0;
+    const getMaxSecondary = () => {
+        let maxSecondary = 0;
 
         cores.forEach(cr => {
-            if (cr.percentageInvolved.value > maxPercentPositive) {
-                maxPercentPositive = cr.percentageInvolved.value
+            if (cr.gleasonSecondary.value > maxSecondary) {
+                maxSecondary = cr.gleasonSecondary.value
             }
         })
 
-        return maxPercentPositive;
+        return maxSecondary;
+    }
+
+    const getMaxInvolvedPercentage = () => {
+        let maxInvolvedPercentage = 0;
+        cores.forEach(cr => {
+            if (cr.percentageInvolved.value > maxInvolvedPercentage) {
+                maxInvolvedPercentage = cr.percentageInvolved.value
+                console.log("maxInvolvedPercentage", maxInvolvedPercentage);
+            }
+        })
+
+        return maxInvolvedPercentage || 'NA';
     }
 
     const calculateIntermediateRisk = (maxGradeGroup) => {
@@ -209,7 +226,7 @@ export default function AppForm() {
         }
     }
 
-    const calculateRisk = (maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxPercentPositive) => {
+    const calculateRisk = (maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage) => {
 
         //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
 
@@ -220,6 +237,11 @@ export default function AppForm() {
             return VERY_HIGH_RISK;
         };
 
+        //This means at least two of the three high risk factors that should bump it to very high risk
+        if ((psa >= 20 && (clinicalStage === 'T3a' || maxGradeGroup > 3)) || ((psa >= 20 || clinicalStage === 'T3a') && maxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa >= 20 || maxGradeGroup > 3)) ) {
+            return VERY_HIGH_RISK;
+        }
+
         if (psa >= 20 || clinicalStage === 'T3a' || maxGradeGroup > 3) {
 
             return HIGH_RISK;
@@ -229,7 +251,7 @@ export default function AppForm() {
             return INTERMEDIATE_RISK;
         }
         //the clinical stages are the only ones possible for low risk
-        if (psaDensity < 0.15 || cores.length >= 3 || maxPercentPositive > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
+        if (psaDensity < 0.15 || cores.length >= 3 || maxInvolvedPercentage > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
 
             return LOW_RISK;
         }
