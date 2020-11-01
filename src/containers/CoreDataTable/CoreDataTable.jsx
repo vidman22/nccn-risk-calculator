@@ -2,31 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../../components/PlusIcon/PlusIcon';
 import DeleteIcon from '../../components/DeleteIcon/DeleteIcon';
-import { coreData } from '../../data/coreData';
 import './CoreDataTable.css';
 import { gradeGroupTable } from '../../data/gradeGroup';
 
-export default function CoreDataTable() {
+export default function CoreDataTable({addCore, removeCore, setCores, cores}) {
     const [scrollPosition, setSrollPosition] = useState(0);
-    const [cores, setCores] = useState([coreData])
-    const addCore = () => {
-        const newCores = [...cores];
-        newCores.push(coreData);
-        setCores(newCores);
-    }
 
-    const removeCore = (index) => {
-        if (cores.length < 2) {
-            return;
-        }
-        const newCores = [...cores];
-        newCores.splice(index, 1);
-        setCores(newCores);
-    }
-
-    const clearCores = () => {
-        setCores([coreData])
-    }
+    // const clearCores = () => {
+    //     setCores([coreData])
+    // }
 
     const handleScroll = () => {
         const position = window.pageYOffset;
@@ -74,7 +58,7 @@ export default function CoreDataTable() {
 
     return (
         <div className="CoreDataContainer">
-            <h2>Core Data</h2>
+            <h2>Positive Core Data</h2>
             <div className="CoreDataTable">
                 <div
                     style={scrollPosition > 200 ? { position: 'fixed', top: 0, width: '1200px' } : {}}

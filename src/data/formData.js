@@ -31,9 +31,9 @@ export const formData = {
     },
     clinicalStage: {
         value: 'T1c',
-        initialValue: '',
+        initialValue: 'T1c',
         type: "select",
-        options: ['T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4', 'N', 'M'],
+        options: ['T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4'],
         validation: {
             touched: false,
             error: "",
@@ -45,6 +45,36 @@ export const formData = {
         placeholder: "0",
         description: "What is the clinical stage? Select from the dropdown.",
     },
+    totalCores: {
+        value: 0,
+        initialValue: 0,
+        type: "number",
+        validation: {
+            touched: false,
+            error: "",
+            msg: "",
+        },
+        label: "Total Cores",
+        min: '0',
+        max: '40',
+        placeholder: "0",
+        description: "How many cores were taken?",
+    },
+    // coresPositive: {
+    //     value: 0,
+    //     initialValue: 0,
+    //     type: "number",
+    //     validation: {
+    //         touched: false,
+    //         error: "",
+    //         msg: "",
+    //     },
+    //     label: "Number Cores Positive",
+    //     min: '0',
+    //     max: '40',
+    //     placeholder: "0",
+    //     description: "How many were deemed positive?",
+    // },
     prostateSize: {
         value: 10,
         initialValue: 10,
