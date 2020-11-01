@@ -28,7 +28,7 @@ export default function Analysis({ result }) {
                 return 'NA';
         };
     }
-    console.log("result", result);
+  
     return (
         <div className="AnalysisContainer">
             <h3>Analysis</h3>

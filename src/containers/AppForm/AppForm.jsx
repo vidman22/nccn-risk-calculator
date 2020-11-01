@@ -206,7 +206,6 @@ export default function AppForm() {
         cores.forEach(cr => {
             if (cr.percentageInvolved.value > maxInvolvedPercentage) {
                 maxInvolvedPercentage = cr.percentageInvolved.value
-                console.log("maxInvolvedPercentage", maxInvolvedPercentage);
             }
         })
 
