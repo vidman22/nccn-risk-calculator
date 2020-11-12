@@ -1,6 +1,6 @@
 export const formData = {
     age: {
-        value: 0,
+        value: null,
         initialValue: 0,
         type: "number",
         validation: {
@@ -15,7 +15,7 @@ export const formData = {
         description: "The patient's age",
     },
     psa: {
-        value: 0,
+        value: null,
         initialValue: 0,
         step: 'any',
         type: "number",
@@ -43,7 +43,7 @@ export const formData = {
         label: "Clinical Stage",
         min: '0',
         max: '5',
-        placeholder: "0",
+        placeholder: "T1c",
         description: "What is the clinical stage? Select from the dropdown.",
     },
     // totalCores: {

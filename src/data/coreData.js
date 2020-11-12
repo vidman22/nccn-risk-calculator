@@ -14,7 +14,7 @@ export const coreData = {
         disabled: false,
     },
     length: {
-        value: 0,
+        value: null,
         initialValue: 0,
         type: "number",
         validation: {
@@ -24,11 +24,11 @@ export const coreData = {
         },
         min: '0',
         max: '40',
-        placeholder: "",
+        placeholder: "0",
         disabled: false,
     },
     percentageInvolved: {
-        value: 0,
+        value: null,
         initialValue: 0,
         type: "number",
         validation: {
@@ -38,11 +38,11 @@ export const coreData = {
         },
         min: '0',
         max: '100',
-        placeholder: "",
+        placeholder: "0",
         disabled: false,
     },
     gleasonPrimary: {
-        value: 0,
+        value: null,
         initialValue: 0,
         type: "number",
         validation: {
@@ -52,11 +52,11 @@ export const coreData = {
         },
         min: '0',
         max: '5',
-        placeholder: "",
+        placeholder: "0",
         disabled: false,
     },
     gleasonSecondary: {
-        value: 0,
+        value: null,
         initialValue: 0,
         type: "number",
         validation: {
@@ -66,11 +66,11 @@ export const coreData = {
         },
         min: '0',
         max: '5',
-        placeholder: "",
+        placeholder: "0",
         disabled: false,
     },
     gleasonSum: {
-        value: 0,
+        value: null,
         initialValue: 0,
         type: "number",
         validation: {
@@ -80,11 +80,11 @@ export const coreData = {
         },
         min: '0',
         max: '10',
-        placeholder: "",
+        placeholder: "0",
         disabled: true,
     },
     gradeGroup: {
-        value: 0,
+        value: null,
         initialValue: 0,
         type: "number",
         validation: {
@@ -94,7 +94,7 @@ export const coreData = {
         },
         min: '0',
         max: '5',
-        placeholder: "",
+        placeholder: "0",
         disabled: true,
     },
 }
