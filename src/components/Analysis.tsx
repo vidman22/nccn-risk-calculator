@@ -1,15 +1,31 @@
 import React from 'react';
 import './Analysis.css';
 
-import { 
+import {
     HIGH_RISK,
     VERY_HIGH_RISK,
     LOW_RISK,
     INTERMEDIATE_HIGH_RISK,
     INTERMEDIATE_LOW_RISK,
-    VERY_LOW_RISK} from  '../data/riskConstants';
+    VERY_LOW_RISK
+} from '../data/riskConstants';
 
-export default function Analysis({ result }) {
+export interface Result {
+    corePercentagePositive: string,
+    psaDensity: string,
+    maxInvolvedPercentage: string,
+    maxGradeGroup: string,
+    maxGleasonSum: string,
+    maxPrimary: string,
+    maxSecondary: string,
+    ggFourAndFiveCount: string,
+    risk: string,
+}
+
+type Props = {
+    result: Result;
+}
+export default function Analysis({ result }: Props) {
     let risk = () => {
         switch (result.risk) {
             case HIGH_RISK:
@@ -28,7 +44,7 @@ export default function Analysis({ result }) {
                 return 'NA';
         };
     }
-  
+
     return (
         <div className="AnalysisContainer">
             <h3>Analysis</h3>

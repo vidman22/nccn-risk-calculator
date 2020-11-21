@@ -1,7 +1,32 @@
+type Validation = {
+    touched: boolean;
+    error: string;
+    msg: string;
+}
+
+export interface FormValue {
+    value: string;
+    type: string;
+    step?: string;
+    validation: Validation;
+    options?: string[];
+    label: string;
+    min: string;
+    max: string;
+    placeholder: string;
+    description: string;
+}
+
+export interface FormData {
+    age: FormValue;
+    psa: FormValue;
+    clinicalStage: FormValue;
+    prostateSize: FormValue;
+}
+
 export const formData = {
     age: {
-        value: null,
-        initialValue: 0,
+        value: '',
         type: "number",
         validation: {
             touched: false,
@@ -15,8 +40,7 @@ export const formData = {
         description: "The patient's age",
     },
     psa: {
-        value: null,
-        initialValue: 0,
+        value: '',
         step: 'any',
         type: "number",
         validation: {
@@ -32,7 +56,6 @@ export const formData = {
     },
     clinicalStage: {
         value: 'T1c',
-        initialValue: 'T1c',
         type: "select",
         options: ['T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4'],
         validation: {
@@ -46,39 +69,8 @@ export const formData = {
         placeholder: "T1c",
         description: "What is the clinical stage? Select from the dropdown.",
     },
-    // totalCores: {
-    //     value: 0,
-    //     initialValue: 0,
-    //     type: "number",
-    //     validation: {
-    //         touched: false,
-    //         error: "",
-    //         msg: "",
-    //     },
-    //     label: "Total Cores",
-    //     min: '0',
-    //     max: '40',
-    //     placeholder: "0",
-    //     description: "How many cores were taken?",
-    // },
-    // coresPositive: {
-    //     value: 0,
-    //     initialValue: 0,
-    //     type: "number",
-    //     validation: {
-    //         touched: false,
-    //         error: "",
-    //         msg: "",
-    //     },
-    //     label: "Number Cores Positive",
-    //     min: '0',
-    //     max: '40',
-    //     placeholder: "0",
-    //     description: "How many were deemed positive?",
-    // },
     prostateSize: {
-        value: 10,
-        initialValue: 10,
+        value: '10',
         type: "number",
         validation: {
             touched: false,
@@ -91,4 +83,4 @@ export const formData = {
         placeholder: "10",
         description: "Input the size of the prostate in millimeters",
     }
-}
+} as FormData;

@@ -1,3 +1,30 @@
+type Validation = {
+    touched: boolean;
+    error: string;
+    msg: string;
+}
+
+export interface CoreValue {
+    value: string;
+    initialValue: string | number;
+    type: string;
+    validation: Validation;
+    min: string;
+    max: string;
+    placeholder: string;
+    disabled: boolean;
+}
+
+export interface CoreData {
+    coreID: CoreValue;
+    length: CoreValue;
+    percentageInvolved: CoreValue;
+    gleasonPrimary: CoreValue;
+    gleasonSecondary: CoreValue;
+    gleasonSum: CoreValue;
+    gradeGroup: CoreValue;
+}
+
 export const coreData = {
     coreID: {
         value: '',
@@ -14,7 +41,7 @@ export const coreData = {
         disabled: false,
     },
     length: {
-        value: null,
+        value: '',
         initialValue: 0,
         type: "number",
         validation: {
@@ -28,7 +55,7 @@ export const coreData = {
         disabled: false,
     },
     percentageInvolved: {
-        value: null,
+        value: '',
         initialValue: 0,
         type: "number",
         validation: {
@@ -42,7 +69,7 @@ export const coreData = {
         disabled: false,
     },
     gleasonPrimary: {
-        value: null,
+        value: '',
         initialValue: 0,
         type: "number",
         validation: {
@@ -56,7 +83,7 @@ export const coreData = {
         disabled: false,
     },
     gleasonSecondary: {
-        value: null,
+        value: '',
         initialValue: 0,
         type: "number",
         validation: {
@@ -70,7 +97,7 @@ export const coreData = {
         disabled: false,
     },
     gleasonSum: {
-        value: null,
+        value: '',
         initialValue: 0,
         type: "number",
         validation: {
@@ -84,7 +111,7 @@ export const coreData = {
         disabled: true,
     },
     gradeGroup: {
-        value: null,
+        value: '',
         initialValue: 0,
         type: "number",
         validation: {
@@ -97,15 +124,15 @@ export const coreData = {
         placeholder: "0",
         disabled: true,
     },
-}
+} as CoreData;
 
 export const coreHeaders = [
-    {name: 'Index', description: 'The core\'s index'},
-    {name: 'Core ID', description: 'This is the arbitrary label from the lab, not needed for calculation'},
-    {name: 'Length', description: 'The length of the core in millimeters'},
-    {name: '% Involved', description: 'The percentage of the core that shows abnormality'},
-    {name: 'Primary', description: 'This is the Gleason Primary score of the core'},
-    {name: 'Secondary', description: 'The is the Gleason Secondary score of the core'},
-    {name: 'Sum', description: 'This is the auto-calculated sum of the Primary and Secondary'},
-    {name: 'Grade Group', description: 'This is the auto-calculated Grade Group score from the Gleason scores'},
+    { name: 'Index', description: 'The core\'s index' },
+    { name: 'Core ID', description: 'This is the arbitrary label from the lab, not needed for calculation' },
+    { name: 'Length', description: 'The length of the core in millimeters' },
+    { name: '% Involved', description: 'The percentage of the core that shows abnormality' },
+    { name: 'Primary', description: 'This is the Gleason Primary score of the core' },
+    { name: 'Secondary', description: 'The is the Gleason Secondary score of the core' },
+    { name: 'Sum', description: 'This is the auto-calculated sum of the Primary and Secondary' },
+    { name: 'Grade Group', description: 'This is the auto-calculated Grade Group score from the Gleason scores' },
 ]

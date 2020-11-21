@@ -4,23 +4,26 @@ import Icon from '../../components/PlusIcon/PlusIcon';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import DeleteIcon from '../../components/DeleteIcon/DeleteIcon';
-import './CoreDataTable.css';
 import { gradeGroupTable } from '../../data/gradeGroup';
-import { coreHeaders } from '../../data/coreData';
+import { CoreData, coreHeaders, CoreValue } from '../../data/coreData';
+import './CoreDataTable.css';
 
-export default function CoreDataTable({ addCore, removeCore, setCores, cores }) {
+type Props = {
+    addCore: () => void;
+    removeCore: (index: number) => void;
+    setCores: (cores: CoreData[]) => void;
+    cores: CoreData[];
+}
+
+export default function CoreDataTable({ addCore, removeCore, setCores, cores } : Props) {
     const [scrollPosition, setSrollPosition] = useState(0);
-
-    // const clearCores = () => {
-    //     setCores([coreData])
-    // }
 
     const handleScroll = () => {
         const position = window.pageYOffset;
         setSrollPosition(position);
     };
 
-    const calculateGradeGroup = (gleasonPrimary, gleasonSecondary) => {
+    const calculateGradeGroup = (gleasonPrimary : number, gleasonSecondary: number) => {
         if (gleasonPrimary < 3 || gleasonSecondary < 3) {
             return '0';
         }
@@ -32,21 +35,21 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }) 
         return gradeGroup.gradeGroup;
     }
 
-    const handleChange = (e, index) => {
+    const handleChange = (e : React.ChangeEvent<HTMLInputElement>, index : number) => {
         const value = e.target.value;
-        const name = e.target.name;
+        const name = e.target.name as keyof CoreData;
         const newCores = [...cores];
         const newCore = { ...newCores[index] };
         const newElement = { ...newCore[name] };
-        newElement.value = newElement.type === "number" ? parseInt(value) : value;
+        newElement.value = value;
 
         newCore[name] = newElement;
         const newGleasonSum = { ...newCore.gleasonSum }
         const newGradeGroup = { ...newCore.gradeGroup }
 
         newGleasonSum.value = newCore.gleasonPrimary.value + newCore.gleasonSecondary.value;
-        const calculatedGradeGroup = calculateGradeGroup(newCore.gleasonPrimary.value, newCore.gleasonSecondary.value);
-        newGradeGroup.value = calculatedGradeGroup ? calculatedGradeGroup : newGradeGroup.value;
+        const calculatedGradeGroup = calculateGradeGroup(parseInt(newCore.gleasonPrimary.value), parseInt(newCore.gleasonSecondary.value));
+        newGradeGroup.value = calculatedGradeGroup ? calculatedGradeGroup.toString() : newGradeGroup.value;
 
         newCore.gleasonSum = newGleasonSum;
         newCore.gradeGroup = newGradeGroup;
@@ -95,7 +98,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }) 
                                 <p>{rowIndex + 1}</p>
                             </div>
                             {Object.keys(core).map((k, index) => {
-                                const obj = core[k];
+                                const obj = core[k as keyof CoreData];
                                 return (
                                     <div
                                         style={{ width: '12%' }}

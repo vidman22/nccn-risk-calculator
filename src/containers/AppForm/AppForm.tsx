@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { InputHTMLAttributes, useState } from "react";
 import Analysis from '../../components/Analysis';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { coreData } from '../../data/coreData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { formData } from '../../data/formData';
+import { formData, FormData } from '../../data/formData';
 import {
     HIGH_RISK,
     VERY_HIGH_RISK,
@@ -14,11 +14,15 @@ import {
     INTERMEDIATE_LOW_RISK,
     VERY_LOW_RISK
 } from '../../data/riskConstants';
+
+import { Result } from '../../components/Analysis';
+
+import { coreDataToFile } from '../../helpers';
 import './AppForm.css';
 
 export default function AppForm() {
     const [form, setForm] = useState(formData);
-    const [result, setResult] = useState({
+    const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
         maxInvolvedPercentage: '',
         psaDensity: '',
@@ -36,7 +40,7 @@ export default function AppForm() {
         setCores(newCores);
     }
 
-    const removeCore = (index) => {
+    const removeCore = (index: number) => {
         if (cores.length < 2) {
             return;
         }
@@ -45,9 +49,9 @@ export default function AppForm() {
         setCores(newCores);
     }
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
-        const name = e.target.name;
+        const name = e.target.name as keyof FormData;
         const newForm = { ...form };
         const newElement = newForm[name];
         newElement.value = value;
@@ -60,9 +64,9 @@ export default function AppForm() {
 
         const newForm = { ...form };
         for (let key in newForm) {
-            const newElement = newForm[key];
-            newElement.value = newElement.initialValue;
-            newForm[key] = newElement;
+            const newElement = newForm[key as keyof FormData];
+            newElement.value = newElement.value;
+            newForm[key as keyof FormData] = newElement;
         }
 
         setForm(newForm);
@@ -79,19 +83,19 @@ export default function AppForm() {
         });
     }
 
-    const handleSubmit = (e) => {
-
+    const handleSubmit = (e : React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
+        coreDataToFile(cores);
         let corePercentagePositive = 'NA';
         let psaDensity = 'NA';
         const totalCoresPositive = getTotalCoresPositive();
         const totalCores = cores.length;
 
         if (totalCores && totalCoresPositive) {
-            corePercentagePositive = Math.round(totalCoresPositive / totalCores * 100);
+            corePercentagePositive = Math.round(totalCoresPositive / totalCores * 100).toString();
         }
         if (form.psa.value && form.prostateSize.value) {
-            psaDensity = Math.round(form.psa.value / form.prostateSize.value * 100) / 100;
+            psaDensity = (Math.round( parseInt(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
         }
 
         const maxPrimary = getMaxPrimary();
@@ -110,7 +114,7 @@ export default function AppForm() {
         let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
 
         if (risk === INTERMEDIATE_RISK) {
-            risk = calculateIntermediateRisk(maxGradeGroup);
+            risk = calculateIntermediateRisk(parseInt(maxGradeGroup));
         }
 
         setResult({
@@ -131,7 +135,7 @@ export default function AppForm() {
         let count = 0;
 
         cores.forEach(cr => {
-            if (cr.percentageInvolved.value > 0) {
+            if ( parseInt(cr.percentageInvolved.value) > 0) {
                 count++;
             }
         })
@@ -143,20 +147,20 @@ export default function AppForm() {
         let count = 0;
 
         cores.forEach(cr => {
-            if (cr.gradeGroup.value > 3) {
+            if (parseInt(cr.gradeGroup.value) > 3) {
                 count++;
             }
         })
 
-        return count;
+        return count.toString();
 
     }
 
     const getMaxGradeGroup = () => {
-        let maxGG = 0;
+        let maxGG = "0";
 
         cores.forEach(cr => {
-            if (cr.gradeGroup.value > maxGG) {
+            if ( parseInt(cr.gradeGroup.value) > parseInt(maxGG)) {
                 maxGG = cr.gradeGroup.value
             }
         })
@@ -166,10 +170,10 @@ export default function AppForm() {
     };
 
     const getMaxGleasonSum = () => {
-        let maxGS = 0;
+        let maxGS = "0";
 
         cores.forEach(cr => {
-            if (cr.gleasonSum.value > maxGS) {
+            if (parseInt(cr.gleasonSum.value) > parseInt(maxGS)) {
                 maxGS = cr.gleasonSum.value
             }
         })
@@ -178,10 +182,10 @@ export default function AppForm() {
     }
 
     const getMaxPrimary = () => {
-        let maxPrimary = 0;
+        let maxPrimary = "0";
 
         cores.forEach(cr => {
-            if (cr.gleasonPrimary.value > maxPrimary) {
+            if (parseInt(cr.gleasonPrimary.value) > parseInt(maxPrimary)) {
                 maxPrimary = cr.gleasonPrimary.value
             }
         })
@@ -190,10 +194,10 @@ export default function AppForm() {
     }
 
     const getMaxSecondary = () => {
-        let maxSecondary = 0;
+        let maxSecondary = "";
 
         cores.forEach(cr => {
-            if (cr.gleasonSecondary.value > maxSecondary) {
+            if (parseInt(cr.gleasonSecondary.value) > parseInt(maxSecondary)) {
                 maxSecondary = cr.gleasonSecondary.value
             }
         })
@@ -202,9 +206,9 @@ export default function AppForm() {
     }
 
     const getMaxInvolvedPercentage = () => {
-        let maxInvolvedPercentage = 0;
+        let maxInvolvedPercentage = "0";
         cores.forEach(cr => {
-            if (cr.percentageInvolved.value > maxInvolvedPercentage) {
+            if (parseInt(cr.percentageInvolved.value) > parseInt(maxInvolvedPercentage)) {
                 maxInvolvedPercentage = cr.percentageInvolved.value
             }
         })
@@ -212,45 +216,51 @@ export default function AppForm() {
         return maxInvolvedPercentage || 'NA';
     }
 
-    const calculateIntermediateRisk = (maxGradeGroup) => {
+    const calculateIntermediateRisk = (maxGradeGroup: number) => {
         const clinicalStage = form.clinicalStage.value;
-        const psa = form.psa.value;
+        const psa = parseInt(form.psa.value);
 
-        if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup == 3 || psa >= 10) {
+        if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10) {
             return INTERMEDIATE_HIGH_RISK;
         }
 
         if (maxGradeGroup > 1) {
             return INTERMEDIATE_LOW_RISK;
         }
+        return '';
     }
 
-    const calculateRisk = (maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage) => {
+    const calculateRisk = (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage : string) => {
 
+        let intMaxPrimary = parseInt(maxPrimary);
+        let intMaxGradeGroup = parseInt(maxGradeGroup);
+        let intGGFourAndFiveCount = parseInt(ggFourAndFiveCount);
+        let intPSADensity = parseInt(psaDensity);
+        let intMaxInvolvedPercentage = parseInt(maxInvolvedPercentage);
         //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
 
         const clinicalStage = form.clinicalStage.value;
-        const psa = form.psa.value;
+        const psa = parseInt(form.psa.value);
 
-        if (maxPrimary == 5 || ggFourAndFiveCount >= 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
+        if (intMaxPrimary == 5 || intGGFourAndFiveCount >= 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
             return VERY_HIGH_RISK;
         };
 
         //This means at least two of the three high risk factors that should bump it to very high risk
-        if ((psa >= 20 && (clinicalStage === 'T3a' || maxGradeGroup > 3)) || ((psa >= 20 || clinicalStage === 'T3a') && maxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa >= 20 || maxGradeGroup > 3)) ) {
+        if ((psa >= 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa >= 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa >= 20 || intMaxGradeGroup > 3)) ) {
             return VERY_HIGH_RISK;
         }
 
-        if (psa >= 20 || clinicalStage === 'T3a' || maxGradeGroup > 3) {
+        if (psa >= 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
 
             return HIGH_RISK;
         }
         //this means if they have a clinical stage above T1 and T2a
-        if (psa >= 10 || maxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
+        if (psa >= 10 || intMaxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
             return INTERMEDIATE_RISK;
         }
         //the clinical stages are the only ones possible for low risk
-        if (psaDensity < 0.15 || cores.length >= 3 || maxInvolvedPercentage > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
+        if (intPSADensity < 0.15 || cores.length >= 3 || intMaxInvolvedPercentage > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
 
             return LOW_RISK;
         }
@@ -269,8 +279,8 @@ export default function AppForm() {
                 >
                     <div className="ListWrapper">
                         {Object.keys(form).map((k, index) => {
-                            const obj = form[k];
-                            if (obj.type === 'select') {
+                            const obj = form[k as keyof FormData];
+                            if (obj.options) {
                                 return (
                                     <div key={index} className="InputWrapper">
                                         <div className="LabelIconWrapper">
