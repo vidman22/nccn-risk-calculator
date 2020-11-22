@@ -1,7 +1,13 @@
-import React, { InputHTMLAttributes, useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+    Link,
+    useParams,
+    useLocation
+} from 'react-router-dom';
+import { generatePath } from 'react-router';
 import Analysis from '../../components/Analysis';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
-import { coreData } from '../../data/coreData';
+import { CoreData, coreData } from '../../data/coreData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { formData, FormData } from '../../data/formData';
@@ -20,7 +26,12 @@ import { Result } from '../../components/Analysis';
 import { coreDataToFile } from '../../helpers';
 import './AppForm.css';
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
 export default function AppForm() {
+    const query = useQuery();
     const [form, setForm] = useState(formData);
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -39,6 +50,15 @@ export default function AppForm() {
         newCores.push(coreData);
         setCores(newCores);
     }
+
+    useEffect(() => {
+        query.forEach((value, key) => {
+            console.log("value and key", key, value);
+        });
+      return () => {
+        
+      };
+    }, [query])
 
     const removeCore = (index: number) => {
         if (cores.length < 2) {
@@ -65,7 +85,7 @@ export default function AppForm() {
         const newForm = { ...form };
         for (let key in newForm) {
             const newElement = newForm[key as keyof FormData];
-            newElement.value = newElement.value;
+            newElement.value = newElement.initialValue;
             newForm[key as keyof FormData] = newElement;
         }
 
@@ -83,9 +103,41 @@ export default function AppForm() {
         });
     }
 
+    const generateUrl = () => {
+        
+    }
+
     const handleSubmit = (e : React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
         coreDataToFile(cores);
+
+        // const pattern = cores.flatMap((core, index) => {
+        //     const keys = Object.keys(core);
+        //     return keys.join(`/:${index}`);
+        // }).reduce((acc, value, ind, arr) => {
+        //     return arr.join(`/:${ind}`)
+        // });
+        let pattern = '';
+        cores.forEach((core, index) => {
+            Object.keys(core).forEach((key, ind) => {
+                //remove the final ampersand
+                if (Object.keys(core).length === ind + 1 && cores.length === index + 1){
+                    pattern = pattern + `${index}${key}=${core[key as keyof CoreData].value}`;
+                } else {
+                    pattern = pattern + `${index}${key}=${core[key as keyof CoreData].value}&`;
+                }
+            })
+        })
+        // console.log("pattern", pattern.join("/:"));
+        console.log("pattern", pattern);
+        const paramObj = {};
+        cores.flatMap((core, index) => {
+            return Object.keys(core).map(key => ({[index + key]: (core[key as keyof CoreData].value || "0" )}))
+        }).forEach(value => {
+            Object.assign(paramObj, value);
+        });
+        const path = generatePath(pattern, paramObj);
+        console.log("path", path);
         let corePercentagePositive = 'NA';
         let psaDensity = 'NA';
         const totalCoresPositive = getTotalCoresPositive();
@@ -109,7 +161,6 @@ export default function AppForm() {
         const maxInvolvedPercentage = getMaxInvolvedPercentage();
 
         const maxGleasonSum = getMaxGleasonSum();
-
 
         let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
 
@@ -164,9 +215,7 @@ export default function AppForm() {
                 maxGG = cr.gradeGroup.value
             }
         })
-
         return maxGG;
-
     };
 
     const getMaxGleasonSum = () => {
@@ -194,7 +243,7 @@ export default function AppForm() {
     }
 
     const getMaxSecondary = () => {
-        let maxSecondary = "";
+        let maxSecondary = "0";
 
         cores.forEach(cr => {
             if (parseInt(cr.gleasonSecondary.value) > parseInt(maxSecondary)) {
@@ -242,7 +291,7 @@ export default function AppForm() {
         const clinicalStage = form.clinicalStage.value;
         const psa = parseInt(form.psa.value);
 
-        if (intMaxPrimary == 5 || intGGFourAndFiveCount >= 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
+        if (intMaxPrimary === 5 || intGGFourAndFiveCount >= 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
             return VERY_HIGH_RISK;
         };
 

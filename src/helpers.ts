@@ -1,5 +1,4 @@
 import { parseAsync } from 'json2csv';
-import fs from 'fs';
 import { CoreData } from './data/coreData';
 
 
@@ -41,24 +40,26 @@ export const coreDataToFile = (cores : CoreData[]) => {
     ];
 
     const data = cores.map(core => {
-        Object(core).keys.map((k : keyof CoreData) => {
-            return { [k]: core[k].value }
+        return Object.keys(core).map((k) => {
+            return { [k]: core[k as keyof CoreData].value }
         })
     });
 
-    console.log("data", data);
+    localStorage.setItem("savedCores", 'true');
+    localStorage.setItem("cores", JSON.stringify(cores));
 
     parseAsync(data, { fields: coreFields })
         .then(csv => {
             console.log('csv', csv);
             let filename = `CoreData.csv`
-            fs.appendFile(`${__dirname}/${filename}`, csv, (err) => {
-                if (err) {
-                    console.log("err writing file", err);
-                } else {
-                    console.log("success")
-                }
-            });
+            localStorage.setItem(filename, csv);
+            // writeFile(`${__dirname}/${filename}`, csv, (err) => {
+            //     if (err) {
+            //         console.log("err writing file", err);
+            //     } else {
+            //         console.log("success")
+            //     }
+            // });
         })
         .catch(err => console.error(err));
 }

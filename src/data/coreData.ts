@@ -6,7 +6,7 @@ type Validation = {
 
 export interface CoreValue {
     value: string;
-    initialValue: string | number;
+    initialValue: string;
     type: string;
     validation: Validation;
     min: string;
@@ -42,7 +42,7 @@ export const coreData = {
     },
     length: {
         value: '',
-        initialValue: 0,
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -56,7 +56,7 @@ export const coreData = {
     },
     percentageInvolved: {
         value: '',
-        initialValue: 0,
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -70,7 +70,7 @@ export const coreData = {
     },
     gleasonPrimary: {
         value: '',
-        initialValue: 0,
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -84,7 +84,7 @@ export const coreData = {
     },
     gleasonSecondary: {
         value: '',
-        initialValue: 0,
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -98,7 +98,7 @@ export const coreData = {
     },
     gleasonSum: {
         value: '',
-        initialValue: 0,
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -112,7 +112,7 @@ export const coreData = {
     },
     gradeGroup: {
         value: '',
-        initialValue: 0,
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,

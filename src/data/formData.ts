@@ -6,6 +6,7 @@ type Validation = {
 
 export interface FormValue {
     value: string;
+    initialValue: string;
     type: string;
     step?: string;
     validation: Validation;
@@ -27,6 +28,7 @@ export interface FormData {
 export const formData = {
     age: {
         value: '',
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -41,6 +43,7 @@ export const formData = {
     },
     psa: {
         value: '',
+        initialValue: '0',
         step: 'any',
         type: "number",
         validation: {
@@ -56,6 +59,7 @@ export const formData = {
     },
     clinicalStage: {
         value: 'T1c',
+        initialValue: 'T1c',
         type: "select",
         options: ['T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4'],
         validation: {
@@ -71,6 +75,7 @@ export const formData = {
     },
     prostateSize: {
         value: '10',
+        initialValue: '10',
         type: "number",
         validation: {
             touched: false,

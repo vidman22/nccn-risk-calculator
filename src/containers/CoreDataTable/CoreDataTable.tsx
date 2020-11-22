@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../../components/PlusIcon/PlusIcon';
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import DeleteIcon from '../../components/DeleteIcon/DeleteIcon';
 import { gradeGroupTable } from '../../data/gradeGroup';
-import { CoreData, coreHeaders, CoreValue } from '../../data/coreData';
+import { CoreData, coreHeaders, coreData } from '../../data/coreData';
 import './CoreDataTable.css';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 type Props = {
     addCore: () => void;
@@ -17,6 +19,7 @@ type Props = {
 
 export default function CoreDataTable({ addCore, removeCore, setCores, cores } : Props) {
     const [scrollPosition, setSrollPosition] = useState(0);
+    const [ showConfirmation, setShowConfirmation ] = useState(false); 
 
     const handleScroll = () => {
         const position = window.pageYOffset;
@@ -47,7 +50,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
         const newGleasonSum = { ...newCore.gleasonSum }
         const newGradeGroup = { ...newCore.gradeGroup }
 
-        newGleasonSum.value = newCore.gleasonPrimary.value + newCore.gleasonSecondary.value;
+        newGleasonSum.value = (parseInt(newCore.gleasonPrimary.value || newCore.gleasonPrimary.initialValue) + parseInt(newCore.gleasonSecondary.value || newCore.gleasonSecondary.initialValue)).toString();
         const calculatedGradeGroup = calculateGradeGroup(parseInt(newCore.gleasonPrimary.value), parseInt(newCore.gleasonSecondary.value));
         newGradeGroup.value = calculatedGradeGroup ? calculatedGradeGroup.toString() : newGradeGroup.value;
 
@@ -58,13 +61,29 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
         setCores(newCores);
     }
 
+    const clearCores = ( ) => {
+        setCores([coreData]);
+        localStorage.clear();
+    }
+
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        if (localStorage.getItem("savedCores") === 'true'){
+
+            const coreData = JSON.parse(localStorage.getItem("cores") || '') as CoreData[];
+            
+            console.log("core Data retrieved", coreData );
+            
+            if (coreData){
+                setCores(coreData);
+            }
+        }
+
+        // window.addEventListener('scroll', handleScroll, { passive: true });
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+        //     window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, [setCores]);
 
     return (
         <div className="CoreDataContainer">
@@ -74,6 +93,17 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
                     <h2>Core Data</h2>
                 </label>
                 <span>Enter all cores tested, even the negative ones</span>
+            </div>
+            <div>
+                <button onClick={() => setShowConfirmation(true)}>
+                    Clear All
+                </button>
+                <button onClick={() => {
+                    localStorage.setItem("savedCores", "true" );
+                    localStorage.setItem("cores", JSON.stringify(cores) );
+                    }}>
+                    Save
+                </button>
             </div>
             <div className="CoreDataTable">
                 <div
@@ -126,12 +156,17 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
                 <div>
                     <Icon onClick={() => addCore()} icon={faPlusCircle} />
                 </div>
-                {/* <button
-                        type="button"
-                        onClick={clearCores}
-                        className="ClearButton"
-                    >Clear All</button> */}
             </div>
+            {showConfirmation &&
+                <ConfirmationModal 
+                    visible={showConfirmation}
+                    onDismiss={() => setShowConfirmation(false)}
+                    confirmAction={() => {
+                        clearCores();
+                        setShowConfirmation(false);
+                    }}
+                />
+            }
         </div>
     );
 }
