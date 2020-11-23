@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../../components/PlusIcon/PlusIcon';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
@@ -17,14 +17,14 @@ type Props = {
 }
 
 export default function CoreDataTable({ addCore, removeCore, setCores, cores } : Props) {
-    const [scrollPosition, setSrollPosition] = useState(0);
+    // const [scrollPosition, setSrollPosition] = useState(0);
     const [saved, setSaved] = useState(false);
     const [ showConfirmation, setShowConfirmation ] = useState(false); 
 
-    const handleScroll = () => {
-        const position = window.pageYOffset;
-        setSrollPosition(position);
-    };
+    // const handleScroll = () => {
+    //     const position = window.pageYOffset;
+    //     setSrollPosition(position);
+    // };
 
     const calculateGradeGroup = (gleasonPrimary : number, gleasonSecondary: number) => {
         if (gleasonPrimary < 3 || gleasonSecondary < 3) {

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
-    Link,
-    useParams,
     useLocation
 } from 'react-router-dom';
-import { generatePath } from 'react-router';
 import Analysis from '../../components/Analysis';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { CoreData, coreData } from '../../data/coreData';
@@ -26,15 +23,12 @@ import { Result } from '../../components/Analysis';
 import { coreDataToFile } from '../../helpers';
 import './AppForm.css';
 import ShareLinkModal from "../../components/ShareLinkModal/ShareLinkModal";
-import { isReturnStatement } from "typescript";
 
 
 
 export default function AppForm() {
 
     const query = new URLSearchParams(useLocation().search);
-    const state = useLocation().state;
-    const pathname = useLocation().pathname;
     const [form, setForm] = useState(formData);
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
