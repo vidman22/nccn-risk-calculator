@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../../components/PlusIcon/PlusIcon';
-import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import DeleteIcon from '../../components/DeleteIcon/DeleteIcon';
 import { gradeGroupTable } from '../../data/gradeGroup';
-import { CoreData, coreHeaders, coreData } from '../../data/coreData';
+import { CoreData, coreHeaders } from '../../data/coreData';
 import './CoreDataTable.css';
 
 type Props = {
@@ -18,8 +17,6 @@ type Props = {
 
 export default function CoreDataTable({ addCore, removeCore, setCores, cores } : Props) {
     // const [scrollPosition, setSrollPosition] = useState(0);
-    const [saved, setSaved] = useState(false);
-    const [ showConfirmation, setShowConfirmation ] = useState(false); 
 
     // const handleScroll = () => {
     //     const position = window.pageYOffset;
@@ -61,30 +58,8 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
         setCores(newCores);
     }
 
-    const clearCores = ( ) => {
-        setCores([coreData]);
-        localStorage.clear();
-    }
-
     return (
         <div className="CoreDataContainer">
-            <div className="AlignRight">
-                <button onClick={() => setShowConfirmation(true)}>
-                    Clear All
-                </button>
-                <button onClick={() => {
-                    localStorage.setItem("savedCores", "true" );
-                    localStorage.setItem("cores", JSON.stringify(cores));
-                    setSaved(true);
-                    }}>
-                    Save
-                </button>
-            </div>
-            {saved && 
-                <div className="FadeCopied">
-                    Info saved to browser
-                </div>
-            }
             <div className="LabelIconWrapper CoreDataHeader">
                 <FontAwesomeIcon icon={faInfoCircle} />
                 <label className="FormLabel">
@@ -144,16 +119,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
                     <Icon onClick={() => addCore()} icon={faPlusCircle} />
                 </div>
             </div>
-            {showConfirmation &&
-                <ConfirmationModal 
-                    visible={showConfirmation}
-                    onDismiss={() => setShowConfirmation(false)}
-                    confirmAction={() => {
-                        clearCores();
-                        setShowConfirmation(false);
-                    }}
-                />
-            }
         </div>
     );
 }

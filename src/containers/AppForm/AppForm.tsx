@@ -7,6 +7,7 @@ import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { CoreData, coreData } from '../../data/coreData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faShareSquare, faPrint } from '@fortawesome/free-solid-svg-icons';
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import { formData, FormData } from '../../data/formData';
 import {
     HIGH_RISK,
@@ -29,6 +30,8 @@ import ShareLinkModal from "../../components/ShareLinkModal/ShareLinkModal";
 export default function AppForm() {
 
     const query = new URLSearchParams(useLocation().search);
+    const [saved, setSaved] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
     const [form, setForm] = useState(formData);
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -55,13 +58,17 @@ export default function AppForm() {
         const splitArray = [] as any;
         const hasParams = query.has('0a');
         console.log("hasParams", hasParams);
+        const savedForm =  localStorage.getItem("form");
+        if (savedForm){
+            setForm(JSON.parse(savedForm));
+        }
         if (!hasParams && localStorage.getItem("savedCores")) {
-            if (localStorage.getItem("cores")){
+            if (localStorage.getItem("cores")) {
                 console.log("local storage", JSON.parse(localStorage.getItem("cores") || ''))
-                setCores( JSON.parse(localStorage.getItem('cores') || '') );
+                setCores(JSON.parse(localStorage.getItem('cores') || ''));
             }
             return;
-        } else if (!hasParams){
+        } else if (!hasParams) {
             return;
         }
 
@@ -71,7 +78,7 @@ export default function AppForm() {
             if (!check) {
                 return;
             }
-       
+
             switch (check[0]) {
                 case 'a':
                     queryArray.push({
@@ -206,10 +213,10 @@ export default function AppForm() {
         let tmpObj = {} as any;
         queryArray.forEach((el: any, index: number) => {
             tmpObj[el.key] = el;
-            if ( (Object.keys(tmpObj).length) % 7  === 0 ) {
+            if ((Object.keys(tmpObj).length) % 7 === 0) {
                 splitArray.push(tmpObj);
                 tmpObj = {};
-            } 
+            }
         });
         setCores(splitArray);
 
@@ -222,6 +229,11 @@ export default function AppForm() {
         const newCores = [...cores];
         newCores.splice(index, 1);
         setCores(newCores);
+    }
+
+    const clearCores = () => {
+        setCores([coreData]);
+        localStorage.clear();
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
@@ -464,8 +476,23 @@ export default function AppForm() {
         <div className="Container">
             <h1>NCCN Score Calculator</h1>
             <div className="AppFormContainer">
-                <div className="FlexIconWrapper">
-
+                {saved &&
+                    <div className="FadeCopied">
+                        Info saved to browser
+                    </div>
+                }
+                <div className="AlignRight">
+                    <button onClick={() => setShowConfirmation(true)}>
+                        Clear All
+                    </button>
+                    <button onClick={() => {
+                        localStorage.setItem("savedCores", "true");
+                        localStorage.setItem("cores", JSON.stringify(cores));
+                        localStorage.setItem("form", JSON.stringify(form));
+                        setSaved(true);
+                    }}>
+                        Save
+                    </button>
                     <button onClick={() => {
                         setLink(generateUrl());
                         setShowModal(true);
@@ -566,6 +593,16 @@ export default function AppForm() {
                     onDismiss={() => setShowModal(false)}
                     link={link}
                     visible={showModal}
+                />
+            }
+            {showConfirmation &&
+                <ConfirmationModal
+                    visible={showConfirmation}
+                    onDismiss={() => setShowConfirmation(false)}
+                    confirmAction={() => {
+                        clearCores();
+                        setShowConfirmation(false);
+                    }}
                 />
             }
         </div>
