@@ -1,0 +1,38 @@
+.LinkContainer{
+    background: gray;
+    color: white;
+    padding: 4px;
+    height: 20px;
+    overflow: scroll;
+    width: 80%;
+    margin: auto;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.LinkContainer span {
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: pre;
+}
+
+.ClickToCopyWrapper {
+    cursor: pointer;
+}
+
+.FadeCopied{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    animation: fadeIn 2s linear 0s forwards;
+}
+
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    25% {opacity: 1;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}

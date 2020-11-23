@@ -7,6 +7,8 @@ type Validation = {
 export interface CoreValue {
     value: string;
     initialValue: string;
+    shortName: string;
+    key: keyof CoreData;
     type: string;
     validation: Validation;
     min: string;
@@ -29,6 +31,8 @@ export const coreData = {
     coreID: {
         value: '',
         initialValue: '',
+        key: 'coreID',
+        shortName: 'a',
         type: "text",
         validation: {
             touched: false,
@@ -43,6 +47,8 @@ export const coreData = {
     length: {
         value: '',
         initialValue: '0',
+        key: 'length',
+        shortName: 'b',
         type: "number",
         validation: {
             touched: false,
@@ -57,6 +63,8 @@ export const coreData = {
     percentageInvolved: {
         value: '',
         initialValue: '0',
+        key: 'percentageInvolved',
+        shortName: 'c',
         type: "number",
         validation: {
             touched: false,
@@ -71,6 +79,8 @@ export const coreData = {
     gleasonPrimary: {
         value: '',
         initialValue: '0',
+        key: 'gleasonPrimary',
+        shortName: 'd',
         type: "number",
         validation: {
             touched: false,
@@ -85,6 +95,8 @@ export const coreData = {
     gleasonSecondary: {
         value: '',
         initialValue: '0',
+        key: 'gleasonSecondary',
+        shortName: 'e',
         type: "number",
         validation: {
             touched: false,
@@ -99,6 +111,8 @@ export const coreData = {
     gleasonSum: {
         value: '',
         initialValue: '0',
+        key: 'gleasonSum',
+        shortName: 'f',
         type: "number",
         validation: {
             touched: false,
@@ -113,6 +127,8 @@ export const coreData = {
     gradeGroup: {
         value: '',
         initialValue: '0',
+        key: 'gradeGroup',
+        shortName: 'g',
         type: "number",
         validation: {
             touched: false,

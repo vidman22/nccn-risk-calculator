@@ -62,7 +62,6 @@
 
 .InputWrapper label {
     font-size: 25px;
-    cursor: pointer;
 }
 
 .LabelIconWrapper {
@@ -71,7 +70,6 @@
     justify-content: flex-start;
     align-items: center;
     position: relative;
-    cursor: pointer;
 }
 
 .LabelIconWrapper span {
@@ -120,7 +118,6 @@
     font-family: 'Roboto', sans-serif;
     font-size: large;
     border: none;
-    cursor: pointer;
     box-shadow: 0 0 8px 6px #eee;
 
 }
@@ -144,9 +141,7 @@
 .ClearButton:hover{
     box-shadow: none;
 }
-.SubmitButton:focus{
-    text-decoration: none;
-}
+
 .ClearButton{
     background-color: #fff;
     color: black;
@@ -155,13 +150,21 @@
 .SubmitButton:hover{
     box-shadow: none;
 }
-.SubmitButton:focus{
-    text-decoration: none;
-}
 
 .fa-info-circle {
     margin-right: 12px;
     color: #ccc;
+}
+
+.FlexIconWrapper{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.FlexIconWrapper button{
+    margin: 4px;
+    font-size: 16px;
 }
 
 @media only screen and (max-width: 1050px){

@@ -45,9 +45,6 @@ export const coreDataToFile = (cores : CoreData[]) => {
         })
     });
 
-    localStorage.setItem("savedCores", 'true');
-    localStorage.setItem("cores", JSON.stringify(cores));
-
     parseAsync(data, { fields: coreFields })
         .then(csv => {
             console.log('csv', csv);

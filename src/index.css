@@ -16,6 +16,16 @@ label {
     font-family: 'Roboto', sans-serif;
 }
 
+button{
+    border:none;
+    background: none;
+    cursor: pointer;
+}
+
+button:focus{
+    outline: 0;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

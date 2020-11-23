@@ -9,7 +9,7 @@ import Analysis from '../../components/Analysis';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { CoreData, coreData } from '../../data/coreData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faShareSquare, faPrint } from '@fortawesome/free-solid-svg-icons';
 import { formData, FormData } from '../../data/formData';
 import {
     HIGH_RISK,
@@ -25,13 +25,16 @@ import { Result } from '../../components/Analysis';
 
 import { coreDataToFile } from '../../helpers';
 import './AppForm.css';
+import ShareLinkModal from "../../components/ShareLinkModal/ShareLinkModal";
+import { isReturnStatement } from "typescript";
 
-function useQuery() {
-    return new URLSearchParams(useLocation().search);
-  }
+
 
 export default function AppForm() {
-    const query = useQuery();
+
+    const query = new URLSearchParams(useLocation().search);
+    const state = useLocation().state;
+    const pathname = useLocation().pathname;
     const [form, setForm] = useState(formData);
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -44,6 +47,8 @@ export default function AppForm() {
         ggFourAndFiveCount: '',
         risk: '',
     });
+    const [showModal, setShowModal] = useState(false);
+    const [link, setLink] = useState('');
     const [cores, setCores] = useState([coreData])
     const addCore = () => {
         const newCores = [...cores];
@@ -52,13 +57,167 @@ export default function AppForm() {
     }
 
     useEffect(() => {
+        const queryArray = [] as any;
+        const splitArray = [] as any;
+        const hasParams = query.has('0a');
+        console.log("hasParams", hasParams);
+        if (!hasParams && localStorage.getItem("savedCores")) {
+            if (localStorage.getItem("cores")){
+                console.log("local storage", JSON.parse(localStorage.getItem("cores") || ''))
+                setCores( JSON.parse(localStorage.getItem('cores') || '') );
+                return;
+            }
+        } 
+
         query.forEach((value, key) => {
-            console.log("value and key", key, value);
+
+            const check = key.match(/[^0-9]/);
+            if (!check) {
+                return;
+            }
+       
+            switch (check[0]) {
+                case 'a':
+                    queryArray.push({
+                        value: value,
+                        key: 'coreID',
+                        initialValue: '',
+                        shortName: 'a',
+                        type: "text",
+                        validation: {
+                            touched: false,
+                            error: "",
+                            msg: "",
+                        },
+                        min: '',
+                        max: '',
+                        placeholder: "ID",
+                        disabled: false,
+                    })
+                    break;
+                case 'b':
+                    queryArray.push({
+                        value,
+                        key: 'length',
+                        initialValue: '0',
+                        shortName: check[0],
+                        type: "number",
+                        validation: {
+                            touched: false,
+                            error: "",
+                            msg: "",
+                        },
+                        min: '0',
+                        max: '40',
+                        placeholder: "0",
+                        disabled: false,
+                    })
+                    break;
+                case 'c':
+                    queryArray.push({
+                        value,
+                        key: 'percentageInvolved',
+                        initialValue: '0',
+                        shortName: check[0],
+                        type: "number",
+                        validation: {
+                            touched: false,
+                            error: "",
+                            msg: "",
+                        },
+                        min: '0',
+                        max: '100',
+                        placeholder: "0",
+                        disabled: false,
+                    })
+                    break;
+                case 'd':
+                    queryArray.push({
+                        value,
+                        key: 'gleasonPrimary',
+                        initialValue: '0',
+                        shortName: check[0],
+                        type: "number",
+                        validation: {
+                            touched: false,
+                            error: "",
+                            msg: "",
+                        },
+                        min: '0',
+                        max: '5',
+                        placeholder: "0",
+                        disabled: false,
+                    })
+                    break;
+                case 'e':
+                    queryArray.push({
+                        value,
+                        key: 'gleasonSecondary',
+                        initialValue: '0',
+                        shortName: check[0],
+                        type: "number",
+                        validation: {
+                            touched: false,
+                            error: "",
+                            msg: "",
+                        },
+                        min: '0',
+                        max: '5',
+                        placeholder: "0",
+                        disabled: false,
+                    })
+                    break;
+                case 'f':
+                    queryArray.push({
+                        value,
+                        key: 'gleasonSum',
+                        initialValue: '0',
+                        shortName: check[0],
+                        type: "number",
+                        validation: {
+                            touched: false,
+                            error: "",
+                            msg: "",
+                        },
+                        min: '0',
+                        max: '10',
+                        placeholder: "0",
+                        disabled: false,
+                    })
+                    break;
+                case 'g':
+                    queryArray.push({
+                        value,
+                        key: 'gradeGroup',
+                        initialValue: '0',
+                        shortName: check[0],
+                        type: "number",
+                        validation: {
+                            touched: false,
+                            error: "",
+                            msg: "",
+                        },
+                        min: '0',
+                        max: '5',
+                        placeholder: "0",
+                        disabled: false,
+                    })
+                    break;
+                default:
+                    break;
+            }
         });
-      return () => {
-        
-      };
-    }, [query])
+        let tmpObj = {} as any;
+        queryArray.forEach((el: any, index: number) => {
+            tmpObj[el.key] = el;
+            if ( (Object.keys(tmpObj).length) % 7  === 0 ) {
+                splitArray.push(tmpObj);
+                tmpObj = {};
+            } 
+        });
+        setCores(splitArray);
+
+    }, [])
 
     const removeCore = (index: number) => {
         if (cores.length < 2) {
@@ -104,40 +263,26 @@ export default function AppForm() {
     }
 
     const generateUrl = () => {
-        
-    }
-
-    const handleSubmit = (e : React.FormEvent<HTMLFormElement> ) => {
-        e.preventDefault();
-        coreDataToFile(cores);
-
-        // const pattern = cores.flatMap((core, index) => {
-        //     const keys = Object.keys(core);
-        //     return keys.join(`/:${index}`);
-        // }).reduce((acc, value, ind, arr) => {
-        //     return arr.join(`/:${ind}`)
-        // });
         let pattern = '';
         cores.forEach((core, index) => {
             Object.keys(core).forEach((key, ind) => {
                 //remove the final ampersand
-                if (Object.keys(core).length === ind + 1 && cores.length === index + 1){
-                    pattern = pattern + `${index}${key}=${core[key as keyof CoreData].value}`;
+                if (Object.keys(core).length === ind + 1 && cores.length === index + 1) {
+                    pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}`;
                 } else {
-                    pattern = pattern + `${index}${key}=${core[key as keyof CoreData].value}&`;
+                    pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}&`;
                 }
             })
         })
         // console.log("pattern", pattern.join("/:"));
-        console.log("pattern", pattern);
-        const paramObj = {};
-        cores.flatMap((core, index) => {
-            return Object.keys(core).map(key => ({[index + key]: (core[key as keyof CoreData].value || "0" )}))
-        }).forEach(value => {
-            Object.assign(paramObj, value);
-        });
-        const path = generatePath(pattern, paramObj);
-        console.log("path", path);
+
+        return window.location.origin + '/?' + pattern;
+    }
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        coreDataToFile(cores);
+
         let corePercentagePositive = 'NA';
         let psaDensity = 'NA';
         const totalCoresPositive = getTotalCoresPositive();
@@ -147,7 +292,7 @@ export default function AppForm() {
             corePercentagePositive = Math.round(totalCoresPositive / totalCores * 100).toString();
         }
         if (form.psa.value && form.prostateSize.value) {
-            psaDensity = (Math.round( parseInt(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
+            psaDensity = (Math.round(parseInt(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
         }
 
         const maxPrimary = getMaxPrimary();
@@ -186,7 +331,7 @@ export default function AppForm() {
         let count = 0;
 
         cores.forEach(cr => {
-            if ( parseInt(cr.percentageInvolved.value) > 0) {
+            if (parseInt(cr.percentageInvolved.value) > 0) {
                 count++;
             }
         })
@@ -211,7 +356,7 @@ export default function AppForm() {
         let maxGG = "0";
 
         cores.forEach(cr => {
-            if ( parseInt(cr.gradeGroup.value) > parseInt(maxGG)) {
+            if (parseInt(cr.gradeGroup.value) > parseInt(maxGG)) {
                 maxGG = cr.gradeGroup.value
             }
         })
@@ -279,7 +424,7 @@ export default function AppForm() {
         return '';
     }
 
-    const calculateRisk = (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage : string) => {
+    const calculateRisk = (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage: string) => {
 
         let intMaxPrimary = parseInt(maxPrimary);
         let intMaxGradeGroup = parseInt(maxGradeGroup);
@@ -296,7 +441,7 @@ export default function AppForm() {
         };
 
         //This means at least two of the three high risk factors that should bump it to very high risk
-        if ((psa >= 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa >= 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa >= 20 || intMaxGradeGroup > 3)) ) {
+        if ((psa >= 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa >= 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa >= 20 || intMaxGradeGroup > 3))) {
             return VERY_HIGH_RISK;
         }
 
@@ -323,6 +468,18 @@ export default function AppForm() {
         <div className="Container">
             <h1>NCCN Score Calculator</h1>
             <div className="AppFormContainer">
+                <div className="FlexIconWrapper">
+
+                    <button onClick={() => {
+                        setLink(generateUrl());
+                        setShowModal(true);
+                    }}>
+                        <FontAwesomeIcon icon={faShareSquare} />
+                    </button>
+                    <button onClick={() => setShowModal(true)}>
+                        <FontAwesomeIcon icon={faPrint} />
+                    </button>
+                </div>
                 <form
                     onSubmit={handleSubmit}
                 >
@@ -408,6 +565,13 @@ export default function AppForm() {
                 removeCore={removeCore}
                 cores={cores}
             />
+            {showModal &&
+                <ShareLinkModal
+                    onDismiss={() => setShowModal(false)}
+                    link={link}
+                    visible={showModal}
+                />
+            }
         </div>
     );
 }

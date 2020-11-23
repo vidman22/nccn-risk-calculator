@@ -8,7 +8,6 @@ import DeleteIcon from '../../components/DeleteIcon/DeleteIcon';
 import { gradeGroupTable } from '../../data/gradeGroup';
 import { CoreData, coreHeaders, coreData } from '../../data/coreData';
 import './CoreDataTable.css';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 type Props = {
     addCore: () => void;
@@ -19,6 +18,7 @@ type Props = {
 
 export default function CoreDataTable({ addCore, removeCore, setCores, cores } : Props) {
     const [scrollPosition, setSrollPosition] = useState(0);
+    const [saved, setSaved] = useState(false);
     const [ showConfirmation, setShowConfirmation ] = useState(false); 
 
     const handleScroll = () => {
@@ -66,44 +66,31 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
         localStorage.clear();
     }
 
-    useEffect(() => {
-        if (localStorage.getItem("savedCores") === 'true'){
-
-            const coreData = JSON.parse(localStorage.getItem("cores") || '') as CoreData[];
-            
-            console.log("core Data retrieved", coreData );
-            
-            if (coreData){
-                setCores(coreData);
-            }
-        }
-
-        // window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-        //     window.removeEventListener('scroll', handleScroll);
-        };
-    }, [setCores]);
-
     return (
         <div className="CoreDataContainer">
-            <div className="LabelIconWrapper CoreDataHeader">
-                <FontAwesomeIcon icon={faInfoCircle} />
-                <label className="FormLabel">
-                    <h2>Core Data</h2>
-                </label>
-                <span>Enter all cores tested, even the negative ones</span>
-            </div>
             <div>
                 <button onClick={() => setShowConfirmation(true)}>
                     Clear All
                 </button>
                 <button onClick={() => {
                     localStorage.setItem("savedCores", "true" );
-                    localStorage.setItem("cores", JSON.stringify(cores) );
+                    localStorage.setItem("cores", JSON.stringify(cores));
+                    setSaved(true);
                     }}>
                     Save
                 </button>
+            </div>
+            {saved && 
+                <div className="FadeCopied">
+                    Info saved to browser
+                </div>
+            }
+            <div className="LabelIconWrapper CoreDataHeader">
+                <FontAwesomeIcon icon={faInfoCircle} />
+                <label className="FormLabel">
+                    <h2>Core Data</h2>
+                </label>
+                <span>Enter all cores tested, even the negative ones</span>
             </div>
             <div className="CoreDataTable">
                 <div
