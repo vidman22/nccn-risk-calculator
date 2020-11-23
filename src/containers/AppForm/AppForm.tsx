@@ -59,9 +59,11 @@ export default function AppForm() {
             if (localStorage.getItem("cores")){
                 console.log("local storage", JSON.parse(localStorage.getItem("cores") || ''))
                 setCores( JSON.parse(localStorage.getItem('cores') || '') );
-                return;
             }
-        } 
+            return;
+        } else if (!hasParams){
+            return;
+        }
 
         query.forEach((value, key) => {
 

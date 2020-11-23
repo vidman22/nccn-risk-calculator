@@ -17,14 +17,15 @@ export default function ShareLinkModal({ visible, onDismiss, link }: Props) {
         visible ? "ModalOpen" : "ModalClosed"
     ];
     const cssBackDropClasses = ['Backdrop', visible ? 'BackdropOpen' : 'BackdropClosed'];
-    console.log("showCopied", showCopied);
     return (
         <>
             <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;
             <div className={cssClasses.join(' ')}>
-                <button className="NewBackButton" onClick={onDismiss}>
-                    <FontAwesomeIcon icon={faTimes} />
-                </button>
+                <div className="AlignRight">
+                    <button className="NewBackButton" onClick={onDismiss}>
+                        <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                </div>
 
                 {showCopied &&
                     <div className="FadeCopied">

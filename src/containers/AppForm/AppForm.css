@@ -135,6 +135,11 @@
     margin: 0 5% 8px 0;
 }
 
+.AlignRight{
+    display: flex;
+    justify-content: flex-end;
+}
+
 .SubmitButton:hover{
     box-shadow: none;
 }

@@ -68,7 +68,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores } :
 
     return (
         <div className="CoreDataContainer">
-            <div>
+            <div className="AlignRight">
                 <button onClick={() => setShowConfirmation(true)}>
                     Clear All
                 </button>
