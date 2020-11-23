@@ -1,4 +1,3 @@
-import { parseAsync } from 'json2csv';
 import { CoreData } from './data/coreData';
 
 
@@ -45,18 +44,18 @@ export const coreDataToFile = (cores : CoreData[]) => {
         })
     });
 
-    parseAsync(data, { fields: coreFields })
-        .then(csv => {
-            console.log('csv', csv);
-            let filename = `CoreData.csv`
-            localStorage.setItem(filename, csv);
-            // writeFile(`${__dirname}/${filename}`, csv, (err) => {
-            //     if (err) {
-            //         console.log("err writing file", err);
-            //     } else {
-            //         console.log("success")
-            //     }
-            // });
-        })
-        .catch(err => console.error(err));
+    // parseAsync(data, { fields: coreFields })
+    //     .then(csv => {
+    //         console.log('csv', csv);
+    //         let filename = `CoreData.csv`
+    //         localStorage.setItem(filename, csv);
+    //         // writeFile(`${__dirname}/${filename}`, csv, (err) => {
+    //         //     if (err) {
+    //         //         console.log("err writing file", err);
+    //         //     } else {
+    //         //         console.log("success")
+    //         //     }
+    //         // });
+    //     })
+    //     .catch(err => console.error(err));
 }
