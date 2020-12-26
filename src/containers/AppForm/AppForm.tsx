@@ -486,10 +486,10 @@ export default function AppForm() {
                     </div>
                 }
 
-                {showPdf &&
+                {/* {showPdf &&
                     <PDFViewer>
                         <PDFDocument coreData={cores} resultData={result} formData={form} />
-                    </PDFViewer>}
+                    </PDFViewer>} */}
                 <div className="AlignRight">
                     <button onClick={() => setShowConfirmation(true)}>
                         Clear
