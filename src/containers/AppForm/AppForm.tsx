@@ -224,7 +224,7 @@ export default function AppForm() {
             }
         });
         setCores(splitArray);
-        //es-lint-ignore
+        // eslint-disable-next-line
     }, [])
 
     const removeCore = (index: number) => {
