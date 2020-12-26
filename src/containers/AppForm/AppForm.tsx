@@ -10,7 +10,7 @@ import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationMo
 import { CoreData, coreData } from '../../data/coreData';
 import { formData, FormData } from '../../data/formData';
 import PDFDocument from '../PDFDocument/PDFDocument';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import {
     HIGH_RISK,
     VERY_HIGH_RISK,
@@ -30,7 +30,7 @@ export default function AppForm() {
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [form, setForm] = useState(formData);
-    const [showPdf, setShowPdf] = useState(false);
+    // const [showPdf, setShowPdf] = useState(false);
 
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -517,7 +517,7 @@ export default function AppForm() {
 
                     <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form} />} fileName="nccn-risk-result.pdf">
                         {({ blob, url, loading, error }) => (
-                            <button className="LabelIconWrapper" onClick={() => setShowPdf(true)}>
+                            <button className="LabelIconWrapper">
                                 <FontAwesomeIcon icon={faPrint} />
                                 <span>Download PDF</span>
                             </button>
