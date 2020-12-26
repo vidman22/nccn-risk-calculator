@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -17,6 +17,12 @@ export default function ShareLinkModal({ visible, onDismiss, link }: Props) {
         visible ? "ModalOpen" : "ModalClosed"
     ];
     const cssBackDropClasses = ['Backdrop', visible ? 'BackdropOpen' : 'BackdropClosed'];
+
+    useEffect(() => {
+        setTimeout(() => {
+            setShowCopied(false);
+        }, 2000 )
+    }, [showCopied])
     return (
         <>
             <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;
@@ -34,16 +40,18 @@ export default function ShareLinkModal({ visible, onDismiss, link }: Props) {
                 }
                 <div className="ClickToCopyWrapper">
 
-                    <CopyToClipboard
-                        text={link}
-                        onCopy={() => setShowCopied(true)}>
-                        <div>
-                            Click here to copy <FontAwesomeIcon icon={faCopy} />
-                        </div>
-                    </CopyToClipboard>
                 </div>
                 <div className="LinkContainer">
-                    <span>{link}</span>
+                    
+                        <CopyToClipboard
+                            text={link}
+                            onCopy={() => setShowCopied(true)}>
+                            <div className="InnerCopyFlex">
+                                Copy <FontAwesomeIcon style={{marginLeft: ".25rem", marginRight: "1rem"}} icon={faCopy} />
+                                <span>{link}</span>
+                            </div>
+                        </CopyToClipboard>
+                    
                 </div>
             </div>
         </>

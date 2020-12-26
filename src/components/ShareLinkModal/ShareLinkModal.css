@@ -1,21 +1,22 @@
 .LinkContainer{
     background: gray;
     color: white;
-    padding: 4px;
-    height: 20px;
-    overflow: scroll;
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
     width: 80%;
     margin: auto;
-    border-radius: 2px;
-    border: 1px solid #ccc;
+    border-radius: 4px;
     cursor: pointer;
 }
 
 .LinkContainer span {
     width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: pre;
+}
+
+.InnerCopyFlex {
+    display: flex;
+    justify-content: space-between;
 }
 
 .ClickToCopyWrapper {

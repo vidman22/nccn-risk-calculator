@@ -28,7 +28,7 @@ import ShareLinkModal from "../../components/ShareLinkModal/ShareLinkModal";
 
 
 export default function AppForm() {
-
+    const query = new URLSearchParams(useLocation().search);
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [form, setForm] = useState(formData);
@@ -53,7 +53,6 @@ export default function AppForm() {
     }
 
     useEffect(() => {
-    const query = new URLSearchParams(useLocation().search);
 
         const queryArray = [] as any;
         const splitArray = [] as any;

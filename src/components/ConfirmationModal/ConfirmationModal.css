@@ -21,7 +21,7 @@
     position: fixed;
     z-index: 200;
     background-color: white;
-    padding: 10px;
+    padding: 2rem;
     text-align: center;
     border-radius: 8px;
     box-sizing: border-box;
@@ -50,8 +50,14 @@
     cursor: pointer;
 } */
 
-button:hover{
-    color: gray;
+.NewBackButton {
+    font-size: 1rem;
+    transition: all 120ms ease-in;
+}
+
+.NewBackButton:hover{
+    color: #0858B8;
+    transform: rotateZ(90deg);
 }
 
 .ModalOpen {

@@ -25,8 +25,8 @@ export interface Result {
 type Props = {
     result: Result;
 }
-export default function Analysis({ result }: Props) {
-    let risk = () => {
+const Analisys: React.FC<Props> = ({ result }: Props) => {
+    const risk = () => {
         switch (result.risk) {
             case HIGH_RISK:
                 return 'High Risk';
@@ -42,7 +42,7 @@ export default function Analysis({ result }: Props) {
                 return 'Unfavorable Intermediate Risk';
             default:
                 return 'NA';
-        };
+        }
     }
 
     return (
@@ -80,3 +80,4 @@ export default function Analysis({ result }: Props) {
         </div>
     );
 }
+export default Analisys;

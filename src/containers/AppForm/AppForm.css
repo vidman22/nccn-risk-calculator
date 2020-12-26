@@ -80,6 +80,7 @@
     text-align: center;
     padding: 5px;
     border-radius: 4px;
+    white-space: normal;
     position: absolute;
     z-index: 1;
     top: 150%;
