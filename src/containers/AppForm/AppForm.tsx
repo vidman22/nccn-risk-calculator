@@ -4,11 +4,13 @@ import {
 } from 'react-router-dom';
 import Analysis from '../../components/Analysis';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
-import { CoreData, coreData } from '../../data/coreData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faShareSquare, faPrint } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faShareSquare, faPrint, faSave } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
+import { CoreData, coreData } from '../../data/coreData';
 import { formData, FormData } from '../../data/formData';
+import PDFDocument from '../PDFDocument/PDFDocument';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import {
     HIGH_RISK,
     VERY_HIGH_RISK,
@@ -18,13 +20,9 @@ import {
     INTERMEDIATE_LOW_RISK,
     VERY_LOW_RISK
 } from '../../data/riskConstants';
-
 import { Result } from '../../components/Analysis';
-
-import { coreDataToFile } from '../../helpers';
-import './AppForm.css';
 import ShareLinkModal from "../../components/ShareLinkModal/ShareLinkModal";
-
+import './AppForm.css';
 
 
 export default function AppForm() {
@@ -32,6 +30,8 @@ export default function AppForm() {
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [form, setForm] = useState(formData);
+    const [showPdf, setShowPdf] = useState(false);
+
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
         maxInvolvedPercentage: '',
@@ -53,13 +53,18 @@ export default function AppForm() {
     }
 
     useEffect(() => {
+        setTimeout(() => {
+            setSaved(false);
+        }, 3000)
+    }, [saved])
+
+    useEffect(() => {
 
         const queryArray = [] as any;
         const splitArray = [] as any;
         const hasParams = query.has('0a');
-        console.log("hasParams", hasParams);
-        const savedForm =  localStorage.getItem("form");
-        if (savedForm){
+        const savedForm = localStorage.getItem("form");
+        if (savedForm) {
             setForm(JSON.parse(savedForm));
         }
         if (!hasParams && localStorage.getItem("savedCores")) {
@@ -185,7 +190,7 @@ export default function AppForm() {
                         min: '0',
                         max: '10',
                         placeholder: "0",
-                        disabled: false,
+                        disabled: true,
                     })
                     break;
                 case 'g':
@@ -203,7 +208,7 @@ export default function AppForm() {
                         min: '0',
                         max: '5',
                         placeholder: "0",
-                        disabled: false,
+                        disabled: true,
                     })
                     break;
                 default:
@@ -219,7 +224,7 @@ export default function AppForm() {
             }
         });
         setCores(splitArray);
-
+        //es-lint-ignore
     }, [])
 
     const removeCore = (index: number) => {
@@ -289,7 +294,6 @@ export default function AppForm() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        coreDataToFile(cores);
 
         let corePercentagePositive = 'NA';
         let psaDensity = 'NA';
@@ -481,28 +485,50 @@ export default function AppForm() {
                         Info saved to browser
                     </div>
                 }
+
+                {showPdf &&
+                    <PDFViewer>
+                        <PDFDocument coreData={cores} resultData={result} formData={form} />
+                    </PDFViewer>}
                 <div className="AlignRight">
                     <button onClick={() => setShowConfirmation(true)}>
-                        Clear All
+                        Clear
                     </button>
-                    <button onClick={() => {
-                        localStorage.setItem("savedCores", "true");
-                        localStorage.setItem("cores", JSON.stringify(cores));
-                        localStorage.setItem("form", JSON.stringify(form));
-                        setSaved(true);
-                    }}>
-                        Save
+                    <button
+                        className="LabelIconWrapper"
+                        onClick={() => {
+                            localStorage.setItem("savedCores", "true");
+                            localStorage.setItem("cores", JSON.stringify(cores));
+                            localStorage.setItem("form", JSON.stringify(form));
+                            setSaved(true);
+                        }}>
+                        <FontAwesomeIcon icon={faSave} />
+                        <span>Save your data to browser</span>
                     </button>
-                    <button onClick={() => {
-                        setLink(generateUrl());
-                        setShowModal(true);
-                    }}>
+                    <button
+                        className="LabelIconWrapper"
+                        onClick={() => {
+                            setLink(generateUrl());
+                            setShowModal(true);
+                        }}>
                         <FontAwesomeIcon icon={faShareSquare} />
+                        <span>Get link to share your data</span>
                     </button>
-                    <button onClick={() => setShowModal(true)}>
-                        <FontAwesomeIcon icon={faPrint} />
-                    </button>
+
+                    <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form} />} fileName="nccn-risk-result.pdf">
+                        {({ blob, url, loading, error }) => (
+                            <button className="LabelIconWrapper" onClick={() => setShowPdf(true)}>
+                                <FontAwesomeIcon icon={faPrint} />
+                                <span>Download PDF</span>
+                            </button>
+                        )}
+                    </PDFDownloadLink>
+
                 </div>
+                {/* {showPdf &&
+                    
+                } */}
+
                 <form
                     onSubmit={handleSubmit}
                 >

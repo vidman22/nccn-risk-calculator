@@ -60,12 +60,15 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
 
     return (
         <div className="CoreDataContainer">
-            <div className="LabelIconWrapper CoreDataHeader">
+            <div className="CoreDataTitle">
+
+            <div className="LabelIconWrapper">
                 <FontAwesomeIcon icon={faInfoCircle} />
                 <label className="FormLabel">
                     <h2>Core Data</h2>
                 </label>
                 <span>Enter all cores tested, even the negative ones</span>
+            </div>
             </div>
             <table className="CoreDataTable">
                 <thead>

@@ -21,7 +21,7 @@ export default function ShareLinkModal({ visible, onDismiss, link }: Props) {
     useEffect(() => {
         setTimeout(() => {
             setShowCopied(false);
-        }, 2000 )
+        }, 3000 )
     }, [showCopied])
     return (
         <>

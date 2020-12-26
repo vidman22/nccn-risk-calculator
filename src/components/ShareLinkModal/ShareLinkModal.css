@@ -28,6 +28,10 @@
     top: 0;
     left: 0;
     display: block;
+    padding: .75rem;
+    color: #fff;
+    background-color: gray;
+    border-radius: .5rem;
     animation: fadeIn 2s linear 0s forwards;
 }
 
