@@ -25,25 +25,25 @@ export interface Result {
 type Props = {
     result: Result;
 }
-const Analisys: React.FC<Props> = ({ result }: Props) => {
-    const risk = () => {
-        switch (result.risk) {
-            case HIGH_RISK:
-                return 'High Risk';
-            case VERY_HIGH_RISK:
-                return 'Very High Risk';
-            case LOW_RISK:
-                return 'Low Risk';
-            case VERY_LOW_RISK:
-                return 'Very Low Risk';
-            case INTERMEDIATE_LOW_RISK:
-                return 'Favorable Intermediate Risk';
-            case INTERMEDIATE_HIGH_RISK:
-                return 'Unfavorable Intermediate Risk';
-            default:
-                return 'NA';
-        }
+export const risk = (risk : string) => {
+    switch (risk) {
+        case HIGH_RISK:
+            return 'High Risk';
+        case VERY_HIGH_RISK:
+            return 'Very High Risk';
+        case LOW_RISK:
+            return 'Low Risk';
+        case VERY_LOW_RISK:
+            return 'Very Low Risk';
+        case INTERMEDIATE_LOW_RISK:
+            return 'Favorable Intermediate Risk';
+        case INTERMEDIATE_HIGH_RISK:
+            return 'Unfavorable Intermediate Risk';
+        default:
+            return 'NA';
     }
+}
+const Analisys: React.FC<Props> = ({ result }: Props) => {
 
     return (
         <div className="AnalysisContainer">
@@ -74,7 +74,7 @@ const Analisys: React.FC<Props> = ({ result }: Props) => {
                     <span>Max Grade Group: </span>{result.maxGradeGroup}
                 </p>
                 <p>
-                    <span>Risk: </span>{risk()}
+                    <span>Risk: </span>{risk(result.risk)}
                 </p>
             </div>
         </div>

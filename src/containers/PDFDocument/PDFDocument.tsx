@@ -3,7 +3,7 @@ import { CoreData } from '../../data/coreData';
 import { FormData } from '../../data/formData';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { Result } from '../../components/Analysis';
-
+import { risk } from '../../components/Analysis';
 const styles = StyleSheet.create({
     page: {
         flexDirection: 'column',
@@ -81,7 +81,7 @@ const MyDocument = ({ formData, resultData, coreData }: Props) => (
                     <Text>Max Primary: {resultData.maxPrimary}</Text>
                     <Text>Max Secondary: {resultData.maxSecondary}</Text>
                     <Text>Grade Group of 4 and 5 count: {resultData.ggFourAndFiveCount}</Text>
-                    <Text>Risk Assessment {resultData.risk}</Text>
+                    <Text>Risk Assessment: {risk(resultData.risk)}</Text>
                 </View>
             </View>
             <View style={styles.section} wrap={false}>

@@ -144,6 +144,7 @@
     font-size: 1rem;
     width: 60px;
     cursor: pointer;
+    color: #555;
 }
 .AlignRight button:hover{
     color: #0858B8;
