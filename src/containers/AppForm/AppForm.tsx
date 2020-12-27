@@ -5,7 +5,7 @@ import {
 import Analysis from '../../components/Analysis';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faShareSquare, faPrint, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faShareSquare, faPrint, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import { CoreData, coreData } from '../../data/coreData';
 import { formData, FormData } from '../../data/formData';
@@ -491,8 +491,11 @@ export default function AppForm() {
                         <PDFDocument coreData={cores} resultData={result} formData={form} />
                     </PDFViewer>} */}
                 <div className="AlignRight">
-                    <button onClick={() => setShowConfirmation(true)}>
-                        Clear
+                    <button
+                        className="LabelIconWrapper"
+                        onClick={() => setShowConfirmation(true)}>
+                        <FontAwesomeIcon icon={faTrash} />
+                        <span>Clear all data, including cores</span>
                     </button>
                     <button
                         className="LabelIconWrapper"
