@@ -138,6 +138,7 @@
 .AlignRight{
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 1rem;
 }
 .AlignRight button{
     font-size: 1rem;
@@ -146,7 +147,7 @@
     color: #555;
 }
 .AlignRight button:hover{
-    color: #0858B8;
+    color: #00a8cc;
     transform: scale(1.2);
     transition: 75ms ease-in;
 }
@@ -157,7 +158,7 @@
     transition: 75ms ease-in;
 }
 .AlignRight a:hover{
-    color: #0858B8;
+    color: #00a8cc;
 }
 
 .SubmitButton:hover{

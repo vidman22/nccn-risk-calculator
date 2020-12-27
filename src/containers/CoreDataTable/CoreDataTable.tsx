@@ -124,7 +124,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                     ))}
                 </tbody>
             </table>
-            <div>
+            <div style={{marginTop: "1rem"}}>
                 <Icon onClick={() => addCore()} icon={faPlusCircle} />
             </div>
         </div>
