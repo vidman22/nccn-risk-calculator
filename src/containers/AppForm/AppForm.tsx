@@ -478,7 +478,7 @@ export default function AppForm() {
 
     return (
         <div className="Container">
-            <h1>NCCN Score Calculator</h1>
+            <h1>NCCN Risk Nomogram</h1>
             <div className="AppFormContainer">
                 {saved &&
                     <div className="FadeCopied">
