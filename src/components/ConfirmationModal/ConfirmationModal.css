@@ -16,6 +16,17 @@
 .BackdropClosed {
     display: none;
 }
+.ModalButtonWrappers{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.NewBackButton {
+    font-size: 1rem;
+    transition: all 120ms ease-in;
+}
 
 .Modal {
     position: fixed;
@@ -31,29 +42,7 @@
     transition: all 0.3s ease-out;
 }
 
-.ModalButtonWrappers{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-}
 
-/* .Modal button{
-    float: left;
-    display: inline;
-    border: none;
-    width: 10%;
-    height: 18px;
-    background: none;
-    margin: 4px;
-    outline: none;
-    cursor: pointer;
-} */
-
-.NewBackButton {
-    font-size: 1rem;
-    transition: all 120ms ease-in;
-}
 
 .NewBackButton:hover{
     color: #0858B8;

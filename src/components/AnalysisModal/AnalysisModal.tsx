@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
-import Analysis, { Result } from '../Analysis';
-import { faShareSquare, faPrint } from '@fortawesome/free-solid-svg-icons';
+import { Result } from '../Analysis';
+import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import PDFDocument from '../../containers/PDFDocument/PDFDocument';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -23,12 +23,13 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
     const [showCopied, setShowCopied] = useState(false);
     const [link, setLink] = useState('');
     const cssClasses = [
-        "Modal",
+        "AnalysisModal",
         visible ? "ModalOpen" : "ModalClosed"
     ];
     const cssBackDropClasses = ['Backdrop', visible ? 'BackdropOpen' : 'BackdropClosed'];
 
-    const generateUrl = () => {
+    const generateUrl = useCallback(
+        () => {
         let pattern = '';
         cores.forEach((core, index) => {
             Object.keys(core).forEach((key, ind) => {
@@ -42,7 +43,11 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
         })
 
         return window.location.origin + '/?' + pattern;
-    }
+    }, [cores])
+
+    useEffect(() => {
+        setLink(generateUrl());
+    }, [generateUrl])
 
     useEffect(() => {
         setTimeout(() => {
@@ -65,49 +70,40 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
                         Copied
                     </div>
                 }
+                <h3>Analysis</h3>
 
-                {link &&
-                    <button
-                        className="LabelIconAppFunction"
-                        onClick={() => {
-                            setLink(generateUrl());
-                        }}>
-                        <FontAwesomeIcon icon={faShareSquare} />
-                        <span>Get link to share your data</span>
-                    </button>}
+                <div className="AnalysisWrapper">
 
-                <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form} />} fileName="nccn-risk-result.pdf">
-                    {({ blob, url, loading, error }) => (
-                        <button className="LabelIconAppFunction">
-                            <FontAwesomeIcon icon={faPrint} />
-                            <span>Download PDF</span>
-                        </button>
-                    )}
-                </PDFDownloadLink>
-                {/* <div className="ButtonWrapper"> */}
-                
-                {/* </div> */}
+                    <div className="LinkContainer">
 
-                <div className="LinkContainer">
+                        <Analisys result={result} />
 
-                    <CopyToClipboard
-                        text={link}
-                        onCopy={() => setShowCopied(true)}>
-                        <div className="InnerCopyFlex">
-                            Copy <FontAwesomeIcon style={{ marginLeft: ".25rem", marginRight: "1rem" }} icon={faCopy} />
-                            <span>{link}</span>
-                        </div>
-                    </CopyToClipboard>
+                    </div>
+                    <div className="LinkContainer">
 
-                </div>
+                        <CopyToClipboard
+                            text={link}
+                            onCopy={() => setShowCopied(true)}>
+                            <div className="InnerCopyFlex">
+                                <FontAwesomeIcon style={{ marginLeft: ".25rem", marginRight: "1rem" }} icon={faCopy} />
+                                <span>Click here for a sharable link of core data</span>
+                            </div>
+                        </CopyToClipboard>
 
 
-
-                <div className="LinkContainer">
-
-
-                    <Analisys result={result} />
-
+                    </div>
+                    <div className="LinkContainer">
+                        <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form} />} fileName="nccn-risk-result.pdf">
+                            {({ blob, url, loading, error }) => (
+                                <div className="InnerCopyFlex">
+                                    <div className="DownloadPdfIcon">
+                                        <FontAwesomeIcon icon={faPrint} />
+                                    </div>
+                                    <span>Download PDF</span>
+                                </div>
+                            )}
+                        </PDFDownloadLink>
+                    </div>
                 </div>
             </div>
         </>

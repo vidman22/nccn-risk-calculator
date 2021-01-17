@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     useLocation
 } from 'react-router-dom';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faSave, faTrash, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faSave, faTrash, faCalculator } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../../components/AnalysisModal/AnalysisModal';
-import { CoreData, coreData } from '../../data/coreData';
+import { coreData } from '../../data/coreData';
 import { formData, FormData } from '../../data/formData';
 import {
     HIGH_RISK,
@@ -19,7 +19,6 @@ import {
     VERY_LOW_RISK
 } from '../../data/riskConstants';
 import { Result } from '../../components/Analysis';
-import ShareLinkModal from "../../components/ShareLinkModal/ShareLinkModal";
 import './AppForm.css';
 
 
@@ -42,8 +41,6 @@ export default function AppForm() {
         ggFourAndFiveCount: '',
         risk: '',
     });
-    const [showModal, setShowModal] = useState(false);
-    const [link, setLink] = useState('');
     const [cores, setCores] = useState([coreData])
     const addCore = () => {
         const newCores = [...cores];
@@ -259,10 +256,6 @@ export default function AppForm() {
         localStorage.clear();
     }
 
-    useEffect(() => {
-        calculateAnalysis()
-    }, [showAnalysis])
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         const name = e.target.name as keyof FormData;
@@ -274,7 +267,173 @@ export default function AppForm() {
         setForm(newForm);
     };
 
-    const calculateAnalysis = () => {
+    const getTotalCoresPositive = useCallback(
+        () => {
+            let count = 0;
+    
+            cores.forEach(cr => {
+                if (parseInt(cr.gleasonPrimary.value) > 2 || parseInt(cr.gleasonPrimary.value) > 2) {
+                    count++;
+                }
+            })
+            return count;
+        },
+      [cores],
+    )
+
+    const getCountGGFourOrFive = useCallback(
+        () => {
+            let count = 0;
+    
+            cores.forEach(cr => {
+                if (parseInt(cr.gradeGroup.value) > 3) {
+                    count++;
+                }
+            })
+    
+            return count.toString();
+    
+        },
+      [cores],
+    );
+
+    const getMaxGradeGroup = useCallback(
+        () => {
+            let maxGG = "0";
+    
+            cores.forEach(cr => {
+                if (parseInt(cr.gradeGroup.value) > parseInt(maxGG)) {
+                    maxGG = cr.gradeGroup.value
+                }
+            })
+            return maxGG;
+        },
+      [cores],
+    );
+
+    const getMaxGleasonSum = useCallback(
+        () => {
+            let maxGS = "0";
+    
+            cores.forEach(cr => {
+                if (parseInt(cr.gleasonSum.value) > parseInt(maxGS)) {
+                    maxGS = cr.gleasonSum.value
+                }
+            })
+    
+            return maxGS;
+        },
+      [cores],
+    )
+
+
+    const getMaxPrimary = useCallback(
+      () => {
+        let maxPrimary = "0";
+
+        cores.forEach(cr => {
+            if (parseInt(cr.gleasonPrimary.value) > parseInt(maxPrimary)) {
+                maxPrimary = cr.gleasonPrimary.value
+            }
+        })
+
+        return maxPrimary;
+    },
+      [cores],
+    )
+
+    const getMaxSecondary = useCallback(
+        () => {
+            let maxSecondary = "0";
+    
+            cores.forEach(cr => {
+                if (parseInt(cr.gleasonSecondary.value) > parseInt(maxSecondary)) {
+                    maxSecondary = cr.gleasonSecondary.value
+                }
+            })
+    
+            return maxSecondary;
+        },
+      [cores],
+    )
+
+    const getMaxInvolvedPercentage = useCallback(
+        () => {
+            let maxInvolvedPercentage = "0";
+            cores.forEach(cr => {
+                if (parseInt(cr.percentageInvolved.value) > parseInt(maxInvolvedPercentage)) {
+                    maxInvolvedPercentage = cr.percentageInvolved.value
+                }
+            })
+    
+            return maxInvolvedPercentage || 'NA';
+        },
+      [cores],
+    );
+
+    const calculateIntermediateRisk = useCallback(
+        (maxGradeGroup: number) => {
+            const clinicalStage = form.clinicalStage.value;
+            const psa = parseInt(form.psa.value);
+    
+            const percentageCoresPositive = Math.floor((getTotalCoresPositive()) / cores.length)
+    
+            if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50) {
+                return INTERMEDIATE_HIGH_RISK;
+            }
+    
+            if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
+                return INTERMEDIATE_LOW_RISK;
+            }
+            return 'x';
+        },
+      [form, cores, getTotalCoresPositive])
+
+    const calculateRisk = useCallback(
+        (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage: string) => {
+
+            let intMaxPrimary = parseInt(maxPrimary);
+            let intMaxGradeGroup = parseInt(maxGradeGroup);
+            let intGGFourAndFiveCount = parseInt(ggFourAndFiveCount);
+            let intPSADensity = parseInt(psaDensity);
+            let intMaxInvolvedPercentage = parseInt(maxInvolvedPercentage);
+            //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
+
+            const clinicalStage = form.clinicalStage.value;
+            const psa = parseInt(form.psa.value);
+
+            if (intMaxPrimary === 5 || intGGFourAndFiveCount >= 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
+                return VERY_HIGH_RISK;
+            };
+
+            //This means at least two of the three high risk factors that should bump it to very high risk
+            if ((psa > 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa > 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa > 20 || intMaxGradeGroup > 3))) {
+                return VERY_HIGH_RISK;
+            }
+
+            if (psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
+
+                return HIGH_RISK;
+            }
+            //this means if they have a clinical stage above T1 and T2a
+            if (psa >= 10 || intMaxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
+                return INTERMEDIATE_RISK;
+            }
+            //the clinical stages are the only ones possible for low risk
+            if (intPSADensity < 0.15 || cores.length >= 3 || intMaxInvolvedPercentage > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
+
+                return LOW_RISK;
+            }
+
+            //basically if the clinical stage is T1c
+            return VERY_LOW_RISK;
+
+        }
+    , [cores, form ])
+
+
+const calculateAnalysis = useCallback(
+    () => {
 
         let corePercentagePositive = 'NA';
         let psaDensity = 'NA';
@@ -317,231 +476,68 @@ export default function AppForm() {
             ggFourAndFiveCount,
             risk,
         });
-    };
+    }, [form, cores, calculateIntermediateRisk, getMaxPrimary, getMaxSecondary, getMaxGleasonSum, calculateRisk, getCountGGFourOrFive, getMaxGradeGroup, getMaxInvolvedPercentage, getTotalCoresPositive]);
 
-    const getTotalCoresPositive = () => {
-        let count = 0;
+useEffect(() => {
+    calculateAnalysis()
+}, [calculateAnalysis])
 
-        cores.forEach(cr => {
-            if (parseInt(cr.gleasonPrimary.value) > 2 || parseInt(cr.gleasonPrimary.value) > 2) {
-                count++;
-            }
-        })
-        return count;
-    }
-
-
-    const getCountGGFourOrFive = () => {
-        let count = 0;
-
-        cores.forEach(cr => {
-            if (parseInt(cr.gradeGroup.value) > 3) {
-                count++;
-            }
-        })
-
-        return count.toString();
-
-    }
-
-    const getMaxGradeGroup = () => {
-        let maxGG = "0";
-
-        cores.forEach(cr => {
-            if (parseInt(cr.gradeGroup.value) > parseInt(maxGG)) {
-                maxGG = cr.gradeGroup.value
-            }
-        })
-        return maxGG;
-    };
-
-    const getMaxGleasonSum = () => {
-        let maxGS = "0";
-
-        cores.forEach(cr => {
-            if (parseInt(cr.gleasonSum.value) > parseInt(maxGS)) {
-                maxGS = cr.gleasonSum.value
-            }
-        })
-
-        return maxGS;
-    }
-
-    const getMaxPrimary = () => {
-        let maxPrimary = "0";
-
-        cores.forEach(cr => {
-            if (parseInt(cr.gleasonPrimary.value) > parseInt(maxPrimary)) {
-                maxPrimary = cr.gleasonPrimary.value
-            }
-        })
-
-        return maxPrimary;
-    }
-
-    const getMaxSecondary = () => {
-        let maxSecondary = "0";
-
-        cores.forEach(cr => {
-            if (parseInt(cr.gleasonSecondary.value) > parseInt(maxSecondary)) {
-                maxSecondary = cr.gleasonSecondary.value
-            }
-        })
-
-        return maxSecondary;
-    }
-
-    const getMaxInvolvedPercentage = () => {
-        let maxInvolvedPercentage = "0";
-        cores.forEach(cr => {
-            if (parseInt(cr.percentageInvolved.value) > parseInt(maxInvolvedPercentage)) {
-                maxInvolvedPercentage = cr.percentageInvolved.value
-            }
-        })
-
-        return maxInvolvedPercentage || 'NA';
-    }
-
-    const calculateIntermediateRisk = (maxGradeGroup: number) => {
-        const clinicalStage = form.clinicalStage.value;
-        const psa = parseInt(form.psa.value);
-
-        const percentageCoresPositive = Math.floor((getTotalCoresPositive()) / cores.length)
-
-        if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50) {
-            return INTERMEDIATE_HIGH_RISK;
-        }
-
-        if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
-            return INTERMEDIATE_LOW_RISK;
-        }
-        return 'x';
-    }
-
-    const calculateRisk = (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage: string) => {
-
-        let intMaxPrimary = parseInt(maxPrimary);
-        let intMaxGradeGroup = parseInt(maxGradeGroup);
-        let intGGFourAndFiveCount = parseInt(ggFourAndFiveCount);
-        let intPSADensity = parseInt(psaDensity);
-        let intMaxInvolvedPercentage = parseInt(maxInvolvedPercentage);
-        //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
-
-        const clinicalStage = form.clinicalStage.value;
-        const psa = parseInt(form.psa.value);
-
-        if (intMaxPrimary === 5 || intGGFourAndFiveCount >= 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
-            return VERY_HIGH_RISK;
-        };
-
-        //This means at least two of the three high risk factors that should bump it to very high risk
-        if ((psa > 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa > 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa > 20 || intMaxGradeGroup > 3))) {
-            return VERY_HIGH_RISK;
-        }
-
-        if (psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
-
-            return HIGH_RISK;
-        }
-        //this means if they have a clinical stage above T1 and T2a
-        if (psa >= 10 || intMaxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
-            return INTERMEDIATE_RISK;
-        }
-        //the clinical stages are the only ones possible for low risk
-        if (intPSADensity < 0.15 || cores.length >= 3 || intMaxInvolvedPercentage > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
-
-            return LOW_RISK;
-        }
-
-        //basically if the clinical stage is T1c
-        return VERY_LOW_RISK;
-
-    }
-
-    return (
-        <div className="Container">
-            <h1>NCCN Risk Nomogram</h1>
-            <div className="AppFormContainer">
-                {saved &&
-                    <div className="FadeCopied">
-                        Info saved to browser
+return (
+    <div className="Container">
+        <h1>NCCN Risk Nomogram</h1>
+        <div className="AppFormContainer">
+            {saved &&
+                <div className="FadeCopied">
+                    Info saved to browser
                     </div>
-                }
+            }
 
-                {/* {showPdf &&
+            {/* {showPdf &&
                     <PDFViewer>
                         <PDFDocument coreData={cores} resultData={result} formData={form} />
                     </PDFViewer>} */}
-                <div className="AnotherWrapper">
+            <div className="AnotherWrapper">
 
 
-                </div>
-                <div className="AlignRight">
-                    <button
-                        className="LabelIconAppFunction"
-                        onClick={() => setShowConfirmation(true)}>
-                        <FontAwesomeIcon icon={faTrash} />
-                        <span>Clear all data, including cores</span>
-                    </button>
-                    <button
-                        className="LabelIconAppFunction"
-                        onClick={() => {
-                            localStorage.setItem("savedCores", "true");
-                            localStorage.setItem("cores", JSON.stringify(cores));
-                            localStorage.setItem("form", JSON.stringify(form));
-                            setSaved(true);
-                        }}>
-                        <FontAwesomeIcon icon={faSave} />
-                        <span>Save your data to browser</span>
-                    </button>
+            </div>
+            <div className="AlignRight">
+                <button
+                    className="LabelIconAppFunction"
+                    onClick={() => setShowConfirmation(true)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                    <span>Clear all data, including cores</span>
+                </button>
+                <button
+                    className="LabelIconAppFunction"
+                    onClick={() => {
+                        localStorage.setItem("savedCores", "true");
+                        localStorage.setItem("cores", JSON.stringify(cores));
+                        localStorage.setItem("form", JSON.stringify(form));
+                        setSaved(true);
+                    }}>
+                    <FontAwesomeIcon icon={faSave} />
+                    <span>Save your data to browser</span>
+                </button>
 
-                    <button
-                        onClick={() => setShowAnalysis(true)}
-                        type="button"
-                        className="LabelIconAppFunction"
-                    >
-                        <FontAwesomeIcon icon={faPaperPlane} />
-                        <span>Get Anaylysis</span>
-                    </button>
+                <button
+                    onClick={() => setShowAnalysis(true)}
+                    type="button"
+                    className="LabelIconAppFunction"
+                >
+                    <FontAwesomeIcon icon={faCalculator} />
+                    <span>Get Analysis</span>
+                </button>
 
 
 
-                </div>
+            </div>
 
-                <div className="ListWrapper">
-                    {Object.keys(form).map((k, index) => {
-                        const obj = form[k as keyof FormData];
-                        if (obj.options) {
-                            return (
-                                <div key={index} className="InputWrapper">
-                                    <div className="LabelIconWrapper">
-                                        <FontAwesomeIcon icon={faInfoCircle} />
-                                        <label className="FormLabel">
-                                            {obj.label}
-                                        </label>
-                                        <span>{obj.description}</span>
-                                    </div>
-                                    <select
-                                        className="SelectField"
-
-                                        name={k}
-                                        value={obj.value}
-                                        onChange={handleChange}
-                                    >
-                                        {obj.options.map(op => (
-                                            <option key={op}>
-                                                {op}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )
-                        }
+            <div className="ListWrapper">
+                {Object.keys(form).map((k, index) => {
+                    const obj = form[k as keyof FormData];
+                    if (obj.options) {
                         return (
-                            <div
-                                className="InputWrapper"
-                                key={index}
-                            >
+                            <div key={index} className="InputWrapper">
                                 <div className="LabelIconWrapper">
                                     <FontAwesomeIcon icon={faInfoCircle} />
                                     <label className="FormLabel">
@@ -549,57 +545,77 @@ export default function AppForm() {
                                     </label>
                                     <span>{obj.description}</span>
                                 </div>
-                                <input
-                                    className="FormInput"
-                                    style={{ width: "80px" }}
+                                <select
+                                    className="SelectField"
+
                                     name={k}
-                                    min={obj.min || ''}
-                                    max={obj.max || ''}
-                                    step={obj.step || "1"}
-                                    type={obj.type}
-                                    placeholder={obj.placeholder}
                                     value={obj.value}
                                     onChange={handleChange}
-                                />
+                                >
+                                    {obj.options.map(op => (
+                                        <option key={op}>
+                                            {op}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                        );
-                    })}
-                </div>
+                        )
+                    }
+                    return (
+                        <div
+                            className="InputWrapper"
+                            key={index}
+                        >
+                            <div className="LabelIconWrapper">
+                                <FontAwesomeIcon icon={faInfoCircle} />
+                                <label className="FormLabel">
+                                    {obj.label}
+                                </label>
+                                <span>{obj.description}</span>
+                            </div>
+                            <input
+                                className="FormInput"
+                                style={{ width: "80px" }}
+                                name={k}
+                                min={obj.min || ''}
+                                max={obj.max || ''}
+                                step={obj.step || "1"}
+                                type={obj.type}
+                                placeholder={obj.placeholder}
+                                value={obj.value}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    );
+                })}
             </div>
-            <CoreDataTable
-                addCore={addCore}
-                setCores={setCores}
-                removeCore={removeCore}
-                cores={cores}
-            />
-            {showAnalysis && (
-                <AnalysisModal
-                    visible={showAnalysis}
-                    onDismiss={() => setShowAnalysis(false)}
-                    result={result}
-                    cores={cores}
-                    form={form}
-                />
-            )}
-
-            {showModal &&
-                <ShareLinkModal
-                    onDismiss={() => setShowModal(false)}
-                    link={link}
-                    visible={showModal}
-                />
-            }
-            {showConfirmation &&
-                <ConfirmationModal
-                    visible={showConfirmation}
-                    onDismiss={() => setShowConfirmation(false)}
-                    confirmAction={() => {
-                        clearCores();
-                        setShowConfirmation(false);
-                    }}
-                />
-            }
-
         </div>
-    );
+        <CoreDataTable
+            addCore={addCore}
+            setCores={setCores}
+            removeCore={removeCore}
+            cores={cores}
+        />
+        {showAnalysis && (
+            <AnalysisModal
+                visible={showAnalysis}
+                onDismiss={() => setShowAnalysis(false)}
+                result={result}
+                cores={cores}
+                form={form}
+            />
+        )}
+        {showConfirmation &&
+            <ConfirmationModal
+                visible={showConfirmation}
+                onDismiss={() => setShowConfirmation(false)}
+                confirmAction={() => {
+                    clearCores();
+                    setShowConfirmation(false);
+                }}
+            />
+        }
+
+    </div>
+);
 }
