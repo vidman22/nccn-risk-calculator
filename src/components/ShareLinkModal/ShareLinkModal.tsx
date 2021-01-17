@@ -22,7 +22,8 @@ export default function ShareLinkModal({ visible, onDismiss, link }: Props) {
         setTimeout(() => {
             setShowCopied(false);
         }, 3000 )
-    }, [showCopied])
+    }, [showCopied]);
+    
     return (
         <>
             <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;

@@ -2,15 +2,13 @@ import React, { useState, useEffect } from "react";
 import {
     useLocation
 } from 'react-router-dom';
-import Analysis from '../../components/Analysis';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faShareSquare, faPrint, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faSave, faTrash, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
+import AnalysisModal from '../../components/AnalysisModal/AnalysisModal';
 import { CoreData, coreData } from '../../data/coreData';
 import { formData, FormData } from '../../data/formData';
-import PDFDocument from '../PDFDocument/PDFDocument';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import {
     HIGH_RISK,
     VERY_HIGH_RISK,
@@ -29,6 +27,7 @@ export default function AppForm() {
     const query = new URLSearchParams(useLocation().search);
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showAnalysis, setShowAnalysis] = useState(false);
     const [form, setForm] = useState(formData);
     // const [showPdf, setShowPdf] = useState(false);
 
@@ -69,7 +68,6 @@ export default function AppForm() {
         }
         if (!hasParams && localStorage.getItem("savedCores")) {
             if (localStorage.getItem("cores")) {
-                console.log("local storage", JSON.parse(localStorage.getItem("cores") || ''))
                 setCores(JSON.parse(localStorage.getItem('cores') || ''));
             }
             return;
@@ -237,23 +235,6 @@ export default function AppForm() {
     }
 
     const clearCores = () => {
-        setCores([coreData]);
-        localStorage.clear();
-    }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value;
-        const name = e.target.name as keyof FormData;
-        const newForm = { ...form };
-        const newElement = newForm[name];
-        newElement.value = value;
-        newForm[name] = newElement;
-
-        setForm(newForm);
-    };
-
-    const handleClick = () => {
-
         const newForm = { ...form };
         for (let key in newForm) {
             const newElement = newForm[key as keyof FormData];
@@ -273,27 +254,27 @@ export default function AppForm() {
             ggFourAndFiveCount: '',
             risk: '',
         });
+
+        setCores([coreData]);
+        localStorage.clear();
     }
 
-    const generateUrl = () => {
-        let pattern = '';
-        cores.forEach((core, index) => {
-            Object.keys(core).forEach((key, ind) => {
-                //remove the final ampersand
-                if (Object.keys(core).length === ind + 1 && cores.length === index + 1) {
-                    pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}`;
-                } else {
-                    pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}&`;
-                }
-            })
-        })
-        // console.log("pattern", pattern.join("/:"));
+    useEffect(() => {
+        calculateAnalysis()
+    }, [showAnalysis])
 
-        return window.location.origin + '/?' + pattern;
-    }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
+        const name = e.target.name as keyof FormData;
+        const newForm = { ...form };
+        const newElement = newForm[name];
+        newElement.value = value;
+        newForm[name] = newElement;
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+        setForm(newForm);
+    };
+
+    const calculateAnalysis = () => {
 
         let corePercentagePositive = 'NA';
         let psaDensity = 'NA';
@@ -338,12 +319,11 @@ export default function AppForm() {
         });
     };
 
-
     const getTotalCoresPositive = () => {
         let count = 0;
 
         cores.forEach(cr => {
-            if (parseInt(cr.percentageInvolved.value) > 0) {
+            if (parseInt(cr.gleasonPrimary.value) > 2 || parseInt(cr.gleasonPrimary.value) > 2) {
                 count++;
             }
         })
@@ -426,14 +406,16 @@ export default function AppForm() {
         const clinicalStage = form.clinicalStage.value;
         const psa = parseInt(form.psa.value);
 
-        if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10) {
+        const percentageCoresPositive = Math.floor((getTotalCoresPositive()) / cores.length)
+
+        if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50) {
             return INTERMEDIATE_HIGH_RISK;
         }
 
-        if (maxGradeGroup > 1) {
+        if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
             return INTERMEDIATE_LOW_RISK;
         }
-        return '';
+        return 'x';
     }
 
     const calculateRisk = (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage: string) => {
@@ -453,11 +435,11 @@ export default function AppForm() {
         };
 
         //This means at least two of the three high risk factors that should bump it to very high risk
-        if ((psa >= 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa >= 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa >= 20 || intMaxGradeGroup > 3))) {
+        if ((psa > 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa > 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa > 20 || intMaxGradeGroup > 3))) {
             return VERY_HIGH_RISK;
         }
 
-        if (psa >= 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
+        if (psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
 
             return HIGH_RISK;
         }
@@ -490,15 +472,19 @@ export default function AppForm() {
                     <PDFViewer>
                         <PDFDocument coreData={cores} resultData={result} formData={form} />
                     </PDFViewer>} */}
+                <div className="AnotherWrapper">
+
+
+                </div>
                 <div className="AlignRight">
                     <button
-                        className="LabelIconWrapper"
+                        className="LabelIconAppFunction"
                         onClick={() => setShowConfirmation(true)}>
                         <FontAwesomeIcon icon={faTrash} />
                         <span>Clear all data, including cores</span>
                     </button>
                     <button
-                        className="LabelIconWrapper"
+                        className="LabelIconAppFunction"
                         onClick={() => {
                             localStorage.setItem("savedCores", "true");
                             localStorage.setItem("cores", JSON.stringify(cores));
@@ -508,67 +494,26 @@ export default function AppForm() {
                         <FontAwesomeIcon icon={faSave} />
                         <span>Save your data to browser</span>
                     </button>
+
                     <button
-                        className="LabelIconWrapper"
-                        onClick={() => {
-                            setLink(generateUrl());
-                            setShowModal(true);
-                        }}>
-                        <FontAwesomeIcon icon={faShareSquare} />
-                        <span>Get link to share your data</span>
+                        onClick={() => setShowAnalysis(true)}
+                        type="button"
+                        className="LabelIconAppFunction"
+                    >
+                        <FontAwesomeIcon icon={faPaperPlane} />
+                        <span>Get Anaylysis</span>
                     </button>
 
-                    <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form} />} fileName="nccn-risk-result.pdf">
-                        {({ blob, url, loading, error }) => (
-                            <button className="LabelIconWrapper">
-                                <FontAwesomeIcon icon={faPrint} />
-                                <span>Download PDF</span>
-                            </button>
-                        )}
-                    </PDFDownloadLink>
+
 
                 </div>
-                {/* {showPdf &&
-                    
-                } */}
 
-                <form
-                    onSubmit={handleSubmit}
-                >
-                    <div className="ListWrapper">
-                        {Object.keys(form).map((k, index) => {
-                            const obj = form[k as keyof FormData];
-                            if (obj.options) {
-                                return (
-                                    <div key={index} className="InputWrapper">
-                                        <div className="LabelIconWrapper">
-                                            <FontAwesomeIcon icon={faInfoCircle} />
-                                            <label className="FormLabel">
-                                                {obj.label}
-                                            </label>
-                                            <span>{obj.description}</span>
-                                        </div>
-                                        <select
-                                            className="SelectField"
-
-                                            name={k}
-                                            value={obj.value}
-                                            onChange={handleChange}
-                                        >
-                                            {obj.options.map(op => (
-                                                <option key={op}>
-                                                    {op}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )
-                            }
+                <div className="ListWrapper">
+                    {Object.keys(form).map((k, index) => {
+                        const obj = form[k as keyof FormData];
+                        if (obj.options) {
                             return (
-                                <div
-                                    className="InputWrapper"
-                                    key={index}
-                                >
+                                <div key={index} className="InputWrapper">
                                     <div className="LabelIconWrapper">
                                         <FontAwesomeIcon icon={faInfoCircle} />
                                         <label className="FormLabel">
@@ -576,40 +521,50 @@ export default function AppForm() {
                                         </label>
                                         <span>{obj.description}</span>
                                     </div>
-                                    <input
-                                        className="FormInput"
-                                        style={{ width: "80px" }}
+                                    <select
+                                        className="SelectField"
+
                                         name={k}
-                                        min={obj.min || ''}
-                                        max={obj.max || ''}
-                                        step={obj.step || "1"}
-                                        type={obj.type}
-                                        placeholder={obj.placeholder}
                                         value={obj.value}
                                         onChange={handleChange}
-                                    />
+                                    >
+                                        {obj.options.map(op => (
+                                            <option key={op}>
+                                                {op}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                            );
-                        })}
-                    </div>
-                    <div className="AnotherWrapper">
-
-                        <div className="ButtonWrapper">
-                            <button
-                                type="button"
-                                onClick={handleClick}
-                                className="ClearButton"
-                            >Clear</button>
-                            <button
-                                type="submit"
-                                className="SubmitButton"
-                            >Submit</button>
-                        </div>
-                    </div>
-                </form>
-                {result.psaDensity && (
-                    <Analysis result={result} />
-                )}
+                            )
+                        }
+                        return (
+                            <div
+                                className="InputWrapper"
+                                key={index}
+                            >
+                                <div className="LabelIconWrapper">
+                                    <FontAwesomeIcon icon={faInfoCircle} />
+                                    <label className="FormLabel">
+                                        {obj.label}
+                                    </label>
+                                    <span>{obj.description}</span>
+                                </div>
+                                <input
+                                    className="FormInput"
+                                    style={{ width: "80px" }}
+                                    name={k}
+                                    min={obj.min || ''}
+                                    max={obj.max || ''}
+                                    step={obj.step || "1"}
+                                    type={obj.type}
+                                    placeholder={obj.placeholder}
+                                    value={obj.value}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
             <CoreDataTable
                 addCore={addCore}
@@ -617,6 +572,16 @@ export default function AppForm() {
                 removeCore={removeCore}
                 cores={cores}
             />
+            {showAnalysis && (
+                <AnalysisModal
+                    visible={showAnalysis}
+                    onDismiss={() => setShowAnalysis(false)}
+                    result={result}
+                    cores={cores}
+                    form={form}
+                />
+            )}
+
             {showModal &&
                 <ShareLinkModal
                     onDismiss={() => setShowModal(false)}
@@ -634,6 +599,7 @@ export default function AppForm() {
                     }}
                 />
             }
+
         </div>
     );
 }

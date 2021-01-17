@@ -20,6 +20,7 @@
 
 .CoreDataContainer {
     width: 80%;
+    position: relative;
     margin: 40px auto;
     padding: 40px;
     overflow-x: auto;
@@ -57,4 +58,20 @@
 
 .CoreCell p{
     font-size: 22px;
+}
+
+.CoreWarning{
+    width: 400px;
+    background-color: rgb(4, 233, 145);
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+    white-space: normal;
+    position: absolute; 
+    z-index: 1;
+    top: 10%;
+    left: 70%;
+    margin-left: -112px;
+    transition: opacity 300ms;
 }

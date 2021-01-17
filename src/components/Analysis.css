@@ -1,5 +1,5 @@
 .AnalysisContainer {
-    border-top: 1px solid #ccc;
+
 }
 
 .AnalysisContainer h3{
@@ -9,7 +9,7 @@
 .ResultContainer{
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 16px;
+    padding: 1rem;
     text-align: left;
     font-family: 'Roboto', sans-serif;
 }

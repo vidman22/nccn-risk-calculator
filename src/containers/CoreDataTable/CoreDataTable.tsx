@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../../components/PlusIcon/PlusIcon';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,7 @@ type Props = {
 
 export default function CoreDataTable({ addCore, removeCore, setCores, cores }: Props) {
     // const [scrollPosition, setSrollPosition] = useState(0);
+    const [showWarning, setShowWarning] = useState(false);
 
     // const handleScroll = () => {
     //     const position = window.pageYOffset;
@@ -36,6 +37,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+        setShowWarning(false);
         const value = e.target.value;
         const name = e.target.name as keyof CoreData;
         const newCores = [...cores];
@@ -54,21 +56,25 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
         newCore.gleasonSum = newGleasonSum;
         newCore.gradeGroup = newGradeGroup;
         newCores[index] = newCore;
+        if ((name === 'gleasonPrimary' || name === 'gleasonSecondary') && (parseInt(value) > 0 && parseInt(value) < 3)) {
+            setShowWarning(true);
+        }
 
         setCores(newCores);
     }
 
     return (
         <div className="CoreDataContainer">
+            {showWarning && <span className="CoreWarning">Scores less than 3 are not factored into risk</span>}
             <div className="CoreDataTitle">
 
-            <div className="LabelIconWrapper">
-                <FontAwesomeIcon icon={faInfoCircle} />
-                <label className="FormLabel">
-                    <h2>Core Data</h2>
-                </label>
-                <span>Enter all cores tested, even the negative ones</span>
-            </div>
+                <div className="LabelIconWrapper">
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    <label className="FormLabel">
+                        <h2>Core Data</h2>
+                    </label>
+                    <span>Enter all cores tested, even the negative ones</span>
+                </div>
             </div>
             <table className="CoreDataTable">
                 <thead>
@@ -103,6 +109,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                                     className="CoreCell"
                                     key={index + k}
                                 >
+
                                     <input
                                         className="FormInput"
                                         name={k}
@@ -114,6 +121,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                                         value={obj.value}
                                         onChange={(e) => handleChange(e, rowIndex)}
                                     />
+
                                 </td>
                             )
                         })}
@@ -124,7 +132,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                     ))}
                 </tbody>
             </table>
-            <div style={{marginTop: "1rem"}}>
+            <div style={{ marginTop: "1rem" }}>
                 <Icon onClick={() => addCore()} icon={faPlusCircle} />
             </div>
         </div>
