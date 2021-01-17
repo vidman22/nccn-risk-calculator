@@ -1,0 +1,36 @@
+.InfoModal{
+    top: 5%;
+    overflow-y: scroll;
+    text-align: left;
+    height: 90vh;
+    line-height: 1.5rem;
+    font-size: 1rem;
+    padding: 2rem 3rem;
+}
+
+.InfoModal h2{
+    text-align: center;
+}
+
+.InfoTextWrapper{
+    width: 70%;
+    margin: auto;
+}
+
+.InfoModal table {
+    border-collapse: collapse;
+    border: 1px solid gray;
+    margin: 1rem 0;
+}
+
+.InfoModal td{
+    border: 1px solid gray;
+    min-width: 4rem;
+    padding: .5rem;
+}
+
+.InfoModal th{
+    border: 1px solid gray;
+    min-width: 4rem;
+    padding: .5rem;
+}

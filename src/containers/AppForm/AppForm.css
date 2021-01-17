@@ -150,6 +150,17 @@
     opacity: 1;
 }
 
+.TitleWrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.TitleWrapper .fa-info-circle {
+    color:gray;
+    font-size: 1rem;
+}
+
 .SubmitButton,
 .ClearButton{
     background-color: #0858B8;
