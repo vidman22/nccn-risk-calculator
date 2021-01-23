@@ -42,6 +42,7 @@ export default function AppForm() {
         maxSecondary: '',
         ggFourAndFiveCount: '',
         risk: '',
+        capra: '',
     });
     const [cores, setCores] = useState([coreData])
     const addCore = () => {
@@ -252,6 +253,7 @@ export default function AppForm() {
             maxSecondary: '',
             ggFourAndFiveCount: '',
             risk: '',
+            capra: '',
         });
 
         setCores([coreData]);
@@ -433,6 +435,49 @@ export default function AppForm() {
         }
         , [cores, form])
 
+    const calculateCapra = useCallback(
+        (maxPrimary: string, maxSecondary: string, corePercentagePositive: string ) => {
+
+            let intMaxPrimary = parseInt(maxPrimary);
+            let inMaxSecondary = parseInt(maxSecondary);
+            const clinicalStage = form.clinicalStage.value;
+            console.log(" coresPerctentagePositive ", corePercentagePositive );
+            let capra = 0;
+
+            if (parseInt(form.age.value) > 49) {
+                capra++;
+            }
+            // If the psa is less than six do nothing, if it is greate than six but less than 10 add one
+            if ( parseInt(form.psa.value) > 6 && parseInt(form.psa.value) < 10  ) {
+                capra++;
+            } 
+            // If the psa is between 10 and 20 add two
+            if ( parseInt(form.psa.value) > 10 && parseInt(form.psa.value) < 20 ) {
+                capra+=2
+            }
+            if ( parseInt(form.psa.value) > 20 && parseInt(form.psa.value) < 30 ) {
+                capra+=3
+            }
+            if ( parseInt(form.psa.value) > 30 && parseInt(form.psa.value) < 40 ) {
+                capra+=4
+            }
+            if ( intMaxPrimary > 3 ) {
+                capra+=3
+            } else if ( inMaxSecondary > 3 ) {
+                capra++
+            }
+            if ( clinicalStage === 'T3a' || clinicalStage === 'T3b' ) {
+                capra++
+            }
+            if ( parseInt(corePercentagePositive) >= 34 ) {
+                capra++
+            }
+
+            return capra.toString()
+
+        }
+        , [form])
+
 
     const calculateAnalysis = useCallback(
         () => {
@@ -462,6 +507,9 @@ export default function AppForm() {
             const maxGleasonSum = getMaxGleasonSum();
 
             let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
+            
+            console.log("total cores", totalCores, totalCoresPositive);
+            let capra = calculateCapra(maxPrimary, maxSecondary, corePercentagePositive)
 
             if (risk === INTERMEDIATE_RISK) {
                 risk = calculateIntermediateRisk(parseInt(maxGradeGroup));
@@ -477,8 +525,9 @@ export default function AppForm() {
                 maxSecondary,
                 ggFourAndFiveCount,
                 risk,
+                capra,
             });
-        }, [form, cores, calculateIntermediateRisk, getMaxPrimary, getMaxSecondary, getMaxGleasonSum, calculateRisk, getCountGGFourOrFive, getMaxGradeGroup, getMaxInvolvedPercentage, getTotalCoresPositive]);
+        }, [form, cores, calculateIntermediateRisk, getMaxPrimary, getMaxSecondary, getMaxGleasonSum, calculateRisk, getCountGGFourOrFive, getMaxGradeGroup, getMaxInvolvedPercentage, getTotalCoresPositive, calculateCapra]);
 
     useEffect(() => {
         calculateAnalysis()

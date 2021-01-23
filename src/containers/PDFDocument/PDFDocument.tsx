@@ -82,6 +82,7 @@ const MyDocument = ({ formData, resultData, coreData }: Props) => (
                     <Text>Max Secondary: {resultData.maxSecondary}</Text>
                     <Text>Grade Group of 4 and 5 count: {resultData.ggFourAndFiveCount}</Text>
                     <Text>Risk Assessment: {risk(resultData.risk)}</Text>
+                    <Text>CAPRA Score: {resultData.capra}</Text>
                 </View>
             </View>
             <View style={styles.section} wrap={false}>

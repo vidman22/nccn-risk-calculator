@@ -1,6 +1,5 @@
 .LinkContainer{
-    background: gray;
-    color: white;
+    background: #eee;
     padding: 1rem;
     overflow-x: auto;
     white-space: nowrap;
@@ -8,6 +7,7 @@
     border-radius: 4px;
     cursor: pointer;
     margin: 1rem auto;
+    color: rgb(99, 99, 99);
 }
 
 .AnalysisWrapper{
@@ -15,10 +15,15 @@
     margin: auto;
 }
 
+.AnalysisWrapper h2 {
+    text-align: left;
+    margin-left: 10%;
+}
+
 .LinkContainer span {
     width: 100%;
     text-decoration: none;
-    color: #fff;
+    color: rgb(99, 99, 99);
 }
 
 .InnerCopyFlex {
@@ -44,6 +49,10 @@
 }
 .LinkContainer a:hover{
     color: #00a8cc;
+}
+
+.DownloadPdfIcon{
+    color: rgb(99, 99, 99);
 }
 
 .FadeCopied{
@@ -80,8 +89,4 @@
     left: 7.5%;
     width: 85%;
     transition: all 0.3s ease-out;
-}
-
-.DownloadPdfIcon{
-    color: #fff;
 }

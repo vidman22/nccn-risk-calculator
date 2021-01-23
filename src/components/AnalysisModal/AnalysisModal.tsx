@@ -30,20 +30,20 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
 
     const generateUrl = useCallback(
         () => {
-        let pattern = '';
-        cores.forEach((core, index) => {
-            Object.keys(core).forEach((key, ind) => {
-                //remove the final ampersand
-                if (Object.keys(core).length === ind + 1 && cores.length === index + 1) {
-                    pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}`;
-                } else {
-                    pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}&`;
-                }
+            let pattern = '';
+            cores.forEach((core, index) => {
+                Object.keys(core).forEach((key, ind) => {
+                    //remove the final ampersand
+                    if (Object.keys(core).length === ind + 1 && cores.length === index + 1) {
+                        pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}`;
+                    } else {
+                        pattern = pattern + `${index}${core[key as keyof CoreData].shortName}=${(core[key as keyof CoreData].value || core[key as keyof CoreData].initialValue)}&`;
+                    }
+                })
             })
-        })
 
-        return window.location.origin + '/?' + pattern;
-    }, [cores])
+            return window.location.origin + '/?' + pattern;
+        }, [cores])
 
     useEffect(() => {
         setLink(generateUrl());
@@ -70,9 +70,9 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
                         Copied
                     </div>
                 }
-                <h3>Analysis</h3>
 
                 <div className="AnalysisWrapper">
+                    <h2>Analysis</h2>
 
                     <div className="LinkContainer">
 

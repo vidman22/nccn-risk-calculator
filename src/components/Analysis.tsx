@@ -20,6 +20,7 @@ export interface Result {
     maxSecondary: string,
     ggFourAndFiveCount: string,
     risk: string,
+    capra: string,
 }
 
 type Props = {
@@ -75,6 +76,9 @@ const Analisys: React.FC<Props> = ({ result }: Props) => {
                 </p>
                 <p>
                     <span>Risk: </span>{risk(result.risk)}
+                </p>
+                <p>
+                    <span>CAPRA Score: </span>{result.capra}
                 </p>
             </div>
         </div>
