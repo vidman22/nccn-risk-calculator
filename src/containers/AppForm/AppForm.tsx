@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faSave, faTrash, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../../components/AnalysisModal/AnalysisModal';
 import InfoModal from '../../components/InfoModal/InfoModal';
@@ -416,9 +416,9 @@ export default function AppForm() {
             }
 
             if (psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
-
                 return HIGH_RISK;
             }
+
             //this means if they have a clinical stage above T1 and T2a
             if (psa >= 10 || intMaxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
                 return INTERMEDIATE_RISK;
@@ -441,7 +441,6 @@ export default function AppForm() {
             let intMaxPrimary = parseInt(maxPrimary);
             let inMaxSecondary = parseInt(maxSecondary);
             const clinicalStage = form.clinicalStage.value;
-            console.log(" coresPerctentagePositive ", corePercentagePositive );
             let capra = 0;
 
             if (parseInt(form.age.value) > 49) {
@@ -450,7 +449,7 @@ export default function AppForm() {
             // If the psa is less than six do nothing, if it is greate than six but less than 10 add one
             if ( parseInt(form.psa.value) > 6 && parseInt(form.psa.value) < 10  ) {
                 capra++;
-            } 
+            }
             // If the psa is between 10 and 20 add two
             if ( parseInt(form.psa.value) > 10 && parseInt(form.psa.value) < 20 ) {
                 capra+=2
@@ -507,8 +506,7 @@ export default function AppForm() {
             const maxGleasonSum = getMaxGleasonSum();
 
             let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
-            
-            console.log("total cores", totalCores, totalCoresPositive);
+
             let capra = calculateCapra(maxPrimary, maxSecondary, corePercentagePositive)
 
             if (risk === INTERMEDIATE_RISK) {
@@ -564,29 +562,33 @@ export default function AppForm() {
                 </div>
                 <div className="AlignRight">
                     <button
-                        className="LabelIconAppFunction"
+                        className="ButtonAppFunction"
                         onClick={() => setShowConfirmation(true)}>
-                        <FontAwesomeIcon icon={faTrash} />
+                        {/* <FontAwesomeIcon icon={faTrash} /> */}
+                        Clear
                         <span>Clear all data, including cores</span>
                     </button>
                     <button
-                        className="LabelIconAppFunction"
+                        className="ButtonAppFunction"
                         onClick={() => {
                             localStorage.setItem("savedCores", "true");
                             localStorage.setItem("cores", JSON.stringify(cores));
                             localStorage.setItem("form", JSON.stringify(form));
                             setSaved(true);
                         }}>
-                        <FontAwesomeIcon icon={faSave} />
+                            Save
+                        {/* <FontAwesomeIcon icon={faSave} /> */}
                         <span>Save your data to browser</span>
                     </button>
 
                     <button
                         onClick={() => setShowAnalysis(true)}
                         type="button"
-                        className="LabelIconAppFunction"
+                        className="ButtonAppFunction"
+                        style={{backgroundColor: "#0858B8", color: "#fff"}}
                     >
-                        <FontAwesomeIcon icon={faCalculator} />
+                        Analysis
+                        {/* <FontAwesomeIcon icon={faCalculator} /> */}
                         <span>Get Analysis</span>
                     </button>
 
@@ -670,7 +672,7 @@ export default function AppForm() {
             {showInfoModal &&
                 <InfoModal
                     visible={showInfoModal}
-                    onDismiss={() => setShowConfirmation(false)}
+                    onDismiss={() => setShowInfoModal(false)}
                 />
             }
             {showConfirmation &&

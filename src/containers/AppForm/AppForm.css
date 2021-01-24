@@ -63,7 +63,15 @@
     font-size: 25px;
 }
 
-.LabelIconWrapper {
+.ButtonAppFunction {
+    border: 1px solid gray;
+    margin: 0px 1rem;
+    padding: .5rem;
+    border-radius: .25rem;
+}
+
+.LabelIconWrapper,
+.ButtonAppFunction {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -71,7 +79,8 @@
     align-items: center;
 }
 
-.LabelIconWrapper span {
+.LabelIconWrapper span, 
+.ButtonAppFunction span {
     visibility: hidden;
     width: 200px;
     background-color: #555;
@@ -89,7 +98,8 @@
     transition: opacity 300ms;
 }
 
-.LabelIconWrapper span::after {
+.LabelIconWrapper span::after, 
+.ButtonAppFunction span::after {
     content: "";
     position: absolute;
     bottom: 100%;
@@ -100,7 +110,8 @@
     border-color:  transparent transparent #555 transparent;
 }
 
-.LabelIconWrapper:hover span {
+.LabelIconWrapper:hover span, 
+.ButtonAppFunction:hover span {
     visibility: visible;
     opacity: 1;
 }
@@ -192,16 +203,18 @@
     justify-content: flex-end;
     margin-bottom: 1rem;
 }
+
 .AlignRight button{
     font-size: 1.5rem;
-    width: 3rem;
     cursor: pointer;
     color: #555;
 }
 .AlignRight button:hover{
     color: #00a8cc;
-    transform: scale(1.2);
-    transition: 75ms ease-in;
+}
+
+.AlignRight:last-child{
+    background-color: #0858B8;
 }
 
 .SubmitButton:hover{

@@ -35,17 +35,25 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                 <div className="InfoTextWrapper">
 
                     <p>
-                        This Nomogram is a software tool to stratify a patient’s risk of prostate cancer progression
+                        &emsp; This Nomogram is a software tool to stratify a patient’s risk of prostate cancer progression
                         from Very Low Risk to Very High Risk. The user is not required to understand the significance
                         of the various medical terms such as Gleason Grade Group or Clinical Stage. Using the
                         medical diagnosis details, the Nomogram calculates the patient’s risk of prostate cancer
                         progression by computing the patient’s risk stratification using the well known CAPRA 1 and
                         NCCN 2 Risk analysis software tools.
-                        That information helps the patient and his doctors to make informed treatment decisions with
+                    </p>
+                    <p>
+                        &emsp; That information helps the patient and his doctors to make informed treatment decisions with
                         the goal to cure or at least control the cancer, with the minimum of unwanted side effects such
                         as incontinence, impotence, urinary stricture, and bowel bother.
+                        </p>
+                    <p>
+                        &emsp;
                         The Nomogram is only designed for men with localized prostate cancer, Stage T1 through T4.
                         The Nomogram is not for men with advanced disease Stage N1 positive lymph nodes, and/or
+                        </p>
+                    <p>
+                        &emsp;
                         Stage M1 distant metastasis. Those men are at very high risk and should find a team of
                         prostate cancer specialists to aggressively deal with their cancer. The team should include a
                         Urologic Surgical Oncologist, a Radiation Oncologist, and a Medical Oncologist.
@@ -53,7 +61,8 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         to the cancer diagnosis risk stratification. Very low risk men probably do not need treated, at
                         least not until the cancer shows signs of becoming more aggressive. That avoids or delays
                         treatment side effects that reduce quality of life.
-                </p>
+                        </p>
+
                     <div>
                         Side effects can include:
                     <ol>
@@ -86,26 +95,26 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             obtain the Clinical Stage. Note: biopsy and imaging staging is not included in Clinical
                             Stage. It is DRE data only.
                             <table>
-                                <thead>
-                                    <th>T1c</th>
-                                    <th>T2a</th>
-                                    <th>T2b</th>
-                                    <th>T2c</th>
-                                    <th>T3a</th>
-                                    <th>T3b</th>
-                                    <th>T4</th>
-                                </thead>
-                                <tbody>
-                                    <td>Cannont be felt with the finger</td>
-                                    <td>1/2 of one side only</td>
-                                    <td>Tumor invades more than 1/2 of one side only</td>
-                                    <td> Tumor felt on both sides</td>
-                                    <td>Felt outside the prostate capsule</td>
-                                    <td>Invades the seminal vesicles</td>
-                                    <td>Invades local tissues - bladder, rectum, etc.</td>
-                                </tbody>
-                            </table>
-                        </li>
+                                    <thead>
+                                        <th>T1c</th>
+                                        <th>T2a</th>
+                                        <th>T2b</th>
+                                        <th>T2c</th>
+                                        <th>T3a</th>
+                                        <th>T3b</th>
+                                        <th>T4</th>
+                                    </thead>
+                                    <tbody>
+                                        <td>Cannont be felt with the finger</td>
+                                        <td>1/2 of one side only</td>
+                                        <td>Tumor invades more than 1/2 of one side only</td>
+                                        <td> Tumor felt on both sides</td>
+                                        <td>Felt outside the prostate capsule</td>
+                                        <td>Invades the seminal vesicles</td>
+                                        <td>Invades local tissues - bladder, rectum, etc.</td>
+                                    </tbody>
+                                </table>
+                            </li>
                             <li>PROSTATE SIZE Measured in cubic centimeters (cc) or milliliters (ml). Important for
                             choosing some therapy options such as radiation, and useful for determining the PSA
                             Density calculation that predicts risk of cancer already outside the prostate. PSA
