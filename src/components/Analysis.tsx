@@ -44,7 +44,7 @@ export const risk = (risk : string) => {
             return 'NA';
     }
 }
-const Analisys: React.FC<Props> = ({ result }: Props) => {
+const Analysis: React.FC<Props> = ({ result }: Props) => {
 
     return (
         <div className="AnalysisContainer">
@@ -84,4 +84,4 @@ const Analisys: React.FC<Props> = ({ result }: Props) => {
         </div>
     );
 }
-export default Analisys;
+export default Analysis;

@@ -20,7 +20,44 @@ import {
     VERY_LOW_RISK
 } from '../../data/riskConstants';
 import { Result } from '../../components/Analysis';
+import { parseParams, parseForm } from "../../helpers";
 import './AppForm.css';
+import {setFlagsFromString} from "v8";
+
+export interface HighRiskFactor {
+    psa: { label: string, value: boolean};
+    stage: { label: string, value: boolean };
+    gradeGroup: { label: string, value: boolean};
+}
+
+export interface VHighRiskFactor {
+    stage: { label: string, value: boolean };
+    gradeGroup: { label: string, value: boolean };
+    gleason: { label: string, value: boolean };
+    highRiskFactors: { label: string, value: boolean };
+}
+
+export interface IntRiskFactor {
+    psa: { label: string, value: boolean};
+    stage: { label: string, value: boolean };
+    gradeGroup: { label: string, value: boolean};
+    unfavorableIntermediate: {
+        label: string;
+        value: {
+            fiftyPercentCoresPositive: { label: string, value: boolean };
+            riskFactorNumber: { label: string, value: boolean };
+            gradeGroup: { label: string, value: boolean };
+        };
+    };
+    favorableIntermediate: {
+        label: string;
+        value: {
+            fiftyPercentCoresPositive: { label: string, value: boolean };
+            riskFactorNumber: { label: string, value: boolean };
+            gradeGroup: { label: string, value: boolean };
+        }
+    }
+}
 
 export default function AppForm() {
     const query = new URLSearchParams(useLocation().search);
@@ -29,6 +66,35 @@ export default function AppForm() {
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [form, setForm] = useState(formData);
+    const [ intRiskFactors, setIntRiskFactors ] = useState<IntRiskFactor>({
+        stage : {label: "Stage T2b-T2c", value: false},
+        gradeGroup: {label: "Grade Group 2 or 3", value: false},
+        psa: {label: "PSA 10-20 ng/ml", value: false},
+        unfavorableIntermediate: { label: "Unfavorable Intermediate Factors", value: {
+                fiftyPercentCoresPositive: { label: "50% or more of biopsy cores positive", value: false},
+                riskFactorNumber: { label: "has 2 or 3 Int Risk Factors", value: false},
+                gradeGroup: { label: "Grade Group 3", value: false},
+        }},
+        favorableIntermediate: { label: "Favorable Intermediate Factors", value: {
+                fiftyPercentCoresPositive: { label: "Less than 50% of biopsy cores positive", value: false},
+                riskFactorNumber: { label: "Has 1 Int Risk Factor", value: false},
+                gradeGroup: { label: "Grade Group 1 or 2", value: false},
+        }},
+    });
+
+    const [ highRiskFactors, setHighRiskFactors ] = useState<HighRiskFactor>({
+        stage: { label: "Stage T3a", value: false },
+        gradeGroup: { label: "Grade Group 4 or 5", value: false },
+        psa: { label: "PSA is greater than 20 ng/ml", value: false},
+    });
+
+    const [ vHighRiskFactors, setVHighRiskFactors ] = useState<VHighRiskFactor>({
+        stage: { label: "Stage T3b - T4", value: false },
+        gradeGroup: { label: "More than 4 cores with Grade Group 4 or 5", value: false },
+        gleason: { label: "Primary Gleason has pattern 5", value: false},
+        highRiskFactors: { label: "Has 2-3 high risk factors", value: false},
+    });
+
     // const [showPdf, setShowPdf] = useState(false);
 
     const [result, setResult] = useState<Result>({
@@ -57,7 +123,7 @@ export default function AppForm() {
     }, [saved])
 
     useEffect(() => {
-        const queryArray = [] as any;
+
         const splitArray = [] as any;
         const hasParams = query.has('0a');
         let savedForm = localStorage.getItem("form");
@@ -73,168 +139,10 @@ export default function AppForm() {
             console.log("no params or storage")
             return;
         }
-        const newForm = {...form};
-        query.forEach((value, key) => {
-            const check = key.match(/[^0-9]/);
-            if (!check) {
-                return;
-            }
-            switch (key){
-                case 'ptage':
-                    const newAge = {...newForm.age}
-                    newAge.value = value;
-                    newForm.age = newAge;
-                    break;
-                case 'stage':
-                    const newStage = {...newForm.clinicalStage};
-                    newStage.value = value;
-                    newForm.clinicalStage = newStage;
-                    break;
-                case 'psa':
-                    const newPSA = {...newForm.psa};
-                    newPSA.value = value;
-                    newForm.psa = newPSA
-                    break;
-                case 'size':
-                    const newSize = {...newForm.prostateSize};
-                    newSize.value = value;
-                    newForm.prostateSize = newSize;
-                    break;
-                default:
-                    break;
-            }
 
-            switch (check[0]) {
-                case 'a':
-                    queryArray.push({
-                        value: value,
-                        key: 'coreID',
-                        initialValue: '',
-                        shortName: 'a',
-                        type: "text",
-                        validation: {
-                            touched: false,
-                            error: "",
-                            msg: "",
-                        },
-                        min: '',
-                        max: '',
-                        placeholder: "ID",
-                        disabled: false,
-                    })
-                    break;
-                case 'b':
-                    queryArray.push({
-                        value,
-                        key: 'length',
-                        initialValue: '0',
-                        shortName: check[0],
-                        type: "number",
-                        validation: {
-                            touched: false,
-                            error: "",
-                            msg: "",
-                        },
-                        min: '0',
-                        max: '40',
-                        placeholder: "0",
-                        disabled: false,
-                    })
-                    break;
-                case 'c':
-                    queryArray.push({
-                        value,
-                        key: 'percentageInvolved',
-                        initialValue: '0',
-                        shortName: check[0],
-                        type: "number",
-                        validation: {
-                            touched: false,
-                            error: "",
-                            msg: "",
-                        },
-                        min: '0',
-                        max: '100',
-                        placeholder: "0",
-                        disabled: false,
-                    })
-                    break;
-                case 'd':
-                    queryArray.push({
-                        value,
-                        key: 'gleasonPrimary',
-                        initialValue: '0',
-                        shortName: check[0],
-                        type: "number",
-                        validation: {
-                            touched: false,
-                            error: "",
-                            msg: "",
-                        },
-                        min: '0',
-                        max: '5',
-                        placeholder: "0",
-                        disabled: false,
-                    })
-                    break;
-                case 'e':
-                    queryArray.push({
-                        value,
-                        key: 'gleasonSecondary',
-                        initialValue: '0',
-                        shortName: check[0],
-                        type: "number",
-                        validation: {
-                            touched: false,
-                            error: "",
-                            msg: "",
-                        },
-                        min: '0',
-                        max: '5',
-                        placeholder: "0",
-                        disabled: false,
-                    })
-                    break;
-                case 'f':
-                    queryArray.push({
-                        value,
-                        key: 'gleasonSum',
-                        initialValue: '0',
-                        shortName: check[0],
-                        type: "number",
-                        validation: {
-                            touched: false,
-                            error: "",
-                            msg: "",
-                        },
-                        min: '0',
-                        max: '10',
-                        placeholder: "0",
-                        disabled: true,
-                    })
-                    break;
-                case 'g':
-                    queryArray.push({
-                        value,
-                        key: 'gradeGroup',
-                        initialValue: '0',
-                        shortName: check[0],
-                        type: "number",
-                        validation: {
-                            touched: false,
-                            error: "",
-                            msg: "",
-                        },
-                        min: '0',
-                        max: '5',
-                        placeholder: "0",
-                        disabled: true,
-                    })
-                    break;
-                default:
-                    break;
-            }
-        });
+        const queryArray = parseParams(query)
+        const newForm = parseForm(query, form);
+
         let tmpObj = {} as any;
         queryArray.forEach((el: any, index: number) => {
             tmpObj[el.key] = el;
@@ -386,15 +294,75 @@ export default function AppForm() {
     );
 
     const calculateIntermediateRisk = useCallback(
+
         (maxGradeGroup: number) => {
             const clinicalStage = form.clinicalStage.value;
             const psa = parseInt(form.psa.value);
 
+            const newIRF = {...intRiskFactors};
+
+            const newUFObj = {...newIRF.unfavorableIntermediate};
+            const newUF = {...newUFObj.value};
+
+            const newFObj = {...newIRF.favorableIntermediate};
+            const newF = {...newFObj.value};
+
+            // At this stage we've already determined that the patient has at least one of the intermediate risk factors
+            // We can check for the high risk factors exceeding 2-3 IRFs but don't need to check the number int risk factors
+            // for favorable intermediate risk
+
+            let numRF = 0;
+
+            if (maxGradeGroup === 3 || maxGradeGroup === 2 ){
+                numRF++
+            }
+            if (clinicalStage === 'T2b' || clinicalStage === 'T2c'){
+                numRF++
+            }
+            if (psa >= 10){
+                numRF++
+            }
+
             const percentageCoresPositive = Math.floor((getTotalCoresPositive()) / cores.length)
-            if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50) {
+            if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50 || numRF >= 2) {
+                const newPer = {...newUF.fiftyPercentCoresPositive};
+                const newGG = {...newUF.gradeGroup};
+                const newRF = {...newUF.riskFactorNumber}
+
+                newPer.value = percentageCoresPositive > 50;
+                newGG.value = maxGradeGroup === 3;
+                newRF.value = numRF >=2;
+
+                newUF.riskFactorNumber = newRF;
+                newUF.gradeGroup = newGG;
+                newUF.fiftyPercentCoresPositive = newPer;
+
+                newUFObj.value = newUF;
+                newIRF.unfavorableIntermediate = newUFObj;
+
+                setIntRiskFactors(newIRF);
+
                 return INTERMEDIATE_HIGH_RISK;
             }
+
             if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
+                const newPer = {...newF.fiftyPercentCoresPositive};
+                const newGG = { ...newF.gradeGroup};
+                const newRF = { ...newF.riskFactorNumber };
+
+                newPer.value = percentageCoresPositive > 50;
+                newGG.value = maxGradeGroup === 1 || maxGradeGroup === 2;
+                newRF.value = numRF === 1;
+
+                newF.riskFactorNumber = newRF;
+                newF.gradeGroup = newGG;
+                newF.fiftyPercentCoresPositive = newPer;
+
+                newFObj.value = newF;
+                newIRF.favorableIntermediate = newFObj;
+
+                setIntRiskFactors(newIRF);
+
                 return INTERMEDIATE_LOW_RISK;
             }
             return 'x';
@@ -413,27 +381,77 @@ export default function AppForm() {
 
             const clinicalStage = form.clinicalStage.value;
             const psa = parseInt(form.psa.value);
+            const newVHRF = {...vHighRiskFactors};
+            const newHRF = {...highRiskFactors};
+            const newIRF = {...intRiskFactors};
 
             if (intMaxPrimary === 5 || intGGFourAndFiveCount >= 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
+                const newGG = {...newVHRF.gradeGroup}
+                const newStage = {...newVHRF.stage}
+                const newGleason = {...newVHRF.gleason}
+
+                newStage.value = clinicalStage === 'T3b' || clinicalStage === 'T4';
+                newGG.value = intGGFourAndFiveCount >= 4;
+                newGleason.value = intMaxPrimary === 5;
+
+                newVHRF.gradeGroup = newGG;
+                newVHRF.stage = newStage;
+                newVHRF.gleason = newGleason;
+
+                setVHighRiskFactors(newVHRF);
                 return VERY_HIGH_RISK;
             };
 
-            //This means at least two of the three high risk factors that should bump it to very high risk
+            // This means at least two of the three high risk factors that should bump it to very high risk
             if ((psa > 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa > 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa > 20 || intMaxGradeGroup > 3))) {
+                const newRF = {...newVHRF.highRiskFactors};
+
+                newRF.value = true;
+
+                newVHRF.highRiskFactors = newRF;
+
+                setVHighRiskFactors(newVHRF);
                 return VERY_HIGH_RISK;
             }
 
-            if (psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
+            if ( psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3 ) {
+                const newPSA = {...newHRF.psa};
+                const newStage = {...newHRF.stage};
+                const newGG = {...newHRF.gradeGroup};
+
+                newPSA.value = psa > 20;
+                newStage.value = clinicalStage === 'T3a';
+                newGG.value = intMaxGradeGroup > 3;
+
+                newHRF.psa = newPSA;
+                newHRF.gradeGroup = newGG;
+                newHRF.stage = newStage;
+
+                setHighRiskFactors(newHRF);
+
                 return HIGH_RISK;
             }
 
             //this means if they have a clinical stage above T1 and T2a
             if (psa >= 10 || intMaxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
+                const newPSA = {...newIRF.psa};
+                const newStage = {...newIRF.stage};
+                const newGradeGroup = {...newIRF.gradeGroup};
+
+                newPSA.value = psa >= 10;
+                newStage.value = clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4';
+                newGradeGroup.value = intMaxGradeGroup > 1;
+
+                newIRF.psa = newPSA;
+                newIRF.stage = newStage;
+                newIRF.gradeGroup = newGradeGroup;
+
+                setIntRiskFactors(newIRF);
+
                 return INTERMEDIATE_RISK;
             }
             //the clinical stages are the only ones possible for low risk
             if (intPSADensity < 0.15 || cores.length >= 3 || intMaxInvolvedPercentage > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
-
                 return LOW_RISK;
             }
 
@@ -563,8 +581,6 @@ export default function AppForm() {
                         <PDFDocument coreData={cores} resultData={result} formData={form} />
                     </PDFViewer>} */}
 
-
-
                 <div className="ListWrapper">
                     {Object.keys(form).map((k, index) => {
                         const obj = form[k as keyof FormData];
@@ -580,7 +596,6 @@ export default function AppForm() {
                                     </div>
                                     <select
                                         className="SelectField"
-
                                         name={k}
                                         value={obj.value}
                                         onChange={handleChange}
@@ -664,6 +679,9 @@ export default function AppForm() {
                     result={result}
                     cores={cores}
                     form={form}
+                    highRiskFactors={highRiskFactors}
+                    intRiskFactors={intRiskFactors}
+                    vHighRiskFactors={vHighRiskFactors}
                 />
             )}
             {showInfoModal &&

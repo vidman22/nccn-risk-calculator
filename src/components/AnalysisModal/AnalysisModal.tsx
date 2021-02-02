@@ -7,9 +7,11 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import PDFDocument from '../../containers/PDFDocument/PDFDocument';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { FormData } from '../../data/formData';
-import Analisys from '../Analysis';
+import Analysis from '../Analysis';
+import RiskFactorDisplay from '../RiskFactorDisplay';
 import './AnalysisModal.css';
 import { CoreData } from '../../data/coreData';
+import {HighRiskFactor, IntRiskFactor, VHighRiskFactor} from "../../containers/AppForm/AppForm";
 
 type Props = {
     visible: boolean;
@@ -17,9 +19,12 @@ type Props = {
     cores: CoreData[];
     form: FormData;
     onDismiss: () => void;
+    intRiskFactors: IntRiskFactor;
+    vHighRiskFactors: VHighRiskFactor;
+    highRiskFactors: HighRiskFactor;
 }
 
-export default function ShareLinkModal({ visible, onDismiss, result, cores, form }: Props) {
+export default function ShareLinkModal({ visible, onDismiss, result, cores, form, intRiskFactors, vHighRiskFactors, highRiskFactors }: Props) {
     const [showCopied, setShowCopied] = useState(false);
     const [link, setLink] = useState('');
     const cssClasses = [
@@ -75,14 +80,11 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
 
                 <div className="AnalysisWrapper">
                     <h2>Analysis</h2>
-
                     <div className="LinkContainer">
-
-                        <Analisys result={result} />
-
+                        <Analysis result={result} />
                     </div>
+                    <RiskFactorDisplay intRiskFactors={intRiskFactors} highRiskFactors={highRiskFactors} vHighRiskFactors={vHighRiskFactors} />
                     <div style={{cursor: "pointer"}} className="LinkContainer">
-
                         <CopyToClipboard
                             text={link}
                             onCopy={() => setShowCopied(true)}>
@@ -91,8 +93,6 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
                                 <span>Click here to copy a sharable link of your data</span>
                             </div>
                         </CopyToClipboard>
-
-
                     </div>
                     <div className="LinkContainer">
                         <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form} />} fileName="nccn-risk-result.pdf">
