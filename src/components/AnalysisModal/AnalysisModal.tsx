@@ -41,8 +41,10 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
                     }
                 })
             })
+            pattern = pattern + "&ptage=" + (form.age.value || form.age.initialValue) + "&stage=" + (form.clinicalStage.value || form.clinicalStage.initialValue) + "&psa=" + (form.psa.value || form.psa.initialValue) + "&size=" + (form.prostateSize.value || form.prostateSize.initialValue);
 
             return window.location.origin + '/?' + pattern;
+
         }, [cores])
 
     useEffect(() => {
@@ -79,14 +81,14 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
                         <Analisys result={result} />
 
                     </div>
-                    <div className="LinkContainer">
+                    <div style={{cursor: "pointer"}} className="LinkContainer">
 
                         <CopyToClipboard
                             text={link}
                             onCopy={() => setShowCopied(true)}>
                             <div className="InnerCopyFlex">
                                 <FontAwesomeIcon style={{ marginLeft: ".25rem", marginRight: "1rem" }} icon={faCopy} />
-                                <span>Click here for a sharable link of core data</span>
+                                <span>Click here to copy a sharable link of your data</span>
                             </div>
                         </CopyToClipboard>
 

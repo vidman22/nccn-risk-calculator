@@ -5,9 +5,8 @@
     white-space: nowrap;
     width: 80%;
     border-radius: 4px;
-    cursor: pointer;
     margin: 1rem auto;
-    color: rgb(99, 99, 99);
+    color: #1f1f1f;
 }
 
 .AnalysisWrapper{
@@ -23,7 +22,7 @@
 .LinkContainer span {
     width: 100%;
     text-decoration: none;
-    color: rgb(99, 99, 99);
+    color: #131313;
 }
 
 .InnerCopyFlex {
@@ -52,7 +51,7 @@
 }
 
 .DownloadPdfIcon{
-    color: rgb(99, 99, 99);
+    color: #131313;
 }
 
 .FadeCopied{
@@ -74,7 +73,6 @@
     100% {opacity: 0;}
 }
 
-
 .AnalysisModal {
     position: fixed;
     z-index: 200;
@@ -85,7 +83,7 @@
     height: 90vh;
     overflow-y: scroll;
     box-sizing: border-box;
-    top: 10%;
+    top: 5%;
     left: 7.5%;
     width: 85%;
     transition: all 0.3s ease-out;

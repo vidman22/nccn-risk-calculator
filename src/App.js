@@ -12,9 +12,6 @@ function App() {
         <div className="App">
             <Router>
                 <Switch>
-                    <Route exact path="/analysis">
-                        <div>Hello World!</div>
-                    </Route>
                     <Route path="/">
                         <AppForm />
                     </Route>

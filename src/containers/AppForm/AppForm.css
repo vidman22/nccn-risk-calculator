@@ -1,4 +1,4 @@
-/* 
+/*
     orange ffa41b
     darkblue 000839
     blue 005082
@@ -28,14 +28,14 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: stretch;
-   
+
 }
 
 .InputWrapper {
     width: 45%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     margin: 4px 4px;
     padding: 8px 0px;
@@ -50,12 +50,14 @@
     padding: 0 8px;
     height: 37px;
     width: 70px;
+    margin: 0px 1.5rem;
     font-size: 25px;
 }
 
 .InputWrapper select {
     width: 100px;
     padding: 4px 2px;
+    margin: 0px 1.25rem;
     font-size: 25px;
 }
 
@@ -79,7 +81,7 @@
     align-items: center;
 }
 
-.LabelIconWrapper span, 
+.LabelIconWrapper span,
 .ButtonAppFunction span {
     visibility: hidden;
     width: 200px;
@@ -98,7 +100,7 @@
     transition: opacity 300ms;
 }
 
-.LabelIconWrapper span::after, 
+.LabelIconWrapper span::after,
 .ButtonAppFunction span::after {
     content: "";
     position: absolute;
@@ -110,7 +112,7 @@
     border-color:  transparent transparent #555 transparent;
 }
 
-.LabelIconWrapper:hover span, 
+.LabelIconWrapper:hover span,
 .ButtonAppFunction:hover span {
     visibility: visible;
     opacity: 1;
@@ -211,10 +213,6 @@
 }
 .AlignRight button:hover{
     color: #00a8cc;
-}
-
-.AlignRight:last-child{
-    background-color: #0858B8;
 }
 
 .SubmitButton:hover{

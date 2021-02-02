@@ -22,7 +22,6 @@ import {
 import { Result } from '../../components/Analysis';
 import './AppForm.css';
 
-
 export default function AppForm() {
     const query = new URLSearchParams(useLocation().search);
     const [saved, setSaved] = useState(false);
@@ -58,11 +57,10 @@ export default function AppForm() {
     }, [saved])
 
     useEffect(() => {
-
         const queryArray = [] as any;
         const splitArray = [] as any;
         const hasParams = query.has('0a');
-        const savedForm = localStorage.getItem("form");
+        let savedForm = localStorage.getItem("form");
         if (savedForm) {
             setForm(JSON.parse(savedForm));
         }
@@ -72,14 +70,38 @@ export default function AppForm() {
             }
             return;
         } else if (!hasParams) {
+            console.log("no params or storage")
             return;
         }
-
+        const newForm = {...form};
         query.forEach((value, key) => {
-
             const check = key.match(/[^0-9]/);
             if (!check) {
                 return;
+            }
+            switch (key){
+                case 'ptage':
+                    const newAge = {...newForm.age}
+                    newAge.value = value;
+                    newForm.age = newAge;
+                    break;
+                case 'stage':
+                    const newStage = {...newForm.clinicalStage};
+                    newStage.value = value;
+                    newForm.clinicalStage = newStage;
+                    break;
+                case 'psa':
+                    const newPSA = {...newForm.psa};
+                    newPSA.value = value;
+                    newForm.psa = newPSA
+                    break;
+                case 'size':
+                    const newSize = {...newForm.prostateSize};
+                    newSize.value = value;
+                    newForm.prostateSize = newSize;
+                    break;
+                default:
+                    break;
             }
 
             switch (check[0]) {
@@ -221,6 +243,8 @@ export default function AppForm() {
                 tmpObj = {};
             }
         });
+        console.log("newForm", newForm);
+        setForm(newForm);
         setCores(splitArray);
         // eslint-disable-next-line
     }, [])
@@ -267,14 +291,12 @@ export default function AppForm() {
         const newElement = newForm[name];
         newElement.value = value;
         newForm[name] = newElement;
-
         setForm(newForm);
     };
 
     const getTotalCoresPositive = useCallback(
         () => {
             let count = 0;
-
             cores.forEach(cr => {
                 if (parseInt(cr.gleasonPrimary.value) > 2 || parseInt(cr.gleasonPrimary.value) > 2) {
                     count++;
@@ -288,15 +310,12 @@ export default function AppForm() {
     const getCountGGFourOrFive = useCallback(
         () => {
             let count = 0;
-
             cores.forEach(cr => {
                 if (parseInt(cr.gradeGroup.value) > 3) {
                     count++;
                 }
             })
-
             return count.toString();
-
         },
         [cores],
     );
@@ -304,7 +323,6 @@ export default function AppForm() {
     const getMaxGradeGroup = useCallback(
         () => {
             let maxGG = "0";
-
             cores.forEach(cr => {
                 if (parseInt(cr.gradeGroup.value) > parseInt(maxGG)) {
                     maxGG = cr.gradeGroup.value
@@ -318,13 +336,11 @@ export default function AppForm() {
     const getMaxGleasonSum = useCallback(
         () => {
             let maxGS = "0";
-
             cores.forEach(cr => {
                 if (parseInt(cr.gleasonSum.value) > parseInt(maxGS)) {
                     maxGS = cr.gleasonSum.value
                 }
             })
-
             return maxGS;
         },
         [cores],
@@ -334,13 +350,11 @@ export default function AppForm() {
     const getMaxPrimary = useCallback(
         () => {
             let maxPrimary = "0";
-
             cores.forEach(cr => {
                 if (parseInt(cr.gleasonPrimary.value) > parseInt(maxPrimary)) {
                     maxPrimary = cr.gleasonPrimary.value
                 }
             })
-
             return maxPrimary;
         },
         [cores],
@@ -349,13 +363,11 @@ export default function AppForm() {
     const getMaxSecondary = useCallback(
         () => {
             let maxSecondary = "0";
-
             cores.forEach(cr => {
                 if (parseInt(cr.gleasonSecondary.value) > parseInt(maxSecondary)) {
                     maxSecondary = cr.gleasonSecondary.value
                 }
             })
-
             return maxSecondary;
         },
         [cores],
@@ -369,7 +381,6 @@ export default function AppForm() {
                     maxInvolvedPercentage = cr.percentageInvolved.value
                 }
             })
-
             return maxInvolvedPercentage || 'NA';
         },
         [cores],
@@ -381,11 +392,9 @@ export default function AppForm() {
             const psa = parseInt(form.psa.value);
 
             const percentageCoresPositive = Math.floor((getTotalCoresPositive()) / cores.length)
-
             if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50) {
                 return INTERMEDIATE_HIGH_RISK;
             }
-
             if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
                 return INTERMEDIATE_LOW_RISK;
             }
@@ -446,7 +455,7 @@ export default function AppForm() {
             if (parseInt(form.age.value) > 49) {
                 capra++;
             }
-            // If the psa is less than six do nothing, if it is greate than six but less than 10 add one
+            // If the psa is less than six do nothing, if it is greater than six but less than 10 add one
             if ( parseInt(form.psa.value) > 6 && parseInt(form.psa.value) < 10  ) {
                 capra++;
             }
@@ -471,9 +480,7 @@ export default function AppForm() {
             if ( parseInt(corePercentagePositive) >= 34 ) {
                 capra++
             }
-
             return capra.toString()
-
         }
         , [form])
 
@@ -556,45 +563,8 @@ export default function AppForm() {
                     <PDFViewer>
                         <PDFDocument coreData={cores} resultData={result} formData={form} />
                     </PDFViewer>} */}
-                <div className="AnotherWrapper">
 
 
-                </div>
-                <div className="AlignRight">
-                    <button
-                        className="ButtonAppFunction"
-                        onClick={() => setShowConfirmation(true)}>
-                        {/* <FontAwesomeIcon icon={faTrash} /> */}
-                        Clear
-                        <span>Clear all data, including cores</span>
-                    </button>
-                    <button
-                        className="ButtonAppFunction"
-                        onClick={() => {
-                            localStorage.setItem("savedCores", "true");
-                            localStorage.setItem("cores", JSON.stringify(cores));
-                            localStorage.setItem("form", JSON.stringify(form));
-                            setSaved(true);
-                        }}>
-                            Save
-                        {/* <FontAwesomeIcon icon={faSave} /> */}
-                        <span>Save your data to browser</span>
-                    </button>
-
-                    <button
-                        onClick={() => setShowAnalysis(true)}
-                        type="button"
-                        className="ButtonAppFunction"
-                        style={{backgroundColor: "#0858B8", color: "#fff"}}
-                    >
-                        Analysis
-                        {/* <FontAwesomeIcon icon={faCalculator} /> */}
-                        <span>Get Analysis</span>
-                    </button>
-
-
-
-                </div>
 
                 <div className="ListWrapper">
                     {Object.keys(form).map((k, index) => {
@@ -652,6 +622,34 @@ export default function AppForm() {
                             </div>
                         );
                     })}
+                </div>
+                <div className="AlignRight">
+                    <button
+                        className="ButtonAppFunction"
+                        onClick={() => setShowConfirmation(true)}>
+                        Clear
+                        <span>Clear all data, including cores</span>
+                    </button>
+                    <button
+                        className="ButtonAppFunction"
+                        onClick={() => {
+                            localStorage.setItem("savedCores", "true");
+                            localStorage.setItem("cores", JSON.stringify(cores));
+                            localStorage.setItem("form", JSON.stringify(form));
+                            setSaved(true);
+                        }}>
+                        Save
+                        <span>Save your data to browser</span>
+                    </button>
+                    <button
+                        onClick={() => setShowAnalysis(true)}
+                        type="button"
+                        className="ButtonAppFunction"
+                        style={{backgroundColor: "#0858B8", color: "#fff"}}
+                    >
+                        Analysis
+                        <span>Get Analysis</span>
+                    </button>
                 </div>
             </div>
             <CoreDataTable
