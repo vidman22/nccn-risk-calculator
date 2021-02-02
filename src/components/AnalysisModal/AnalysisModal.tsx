@@ -45,7 +45,7 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
 
             return window.location.origin + '/?' + pattern;
 
-        }, [cores])
+        }, [cores, form])
 
     useEffect(() => {
         setLink(generateUrl());

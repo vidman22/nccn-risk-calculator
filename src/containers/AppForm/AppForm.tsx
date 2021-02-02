@@ -243,7 +243,6 @@ export default function AppForm() {
                 tmpObj = {};
             }
         });
-        console.log("newForm", newForm);
         setForm(newForm);
         setCores(splitArray);
         // eslint-disable-next-line

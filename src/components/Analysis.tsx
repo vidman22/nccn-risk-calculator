@@ -48,7 +48,7 @@ const Analisys: React.FC<Props> = ({ result }: Props) => {
 
     return (
         <div className="AnalysisContainer">
-           
+
             <div className="ResultContainer">
                 <p>
                     <span>Percentage of Cores Positive: </span>{result.corePercentagePositive}%
