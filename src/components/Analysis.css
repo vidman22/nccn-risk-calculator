@@ -12,7 +12,7 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    height: 45vh;
+    height: 33vh;
 }
 
 .ResultContainer p {
@@ -20,8 +20,64 @@
 }
 
 .ResultContainer span{
-    font-weight: bolder;   
+    font-weight: bolder;
 }
+
+.RiskWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: .25rem;
+    width: 92%;
+    margin: auto;
+}
+
+.RiskWrapper h4{
+    margin: .2rem 0;
+}
+
+.VeryHigh, .High, .Int, .IntUnfavorable, .IntFavorable {
+    display: flex;
+    flex-direction: column;
+    padding: .5rem;
+    text-align: left;
+}
+
+.High{
+
+}
+
+.Int {
+
+}
+
+.IntFavorable{
+
+}
+
+.IntUnfavorable {
+
+}
+.Factor{
+    color: #f1ff00;
+    font-weight: bold;
+    padding: .25rem;
+}
+.NonFactor {
+    color: #555555;
+    padding: .25rem;
+}
+
+.ThisRisk {
+    background: #4e48e9;
+    color: #fff;
+}
+.ThisRisk > .NonFactor{
+    color: white;
+}
+
+
 
 @media only screen and (max-width: 1050px){
     .ResultContainer{
