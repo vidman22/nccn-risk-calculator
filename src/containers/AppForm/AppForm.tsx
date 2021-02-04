@@ -445,7 +445,6 @@ export default function AppForm() {
                 return VERY_LOW_RISK;
             }
             return risk;
-
         }
         , [cores, form, highRiskFactors, intRiskFactors, vHighRiskFactors])
 
@@ -485,7 +484,6 @@ export default function AppForm() {
             if (parseInt(corePercentagePositive) >= 34) {
                 capra++
             }
-            console.log("final capra", capra);
             return capra.toString()
         }
         , [form])
@@ -493,7 +491,6 @@ export default function AppForm() {
 
     const calculateAnalysis = useCallback(
         () => {
-
             let corePercentagePositive = 'NA';
             let psaDensity = 'NA';
             const totalCoresPositive = getTotalCoresPositive();
@@ -505,27 +502,17 @@ export default function AppForm() {
             if (form.psa.value && form.prostateSize.value) {
                 psaDensity = (Math.round(parseFloat(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
             }
-
             const maxPrimary = getMaxPrimary();
-
             const maxSecondary = getMaxSecondary();
-
             const maxGradeGroup = getMaxGradeGroup();
-
             const ggFourAndFiveCount = getCountGGFourOrFive();
-
             const maxInvolvedPercentage = getMaxInvolvedPercentage();
-
             const maxGleasonSum = getMaxGleasonSum();
-
             let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
-
             let capra = calculateCapra(maxPrimary, maxSecondary, corePercentagePositive)
-
             if (risk === INTERMEDIATE_RISK) {
                 risk = calculateIntermediateRisk(parseInt(maxGradeGroup));
             }
-
             setResult({
                 corePercentagePositive,
                 maxInvolvedPercentage,
@@ -538,11 +525,11 @@ export default function AppForm() {
                 risk,
                 capra,
             });
-        }, [form, cores, calculateIntermediateRisk, getMaxPrimary, getMaxSecondary, getMaxGleasonSum, calculateRisk, getCountGGFourOrFive, getMaxGradeGroup, getMaxInvolvedPercentage, getTotalCoresPositive, calculateCapra]);
+        }, [form, cores,calculateIntermediateRisk, calculateRisk, getMaxPrimary, getMaxSecondary, getMaxGleasonSum, getCountGGFourOrFive, getMaxGradeGroup, getMaxInvolvedPercentage, getTotalCoresPositive, calculateCapra]);
 
-    useEffect(() => {
-        calculateAnalysis()
-    }, [calculateAnalysis])
+    // useEffect(() => {
+    //     calculateAnalysis()
+    // }, [calculateAnalysis])
 
     return (
         <div className="Container">
@@ -657,6 +644,7 @@ export default function AppForm() {
                     <button
                         onClick={() => {
                             // setShowPdf(true)
+                            calculateAnalysis()
                             setShowAnalysis(true)
                         }}
                         type="button"
