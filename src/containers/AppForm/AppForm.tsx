@@ -6,8 +6,8 @@ import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../../components/AnalysisModal/AnalysisModal';
 import InfoModal from '../../components/InfoModal/InfoModal';
-import {PDFViewer} from '@react-pdf/renderer';
-import PDFDocument from "../PDFDocument/PDFDocument";
+// import {PDFViewer} from '@react-pdf/renderer';
+// import PDFDocument from "../PDFDocument/PDFDocument";
 import {coreData} from '../../data/coreData';
 import {formData, FormData} from '../../data/formData';
 import {
@@ -87,7 +87,7 @@ export default function AppForm() {
         highRiskFactors: {label: "Has 2-3 high risk factors", value: false},
     });
 
-    const [showPdf, setShowPdf] = useState(false);
+    // const [showPdf, setShowPdf] = useState(false);
 
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -565,20 +565,20 @@ export default function AppForm() {
                 </div>
                 }
 
-                {showPdf &&
-                    <PDFViewer>
-                        <PDFDocument
-                            highRiskFactors={highRiskFactors}
-                            intRiskFactors={intRiskFactors}
-                            vHighRiskFactors={vHighRiskFactors}
-                            favorableRiskFactors={favorableRiskFactors}
-                            unfavorableRiskFactors={unfavorableRiskFactors}
-                            riskAssessment={result.risk}
-                            coreData={cores}
-                            resultData={result}
-                            formData={form}
-                        />
-                    </PDFViewer>}
+                {/*{showPdf &&*/}
+                {/*    <PDFViewer>*/}
+                {/*        <PDFDocument*/}
+                {/*            highRiskFactors={highRiskFactors}*/}
+                {/*            intRiskFactors={intRiskFactors}*/}
+                {/*            vHighRiskFactors={vHighRiskFactors}*/}
+                {/*            favorableRiskFactors={favorableRiskFactors}*/}
+                {/*            unfavorableRiskFactors={unfavorableRiskFactors}*/}
+                {/*            riskAssessment={result.risk}*/}
+                {/*            coreData={cores}*/}
+                {/*            resultData={result}*/}
+                {/*            formData={form}*/}
+                {/*        />*/}
+                {/*    </PDFViewer>}*/}
 
                 <div className="ListWrapper">
                     {Object.keys(form).map((k, index) => {
@@ -656,8 +656,8 @@ export default function AppForm() {
                     </button>
                     <button
                         onClick={() => {
-                            setShowPdf(true)
-                            // setShowAnalysis(true)
+                            // setShowPdf(true)
+                            setShowAnalysis(true)
                         }}
                         type="button"
                         className="ButtonAppFunction"
