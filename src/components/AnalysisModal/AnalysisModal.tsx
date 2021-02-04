@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Result } from '../Analysis';
-import { faPrint } from '@fortawesome/free-solid-svg-icons';
+import React, {useCallback, useEffect, useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCopy, faPrint, faTimes} from '@fortawesome/free-solid-svg-icons';
+import Analysis, {Result} from '../Analysis';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import PDFDocument from '../../containers/PDFDocument/PDFDocument';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { FormData } from '../../data/formData';
-import Analysis from '../Analysis';
+import {PDFDownloadLink} from '@react-pdf/renderer';
+import {FormData} from '../../data/formData';
 import RiskFactorDisplay from '../RiskFactorDisplay';
 import './AnalysisModal.css';
-import { CoreData } from '../../data/coreData';
-import {HighRiskFactor, IntRiskFactor, VHighRiskFactor} from "../../containers/AppForm/AppForm";
+import {CoreData} from '../../data/coreData';
+import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VHighRiskFactor} from "../../containers/AppForm/AppForm";
 
 type Props = {
     visible: boolean;
@@ -20,11 +18,24 @@ type Props = {
     form: FormData;
     onDismiss: () => void;
     intRiskFactors: IntRiskFactor;
+    favorableRiskFactors: FavorableRiskFactors;
+    unfavorableRiskFactors: FavorableRiskFactors;
     vHighRiskFactors: VHighRiskFactor;
     highRiskFactors: HighRiskFactor;
 }
 
-export default function ShareLinkModal({ visible, onDismiss, result, cores, form, intRiskFactors, vHighRiskFactors, highRiskFactors }: Props) {
+export default function ShareLinkModal({
+                                           visible,
+                                           onDismiss,
+                                           result,
+                                           cores,
+                                           form,
+                                           intRiskFactors,
+                                           vHighRiskFactors,
+                                           highRiskFactors,
+                                           favorableRiskFactors,
+                                           unfavorableRiskFactors
+                                       }: Props) {
     const [showCopied, setShowCopied] = useState(false);
     const [link, setLink] = useState('');
     const cssClasses = [
@@ -64,42 +75,59 @@ export default function ShareLinkModal({ visible, onDismiss, result, cores, form
 
     return (
         <>
-            <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;
+            <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>
+            ;
             <div className={cssClasses.join(' ')}>
                 <div className="AlignRight">
                     <button className="NewBackButton" onClick={onDismiss}>
-                        <FontAwesomeIcon icon={faTimes} />
+                        <FontAwesomeIcon icon={faTimes}/>
                     </button>
                 </div>
 
-                {showCopied &&
-                    <div className="FadeCopied">
-                        Copied
-                    </div>
-                }
-
                 <div className="AnalysisWrapper">
-                    <h2>Analysis</h2>
+                    <RiskFactorDisplay
+                        riskAssessment={result.risk}
+                        unfavorableRiskFactors={unfavorableRiskFactors}
+                        favorableRiskFactors={favorableRiskFactors}
+                        intRiskFactors={intRiskFactors}
+                        highRiskFactors={highRiskFactors}
+                        vHighRiskFactors={vHighRiskFactors}
+                    />
                     <div className="LinkContainer">
-                        <Analysis result={result} />
+                        <Analysis result={result}/>
                     </div>
-                    <RiskFactorDisplay intRiskFactors={intRiskFactors} highRiskFactors={highRiskFactors} vHighRiskFactors={vHighRiskFactors} />
                     <div style={{cursor: "pointer"}} className="LinkContainer">
                         <CopyToClipboard
                             text={link}
                             onCopy={() => setShowCopied(true)}>
                             <div className="InnerCopyFlex">
-                                <FontAwesomeIcon style={{ marginLeft: ".25rem", marginRight: "1rem" }} icon={faCopy} />
-                                <span>Click here to copy a sharable link of your data</span>
+                                <FontAwesomeIcon style={{marginLeft: ".25rem", marginRight: "1rem"}} icon={faCopy}/>
+                                {showCopied ?
+                                    <span className="FadeCopied">
+                                        Copied
+                                    </span>
+                                    :
+                                    <span>Click here to copy a sharable link of your data</span>
+                                }
                             </div>
                         </CopyToClipboard>
                     </div>
                     <div className="LinkContainer">
-                        <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form} />} fileName="nccn-risk-result.pdf">
-                            {({ blob, url, loading, error }) => (
+                        <PDFDownloadLink document={<PDFDocument
+                                                        riskAssessment={result.risk}
+                                                        unfavorableRiskFactors={unfavorableRiskFactors}
+                                                        favorableRiskFactors={favorableRiskFactors}
+                                                        intRiskFactors={intRiskFactors}
+                                                        highRiskFactors={highRiskFactors}
+                                                        vHighRiskFactors={vHighRiskFactors}
+                                                        coreData={cores}
+                                                        resultData={result}
+                                                        formData={form}/>}
+                                         fileName="nccn-risk-result.pdf">
+                            {({blob, url, loading, error}) => (
                                 <div className="InnerCopyFlex">
                                     <div className="DownloadPdfIcon">
-                                        <FontAwesomeIcon icon={faPrint} />
+                                        <FontAwesomeIcon icon={faPrint}/>
                                     </div>
                                     <span>Download PDF</span>
                                 </div>

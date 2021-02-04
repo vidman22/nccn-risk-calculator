@@ -2,7 +2,6 @@ import { FormData } from "./data/formData";
 
 
 export const parseParams: (query : URLSearchParams) => any = (query : URLSearchParams) => {
-
     const queryArray = [] as any;
 
     query.forEach((value, key) => {
@@ -142,6 +141,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                 break;
         }
     });
+    return queryArray;
 }
 
 export const parseForm: (query: URLSearchParams, form: FormData ) => FormData = ( query: URLSearchParams, form : FormData ) => {

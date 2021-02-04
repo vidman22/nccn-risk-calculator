@@ -3,7 +3,7 @@
     padding: 1rem;
     overflow-x: auto;
     white-space: nowrap;
-    width: 80%;
+    width: 90%;
     border-radius: 4px;
     margin: 1rem auto;
     color: #1f1f1f;
@@ -55,9 +55,6 @@
 }
 
 .FadeCopied{
-    position: absolute;
-    top: 20%;
-    left: 0;
     display: block;
     padding: .75rem;
     color: #fff;

@@ -26,7 +26,7 @@ export interface Result {
 type Props = {
     result: Result;
 }
-export const risk = (risk : string) => {
+export const getRisk = (risk : string) => {
     switch (risk) {
         case HIGH_RISK:
             return 'High Risk';
@@ -73,9 +73,6 @@ const Analysis: React.FC<Props> = ({ result }: Props) => {
                 </p>
                 <p>
                     <span>Max Grade Group: </span>{result.maxGradeGroup}
-                </p>
-                <p>
-                    <span>Risk: </span>{risk(result.risk)}
                 </p>
                 <p>
                     <span>CAPRA Score: </span>{result.capra}
