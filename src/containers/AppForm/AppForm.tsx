@@ -349,7 +349,7 @@ export default function AppForm() {
             }
             return 'x';
         },
-        [form, cores, getTotalCoresPositive])
+        [form, cores, getTotalCoresPositive, favorableRiskFactors, intRiskFactors, unfavorableRiskFactors])
 
     const calculateRisk = useCallback(
         (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage: string) => {
@@ -447,7 +447,7 @@ export default function AppForm() {
             return risk;
 
         }
-        , [cores, form])
+        , [cores, form, highRiskFactors, intRiskFactors, vHighRiskFactors])
 
     const calculateCapra = useCallback(
         (maxPrimary: string, maxSecondary: string, corePercentagePositive: string) => {
