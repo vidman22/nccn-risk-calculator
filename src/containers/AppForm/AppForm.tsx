@@ -6,6 +6,8 @@ import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../../components/AnalysisModal/AnalysisModal';
 import InfoModal from '../../components/InfoModal/InfoModal';
+import {PDFViewer} from '@react-pdf/renderer';
+import PDFDocument from "../PDFDocument/PDFDocument";
 import {coreData} from '../../data/coreData';
 import {formData, FormData} from '../../data/formData';
 import {
@@ -85,7 +87,7 @@ export default function AppForm() {
         highRiskFactors: {label: "Has 2-3 high risk factors", value: false},
     });
 
-    // const [showPdf, setShowPdf] = useState(false);
+    const [showPdf, setShowPdf] = useState(false);
 
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -285,7 +287,7 @@ export default function AppForm() {
     const calculateIntermediateRisk = useCallback(
         (maxGradeGroup: number) => {
             const clinicalStage = form.clinicalStage.value;
-            const psa = parseInt(form.psa.value);
+            const psa = parseFloat(form.psa.value);
 
             const newIRF = {...intRiskFactors};
             const newUF = {...unfavorableRiskFactors};
@@ -360,7 +362,7 @@ export default function AppForm() {
             //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
 
             const clinicalStage = form.clinicalStage.value;
-            const psa = parseInt(form.psa.value);
+            const psa = parseFloat(form.psa.value);
             const newVHRF = {...vHighRiskFactors};
             const newHRF = {...highRiskFactors};
             const newIRF = {...intRiskFactors};
@@ -459,17 +461,17 @@ export default function AppForm() {
                 capra++;
             }
             // If the psa is less than six do nothing, if it is greater than six but less than 10 add one
-            if (parseInt(form.psa.value) >= 6 && parseInt(form.psa.value) < 10) {
+            if (parseFloat(form.psa.value) > 6 && parseFloat(form.psa.value) < 10) {
                 capra++;
             }
             // If the psa is between 10 and 20 add two
-            if (parseInt(form.psa.value) > 10 && parseInt(form.psa.value) < 20) {
+            if (parseFloat(form.psa.value) > 10 && parseFloat(form.psa.value) < 20) {
                 capra += 2
             }
-            if (parseInt(form.psa.value) > 20 && parseInt(form.psa.value) < 30) {
+            if (parseFloat(form.psa.value) > 20 && parseFloat(form.psa.value) < 30) {
                 capra += 3
             }
-            if (parseInt(form.psa.value) > 30 && parseInt(form.psa.value) < 40) {
+            if (parseFloat(form.psa.value) > 30 && parseFloat(form.psa.value) < 40) {
                 capra += 4
             }
             if (intMaxPrimary > 3) {
@@ -483,6 +485,7 @@ export default function AppForm() {
             if (parseInt(corePercentagePositive) >= 34) {
                 capra++
             }
+            console.log("final capra", capra);
             return capra.toString()
         }
         , [form])
@@ -500,7 +503,7 @@ export default function AppForm() {
                 corePercentagePositive = Math.round(totalCoresPositive / totalCores * 100).toString();
             }
             if (form.psa.value && form.prostateSize.value) {
-                psaDensity = (Math.round(parseInt(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
+                psaDensity = (Math.round(parseFloat(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
             }
 
             const maxPrimary = getMaxPrimary();
@@ -562,10 +565,20 @@ export default function AppForm() {
                 </div>
                 }
 
-                {/* {showPdf &&
+                {showPdf &&
                     <PDFViewer>
-                        <PDFDocument coreData={cores} resultData={result} formData={form} />
-                    </PDFViewer>} */}
+                        <PDFDocument
+                            highRiskFactors={highRiskFactors}
+                            intRiskFactors={intRiskFactors}
+                            vHighRiskFactors={vHighRiskFactors}
+                            favorableRiskFactors={favorableRiskFactors}
+                            unfavorableRiskFactors={unfavorableRiskFactors}
+                            riskAssessment={result.risk}
+                            coreData={cores}
+                            resultData={result}
+                            formData={form}
+                        />
+                    </PDFViewer>}
 
                 <div className="ListWrapper">
                     {Object.keys(form).map((k, index) => {
@@ -642,7 +655,10 @@ export default function AppForm() {
                         <span>Save your data to browser</span>
                     </button>
                     <button
-                        onClick={() => setShowAnalysis(true)}
+                        onClick={() => {
+                            setShowPdf(true)
+                            // setShowAnalysis(true)
+                        }}
                         type="button"
                         className="ButtonAppFunction"
                         style={{backgroundColor: "#0858B8", color: "#fff"}}

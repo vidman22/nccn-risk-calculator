@@ -32,7 +32,7 @@ const RiskFactorDisplay = ({
             <h2>Risk Assessment: {getRisk(riskAssessment)}</h2>
             <div className="RiskWrapper">
                 <div className={veryHighClasses.join(' ')}>
-                    <h4>Very High Risk</h4>
+                    <h4>Very High Risk Factors</h4>
                     {Object.keys(vHighRiskFactors).map((k, index: number) => {
                         return (
                             <div className={vHighRiskFactors[k as keyof VHighRiskFactor].value ? "Factor" : "NonFactor"}
@@ -41,7 +41,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={highClasses.join(" ")}>
-                    <h4>High Risk</h4>
+                    <h4>High Risk Factors</h4>
                     {Object.keys(highRiskFactors).map((k, index: number) => {
                         return (
                             <div className={highRiskFactors[k as keyof HighRiskFactor].value ? "Factor" : "NonFactor"}
@@ -50,7 +50,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={intUnfavorableClasses.join(" ")}>
-                    <h4>Unfavorable Int</h4>
+                    <h4>Unfavorable Int Risk Factors</h4>
                     {Object.keys(unfavorableRiskFactors).map((k, index: number) => {
                         return (
                             <div
@@ -60,7 +60,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={intFavorableClasses.join(" ")}>
-                    <h4>Favorable Int</h4>
+                    <h4>Favorable Int Risk Factors</h4>
                     {Object.keys(favorableRiskFactors).map((k, index: number) => {
                         return (
                             <div
@@ -69,15 +69,15 @@ const RiskFactorDisplay = ({
                         )
                     })}
                 </div>
-                {/*<div className="Int">*/}
-                {/*    <h4>Intermediate</h4>*/}
-                {/*    {Object.keys(intRiskFactors).map((k: string, index: number) => {*/}
-                {/*        return (*/}
-                {/*            <div className={intRiskFactors[k as keyof IntRiskFactor].value ? "Factor" : "NonFactor"}*/}
-                {/*                 key={index + "high"}>{intRiskFactors[k as keyof IntRiskFactor].label}</div>*/}
-                {/*        )*/}
-                {/*    })}*/}
-                {/*</div>*/}
+                <div className="Int">
+                    <h4>Intermediate Risk Factors</h4>
+                    {Object.keys(intRiskFactors).map((k: string, index: number) => {
+                        return (
+                            <div className={intRiskFactors[k as keyof IntRiskFactor].value ? "Factor" : "NonFactor"}
+                                 key={index + "high"}>{intRiskFactors[k as keyof IntRiskFactor].label}</div>
+                        )
+                    })}
+                </div>
 
             </div>
         </>

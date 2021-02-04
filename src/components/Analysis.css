@@ -59,11 +59,19 @@
 .IntUnfavorable {
 
 }
+
 .Factor{
+    color: darkorange;
+    font-weight: bold;
+    padding: .25rem;
+}
+
+.ThisRisk > .Factor{
     color: #f1ff00;
     font-weight: bold;
     padding: .25rem;
 }
+
 .NonFactor {
     color: #555555;
     padding: .25rem;
@@ -73,6 +81,7 @@
     background: #4e48e9;
     color: #fff;
 }
+
 .ThisRisk > .NonFactor{
     color: white;
 }

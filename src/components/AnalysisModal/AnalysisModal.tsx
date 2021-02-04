@@ -113,7 +113,16 @@ export default function ShareLinkModal({
                         </CopyToClipboard>
                     </div>
                     <div className="LinkContainer">
-                        <PDFDownloadLink document={<PDFDocument coreData={cores} resultData={result} formData={form}/>}
+                        <PDFDownloadLink document={<PDFDocument
+                                                        riskAssessment={result.risk}
+                                                        unfavorableRiskFactors={unfavorableRiskFactors}
+                                                        favorableRiskFactors={favorableRiskFactors}
+                                                        intRiskFactors={intRiskFactors}
+                                                        highRiskFactors={highRiskFactors}
+                                                        vHighRiskFactors={vHighRiskFactors}
+                                                        coreData={cores}
+                                                        resultData={result}
+                                                        formData={form}/>}
                                          fileName="nccn-risk-result.pdf">
                             {({blob, url, loading, error}) => (
                                 <div className="InnerCopyFlex">
