@@ -92,6 +92,7 @@ export default function ShareLinkModal({
                         intRiskFactors={intRiskFactors}
                         highRiskFactors={highRiskFactors}
                         vHighRiskFactors={vHighRiskFactors}
+                        capra={result.capra}
                     />
                     <div className="LinkContainer">
                         <Analysis result={result}/>

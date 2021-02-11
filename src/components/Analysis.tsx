@@ -74,9 +74,6 @@ const Analysis: React.FC<Props> = ({ result }: Props) => {
                 <p>
                     <span>Max Grade Group: </span>{result.maxGradeGroup}
                 </p>
-                <p>
-                    <span>CAPRA Score: </span>{result.capra}
-                </p>
             </div>
         </div>
     );

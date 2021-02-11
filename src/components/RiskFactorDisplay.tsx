@@ -13,6 +13,7 @@ type Props = {
     vHighRiskFactors: VHighRiskFactor;
     highRiskFactors: HighRiskFactor;
     riskAssessment: string;
+    capra: string;
 }
 
 const RiskFactorDisplay = ({
@@ -21,7 +22,8 @@ const RiskFactorDisplay = ({
                                favorableRiskFactors,
                                unfavorableRiskFactors,
                                vHighRiskFactors,
-                               highRiskFactors
+                               highRiskFactors,
+                               capra
                            }: Props) => {
     const veryHighClasses = ['VeryHigh', riskAssessment === VERY_HIGH_RISK ? 'ThisRisk' : ''];
     const highClasses = ['High', riskAssessment === HIGH_RISK ? 'ThisRisk' : ''];
@@ -29,7 +31,8 @@ const RiskFactorDisplay = ({
     const intUnfavorableClasses = ['IntUnfavorable', riskAssessment === INTERMEDIATE_HIGH_RISK ? 'ThisRisk' : ''];
     return (
         <>
-            <h2>Risk Assessment: {getRisk(riskAssessment)}</h2>
+            <h2>NCCN Risk Stratification: {getRisk(riskAssessment)}</h2>
+            <h2>CAPRA Score: {capra}</h2>
             <div className="RiskWrapper">
                 <div className={veryHighClasses.join(' ')}>
                     <h4>Very High Risk Factors</h4>

@@ -1,15 +1,24 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {useLocation} from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import CoreDataTable from '../CoreDataTable/CoreDataTable';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../../components/AnalysisModal/AnalysisModal';
 import InfoModal from '../../components/InfoModal/InfoModal';
 // import {PDFViewer} from '@react-pdf/renderer';
 // import PDFDocument from "../PDFDocument/PDFDocument";
-import {coreData} from '../../data/coreData';
-import {formData, FormData} from '../../data/formData';
+import { coreData } from '../../data/coreData';
+import { formData, FormData } from '../../data/formData';
+import {
+    getTotalCoresPositive,
+    getCountGGFourOrFive,
+    getMaxGradeGroup,
+    getMaxGleasonSum,
+    getMaxPrimary,
+    getMaxSecondary,
+    getMaxInvolvedPercentage,
+} from '../../coreHelpers';
 import {
     HIGH_RISK,
     INTERMEDIATE_HIGH_RISK,
@@ -19,8 +28,8 @@ import {
     VERY_HIGH_RISK,
     VERY_LOW_RISK
 } from '../../data/riskConstants';
-import {Result} from '../../components/Analysis';
-import {parseForm, parseParams} from "../../helpers";
+import { Result } from '../../components/Analysis';
+import { parseForm, parseParams } from "../../helpers";
 import './AppForm.css';
 
 export interface HighRiskFactor {
@@ -57,34 +66,34 @@ export default function AppForm() {
     const [form, setForm] = useState(formData);
 
     const [intRiskFactors, setIntRiskFactors] = useState<IntRiskFactor>({
-        stage: {label: "Stage T2b-T2c", value: false},
-        gradeGroup: {label: "Grade Group 2 or 3", value: false},
-        psa: {label: "PSA 10-20 ng/ml", value: false},
+        stage: { label: "Stage T2b-T2c", value: false },
+        gradeGroup: { label: "Grade Group 2 or 3", value: false },
+        psa: { label: "PSA 10-20 ng/ml", value: false },
     });
 
     const [unfavorableRiskFactors, setUnfavorableRiskFactors] = useState<FavorableRiskFactors>({
-        fiftyPercentCoresPositive: {label: "50% or more of biopsy cores positive", value: false},
-        riskFactorNumber: {label: "Has 2 or 3 Int Risk Factors", value: false},
-        gradeGroup: {label: "Grade Group 3", value: false},
+        fiftyPercentCoresPositive: { label: "50% or more of biopsy cores positive", value: false },
+        riskFactorNumber: { label: "Has 2 or 3 Int Risk Factors", value: false },
+        gradeGroup: { label: "Grade Group 3", value: false },
     });
 
     const [favorableRiskFactors, setFavorableRiskFactors] = useState<FavorableRiskFactors>({
-        fiftyPercentCoresPositive: {label: "Less than 50% of biopsy cores positive", value: false},
-        riskFactorNumber: {label: "Has 1 Int Risk Factor", value: false},
-        gradeGroup: {label: "Grade Group 1 or 2", value: false},
+        fiftyPercentCoresPositive: { label: "Less than 50% of biopsy cores positive", value: false },
+        riskFactorNumber: { label: "Has 1 Int Risk Factor", value: false },
+        gradeGroup: { label: "Grade Group 1 or 2", value: false },
     });
 
     const [highRiskFactors, setHighRiskFactors] = useState<HighRiskFactor>({
-        stage: {label: "Stage T3a", value: false},
-        gradeGroup: {label: "Grade Group 4 or 5", value: false},
-        psa: {label: "PSA is greater than 20 ng/ml", value: false},
+        stage: { label: "Stage T3a", value: false },
+        gradeGroup: { label: "Grade Group 4 or 5", value: false },
+        psa: { label: "PSA is greater than 20 ng/ml", value: false },
     });
 
     const [vHighRiskFactors, setVHighRiskFactors] = useState<VHighRiskFactor>({
-        stage: {label: "Stage T3b - T4", value: false},
-        gradeGroup: {label: "More than 4 cores with Grade Group 4 or 5", value: false},
-        gleason: {label: "Primary Gleason has pattern 5", value: false},
-        highRiskFactors: {label: "Has 2-3 high risk factors", value: false},
+        stage: { label: "Stage T3b - T4", value: false },
+        gradeGroup: { label: "More than 4 cores with Grade Group 4 or 5", value: false },
+        gleason: { label: "Primary Gleason has pattern 5", value: false },
+        highRiskFactors: { label: "Has 2-3 high risk factors", value: false },
     });
 
     // const [showPdf, setShowPdf] = useState(false);
@@ -157,7 +166,7 @@ export default function AppForm() {
     }
 
     const clearCores = () => {
-        const newForm = {...form};
+        const newForm = { ...form };
         for (let key in newForm) {
             const newElement = newForm[key as keyof FormData];
             newElement.value = newElement.initialValue;
@@ -185,113 +194,21 @@ export default function AppForm() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         const name = e.target.name as keyof FormData;
-        const newForm = {...form};
+        const newForm = { ...form };
         const newElement = newForm[name];
         newElement.value = value;
         newForm[name] = newElement;
         setForm(newForm);
     };
 
-    const getTotalCoresPositive = useCallback(
-        () => {
-            let count = 0;
-            cores.forEach(cr => {
-                if (parseInt(cr.gleasonPrimary.value) > 2 || parseInt(cr.gleasonPrimary.value) > 2) {
-                    count++;
-                }
-            })
-            return count;
-        },
-        [cores],
-    )
-
-    const getCountGGFourOrFive = useCallback(
-        () => {
-            let count = 0;
-            cores.forEach(cr => {
-                if (parseInt(cr.gradeGroup.value) > 3) {
-                    count++;
-                }
-            })
-            return count.toString();
-        },
-        [cores],
-    );
-
-    const getMaxGradeGroup = useCallback(
-        () => {
-            let maxGG = "0";
-            cores.forEach(cr => {
-                if (parseInt(cr.gradeGroup.value) > parseInt(maxGG)) {
-                    maxGG = cr.gradeGroup.value
-                }
-            })
-            return maxGG;
-        },
-        [cores],
-    );
-
-    const getMaxGleasonSum = useCallback(
-        () => {
-            let maxGS = "0";
-            cores.forEach(cr => {
-                if (parseInt(cr.gleasonSum.value) > parseInt(maxGS)) {
-                    maxGS = cr.gleasonSum.value
-                }
-            })
-            return maxGS;
-        },
-        [cores],
-    )
-
-
-    const getMaxPrimary = useCallback(
-        () => {
-            let maxPrimary = "0";
-            cores.forEach(cr => {
-                if (parseInt(cr.gleasonPrimary.value) > parseInt(maxPrimary)) {
-                    maxPrimary = cr.gleasonPrimary.value
-                }
-            })
-            return maxPrimary;
-        },
-        [cores],
-    )
-
-    const getMaxSecondary = useCallback(
-        () => {
-            let maxSecondary = "0";
-            cores.forEach(cr => {
-                if (parseInt(cr.gleasonSecondary.value) > parseInt(maxSecondary)) {
-                    maxSecondary = cr.gleasonSecondary.value
-                }
-            })
-            return maxSecondary;
-        },
-        [cores],
-    )
-
-    const getMaxInvolvedPercentage = useCallback(
-        () => {
-            let maxInvolvedPercentage = "0";
-            cores.forEach(cr => {
-                if (parseInt(cr.percentageInvolved.value) > parseInt(maxInvolvedPercentage)) {
-                    maxInvolvedPercentage = cr.percentageInvolved.value
-                }
-            })
-            return maxInvolvedPercentage || 'NA';
-        },
-        [cores],
-    );
-
     const calculateIntermediateRisk = useCallback(
         (maxGradeGroup: number) => {
             const clinicalStage = form.clinicalStage.value;
             const psa = parseFloat(form.psa.value);
 
-            const newIRF = {...intRiskFactors};
-            const newUF = {...unfavorableRiskFactors};
-            const newF = {...favorableRiskFactors};
+            const newIRF = { ...intRiskFactors };
+            const newUF = { ...unfavorableRiskFactors };
+            const newF = { ...favorableRiskFactors };
 
             // At this stage we've already determined that the patient has at least one of the intermediate risk factors
             // We can check for the high risk factors exceeding 2-3 IRFs but don't need to check the number int risk factors
@@ -309,11 +226,11 @@ export default function AppForm() {
                 numRF++
             }
 
-            const percentageCoresPositive = Math.floor((getTotalCoresPositive()) / cores.length)
+            const percentageCoresPositive = Math.floor((getTotalCoresPositive(cores)) / cores.length)
             if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50 || numRF >= 2) {
-                const newPer = {...newUF.fiftyPercentCoresPositive};
-                const newGG = {...newUF.gradeGroup};
-                const newRF = {...newUF.riskFactorNumber}
+                const newPer = { ...newUF.fiftyPercentCoresPositive };
+                const newGG = { ...newUF.gradeGroup };
+                const newRF = { ...newUF.riskFactorNumber }
 
                 newPer.value = percentageCoresPositive > 50;
                 newGG.value = maxGradeGroup === 3;
@@ -330,9 +247,9 @@ export default function AppForm() {
             }
 
             if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
-                const newPer = {...newF.fiftyPercentCoresPositive};
-                const newGG = {...newF.gradeGroup};
-                const newRF = {...newF.riskFactorNumber};
+                const newPer = { ...newF.fiftyPercentCoresPositive };
+                const newGG = { ...newF.gradeGroup };
+                const newRF = { ...newF.riskFactorNumber };
 
                 newPer.value = percentageCoresPositive > 50;
                 newGG.value = maxGradeGroup === 1 || maxGradeGroup === 2;
@@ -349,7 +266,7 @@ export default function AppForm() {
             }
             return 'x';
         },
-        [form, cores, getTotalCoresPositive, favorableRiskFactors, intRiskFactors, unfavorableRiskFactors])
+        [form, cores, favorableRiskFactors, intRiskFactors, unfavorableRiskFactors])
 
     const calculateRisk = useCallback(
         (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage: string) => {
@@ -363,15 +280,15 @@ export default function AppForm() {
 
             const clinicalStage = form.clinicalStage.value;
             const psa = parseFloat(form.psa.value);
-            const newVHRF = {...vHighRiskFactors};
-            const newHRF = {...highRiskFactors};
-            const newIRF = {...intRiskFactors};
+            const newVHRF = { ...vHighRiskFactors };
+            const newHRF = { ...highRiskFactors };
+            const newIRF = { ...intRiskFactors };
 
             let risk = '';
             if (intMaxPrimary === 5 || intGGFourAndFiveCount > 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
-                const newGG = {...newVHRF.gradeGroup}
-                const newStage = {...newVHRF.stage}
-                const newGleason = {...newVHRF.gleason}
+                const newGG = { ...newVHRF.gradeGroup }
+                const newStage = { ...newVHRF.stage }
+                const newGleason = { ...newVHRF.gleason }
 
                 newStage.value = clinicalStage === 'T3b' || clinicalStage === 'T4';
                 newGG.value = intGGFourAndFiveCount >= 4;
@@ -386,21 +303,22 @@ export default function AppForm() {
             }
             // This means at least two of the three high risk factors that should bump it to very high risk
             if ((psa > 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa > 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa > 20 || intMaxGradeGroup > 3))) {
-                const newRF = {...newVHRF.highRiskFactors};
+                const newRF = { ...newVHRF.highRiskFactors };
 
                 newRF.value = true;
 
                 newVHRF.highRiskFactors = newRF;
 
                 setVHighRiskFactors(newVHRF);
-                if (!risk) {
+
+                if (!risk){
                     risk = VERY_HIGH_RISK;
                 }
             }
             if (psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
-                const newPSA = {...newHRF.psa};
-                const newStage = {...newHRF.stage};
-                const newGG = {...newHRF.gradeGroup};
+                const newPSA = { ...newHRF.psa };
+                const newStage = { ...newHRF.stage };
+                const newGG = { ...newHRF.gradeGroup };
 
                 newPSA.value = psa > 20;
                 newStage.value = clinicalStage === 'T3a';
@@ -411,17 +329,17 @@ export default function AppForm() {
                 newHRF.stage = newStage;
 
                 setHighRiskFactors(newHRF);
-                if (!risk) {
+                if (!risk){
                     risk = HIGH_RISK;
                 }
             }
             //this means if they have a clinical stage above T1 and T2a
             if (psa >= 10 || intMaxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
-                const newPSA = {...newIRF.psa};
-                const newStage = {...newIRF.stage};
-                const newGradeGroup = {...newIRF.gradeGroup};
+                const newPSA = { ...newIRF.psa };
+                const newStage = { ...newIRF.stage };
+                const newGradeGroup = { ...newIRF.gradeGroup };
 
-                newPSA.value = psa >= 10;
+                newPSA.value = psa >= 10 && psa < 20;
                 newStage.value = clinicalStage === 'T2b' || clinicalStage === 'T2c';
                 newGradeGroup.value = intMaxGradeGroup > 1;
 
@@ -430,8 +348,9 @@ export default function AppForm() {
                 newIRF.gradeGroup = newGradeGroup;
 
                 setIntRiskFactors(newIRF);
-                if (!risk) {
-                    risk = INTERMEDIATE_RISK;
+                risk = INTERMEDIATE_RISK;
+                if (!risk){
+                    return risk;
                 }
             }
             //the clinical stages are the only ones possible for low risk
@@ -490,10 +409,10 @@ export default function AppForm() {
 
 
     const calculateAnalysis = useCallback(
-        () => {
+        async () => {
             let corePercentagePositive = 'NA';
             let psaDensity = 'NA';
-            const totalCoresPositive = getTotalCoresPositive();
+            const totalCoresPositive = getTotalCoresPositive(cores);
             const totalCores = cores.length;
 
             if (totalCores && totalCoresPositive) {
@@ -502,12 +421,12 @@ export default function AppForm() {
             if (form.psa.value && form.prostateSize.value) {
                 psaDensity = (Math.round(parseFloat(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
             }
-            const maxPrimary = getMaxPrimary();
-            const maxSecondary = getMaxSecondary();
-            const maxGradeGroup = getMaxGradeGroup();
-            const ggFourAndFiveCount = getCountGGFourOrFive();
-            const maxInvolvedPercentage = getMaxInvolvedPercentage();
-            const maxGleasonSum = getMaxGleasonSum();
+            const maxPrimary = getMaxPrimary(cores);
+            const maxSecondary = getMaxSecondary(cores);
+            const maxGradeGroup = getMaxGradeGroup(cores);
+            const ggFourAndFiveCount = getCountGGFourOrFive(cores);
+            const maxInvolvedPercentage = getMaxInvolvedPercentage(cores);
+            const maxGleasonSum = getMaxGleasonSum(cores);
             let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
             let capra = calculateCapra(maxPrimary, maxSecondary, corePercentagePositive)
             if (risk === INTERMEDIATE_RISK) {
@@ -525,11 +444,7 @@ export default function AppForm() {
                 risk,
                 capra,
             });
-        }, [form, cores,calculateIntermediateRisk, calculateRisk, getMaxPrimary, getMaxSecondary, getMaxGleasonSum, getCountGGFourOrFive, getMaxGradeGroup, getMaxInvolvedPercentage, getTotalCoresPositive, calculateCapra]);
-
-    // useEffect(() => {
-    //     calculateAnalysis()
-    // }, [calculateAnalysis])
+        }, [form, cores, calculateIntermediateRisk, calculateRisk, calculateCapra]);
 
     return (
         <div className="Container">
@@ -541,14 +456,14 @@ export default function AppForm() {
                     onClick={() => {
                         setShowInfoModal(true)
                     }}>
-                    <FontAwesomeIcon icon={faInfoCircle}/>
+                    <FontAwesomeIcon icon={faInfoCircle} />
                     <span>How is this calculated?</span>
                 </button>
             </div>
             <div className="AppFormContainer">
                 {saved &&
-                <div className="FadeCopied">
-                    Info saved to browser
+                    <div className="FadeCopied">
+                        Info saved to browser
                 </div>
                 }
 
@@ -574,7 +489,7 @@ export default function AppForm() {
                             return (
                                 <div key={index} className="InputWrapper">
                                     <div className="LabelIconWrapper">
-                                        <FontAwesomeIcon icon={faInfoCircle}/>
+                                        <FontAwesomeIcon icon={faInfoCircle} />
                                         <label className="FormLabel">
                                             {obj.label}
                                         </label>
@@ -601,7 +516,7 @@ export default function AppForm() {
                                 key={index}
                             >
                                 <div className="LabelIconWrapper">
-                                    <FontAwesomeIcon icon={faInfoCircle}/>
+                                    <FontAwesomeIcon icon={faInfoCircle} />
                                     <label className="FormLabel">
                                         {obj.label}
                                     </label>
@@ -609,7 +524,7 @@ export default function AppForm() {
                                 </div>
                                 <input
                                     className="FormInput"
-                                    style={{width: "80px"}}
+                                    style={{ width: "80px" }}
                                     name={k}
                                     min={obj.min || ''}
                                     max={obj.max || ''}
@@ -642,14 +557,14 @@ export default function AppForm() {
                         <span>Save your data to browser</span>
                     </button>
                     <button
-                        onClick={() => {
+                        onClick={async () => {
                             // setShowPdf(true)
-                            calculateAnalysis()
+                            await calculateAnalysis()
                             setShowAnalysis(true)
                         }}
                         type="button"
                         className="ButtonAppFunction"
-                        style={{backgroundColor: "#0858B8", color: "#fff"}}
+                        style={{ backgroundColor: "#0858B8", color: "#fff" }}
                     >
                         Analysis
                         <span>Get Analysis</span>
@@ -677,20 +592,20 @@ export default function AppForm() {
                 />
             )}
             {showInfoModal &&
-            <InfoModal
-                visible={showInfoModal}
-                onDismiss={() => setShowInfoModal(false)}
-            />
+                <InfoModal
+                    visible={showInfoModal}
+                    onDismiss={() => setShowInfoModal(false)}
+                />
             }
             {showConfirmation &&
-            <ConfirmationModal
-                visible={showConfirmation}
-                onDismiss={() => setShowConfirmation(false)}
-                confirmAction={() => {
-                    clearCores();
-                    setShowConfirmation(false);
-                }}
-            />
+                <ConfirmationModal
+                    visible={showConfirmation}
+                    onDismiss={() => setShowConfirmation(false)}
+                    confirmAction={() => {
+                        clearCores();
+                        setShowConfirmation(false);
+                    }}
+                />
             }
 
         </div>
