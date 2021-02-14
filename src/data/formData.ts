@@ -1,16 +1,28 @@
+import {
+    T1,
+    T1c,
+    T2a,
+    T2b,
+    T2c,
+    T3a,
+    T3b,
+    T4,
+} from './riskConstants';
+
 type Validation = {
     touched: boolean;
     error: string;
     msg: string;
 }
 
+export type ClinicalStage = 'T1' | 'T1c' | 'T2a' | 'T2b' | 'T2c' | 'T3a' | 'T3b' | 'T4';
+
 export interface FormValue {
     value: string;
     initialValue: string;
     type: string;
     step?: string;
-    validation: Validation;
-    options?: string[];
+    options?: ClinicalStage[];
     label: string;
     min: string;
     max: string;
@@ -61,7 +73,15 @@ export const formData = {
         value: 'T1c',
         initialValue: 'T1c',
         type: "select",
-        options: ['T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4'],
+        options: [
+            T1,
+            T1c,
+            T2a,
+            T2b,
+            T2c,
+            T3a,
+            T3b,
+            T4],
         validation: {
             touched: false,
             error: "",

@@ -124,19 +124,6 @@ const MyDocument = ({
         <Document>
             <Page size="LETTER" style={styles.page}>
                 <Text style={{alignSelf: 'center', marginTop: '20'}}>NCCN Risk Calculation</Text>
-
-                <View style={styles.section} wrap={false}>
-                    <Text>Patient</Text>
-                    <View style={styles.section}>
-                        <View style={{...styles.header, padding: 4, borderBottom: '0'}}>
-                            <Text>Age: {formData.age.value || "0"}</Text>
-                            <Text>PSA: {formData.psa.value || "0"}</Text>
-                            <Text>Clinical Stage: {formData.clinicalStage.value || "0"}</Text>
-                            <Text>Prostate Size: {formData.prostateSize.value || "0"}</Text>
-                        </View>
-                    </View>
-                </View>
-
                 <View style={styles.section} wrap={false}>
                     <Text>{getRisk(riskAssessment)}</Text>
                     <View style={veryHighActive ? styles.active : styles.riskBlock}>
@@ -208,6 +195,18 @@ const MyDocument = ({
                                     key={index + "int"}>{veryLowRiskFactors[k as keyof VeryLowRiskFactor].label}</Text>
                             )
                         })}
+                    </View>
+                </View>
+
+                <View style={styles.section} wrap={false}>
+                    <Text>Patient</Text>
+                    <View style={styles.section}>
+                        <View style={{...styles.header, padding: 4, borderBottom: '0'}}>
+                            <Text>Age: {formData.age.value || "0"}</Text>
+                            <Text>PSA: {formData.psa.value || "0"}</Text>
+                            <Text>Clinical Stage: {formData.clinicalStage.value || "0"}</Text>
+                            <Text>Prostate Size: {formData.prostateSize.value || "0"}</Text>
+                        </View>
                     </View>
                 </View>
 

@@ -9,7 +9,7 @@ import InfoModal from '../../components/InfoModal/InfoModal';
 // import {PDFViewer} from '@react-pdf/renderer';
 // import PDFDocument from "../PDFDocument/PDFDocument";
 import { coreData } from '../../data/coreData';
-import { formData, FormData } from '../../data/formData';
+import { formData, FormData, ClinicalStage } from '../../data/formData';
 import {
     getTotalCoresPositive,
     getCountGGFourOrFive,
@@ -24,6 +24,16 @@ import { Result } from '../../components/Analysis';
 import { parseForm, parseParams } from '../../helpers';
 import { calculateNumHighRisk, calculateNumIntRiskFactors, calculateRisk, HighRiskParams, calculateIntermediateRisk, calculateCapra } from '../../riskHelpers';
 import './AppForm.css';
+import {
+    T1,
+    T1c,
+    T2a,
+    T2b,
+    T2c,
+    T3a,
+    T3b,
+    T4,
+} from '../../data/riskConstants';
 
 export interface HighRiskFactor {
     psa: { label: string, value: boolean };
@@ -59,7 +69,7 @@ export interface FavorableRiskFactors {
 }
 
 type VeryLowRiskParams = {
-    clinicalStage: string;
+    clinicalStage: ClinicalStage;
     psa: number;
     maxGradeGroup: number;
     psaDensity: number;
@@ -68,7 +78,7 @@ type VeryLowRiskParams = {
 }
 
 type VeryHighParams = {
-    clinicalStage: string;
+    clinicalStage: ClinicalStage;
     ggFourAndFiveCount: number;
     maxPrimary: number;
     maxGradeGroup: number;
@@ -255,7 +265,7 @@ export default function AppForm() {
             const newGleason = { ...newVHRF.gleason };
             const newRF = { ...newVHRF.highRiskFactors };
 
-            newStage.value = clinicalStage === 'T3b' || clinicalStage === 'T4';
+            newStage.value = clinicalStage === T3b || clinicalStage === T4;
             newGG.value = ggFourAndFiveCount >= 4;
             newGleason.value = maxPrimary === 5;
             newRF.value = calculateNumHighRisk({ clinicalStage, psa, maxGradeGroup }) >= 2;
@@ -278,7 +288,7 @@ export default function AppForm() {
             const newGG = { ...newHRF.gradeGroup };
 
             newPSA.value = psa > 20;
-            newStage.value = clinicalStage === 'T3a';
+            newStage.value = clinicalStage === T3a;
             newGG.value = maxGradeGroup > 3;
 
             newHRF.psa = newPSA;
@@ -298,7 +308,7 @@ export default function AppForm() {
             const newGradeGroup = { ...newIRF.gradeGroup };
 
             newPSA.value = psa >= 10 && psa < 20;
-            newStage.value = clinicalStage === 'T2b' || clinicalStage === 'T2c';
+            newStage.value = clinicalStage === T2b || clinicalStage === T2c;
             newGradeGroup.value = maxGradeGroup > 1;
 
             newIRF.psa = newPSA;
@@ -336,7 +346,7 @@ export default function AppForm() {
             const newGG = { ...newF.gradeGroup };
             const newRF = { ...newF.riskFactorNumber };
 
-            newPer.value = percentageCoresPositive > 50;
+            newPer.value = percentageCoresPositive < 50;
             newGG.value = maxGradeGroup === 1 || maxGradeGroup === 2;
             newRF.value = numIntRiskFactors === 1;
 
@@ -356,7 +366,7 @@ export default function AppForm() {
             const newStage = { ...newL.stage };
             const newPSA = { ...newL.psa };
             const newGG = { ...newL.gradeGroup };
-            newStage.value = (clinicalStage === 'T1' || clinicalStage === 'T2a')
+            newStage.value = (clinicalStage === T1 || clinicalStage === T2a)
             newPSA.value = psa < 10
             newGG.value = maxGradeGroup === 1;
 
@@ -379,11 +389,11 @@ export default function AppForm() {
             const newGG = { ...newVL.gradeGroup };
             const newCoresPositive = { ...newVL.coresPositive}
 
-            newStage.value = clinicalStage === 'T1c'
+            newStage.value = clinicalStage === T1c;
             newPSA.value = psa < 10
             newPSADensity.value = psaDensity < 0.15;
             newGG.value = maxGradeGroup === 1;
-            newCoresPositive.value = (totalCoresPositive >= 3 && maxInvolvedPercentage <= 50);
+            newCoresPositive.value = (totalCoresPositive <= 3 && maxInvolvedPercentage <= 50);
 
             newVL.stage = newStage;
             newVL.gradeGroup = newGG;
@@ -403,13 +413,13 @@ export default function AppForm() {
             const totalCoresPositive = getTotalCoresPositive(cores);
             const totalCores = cores.length;
             const psa = parseFloat(form.psa.value);
-            const clinicalStage = form.clinicalStage.value;
+            const clinicalStage = form.clinicalStage.value as ClinicalStage;
 
             if (totalCores && totalCoresPositive) {
                 percentageCoresPositive = Math.round(totalCoresPositive / totalCores * 100);
             }
             if (form.psa.value && form.prostateSize.value) {
-                psaDensity = (Math.round(psa / parseInt(form.prostateSize.value) * 100) / 100);
+                psaDensity = ((psa / parseInt(form.prostateSize.value) * 100) / 100);
             }
             const maxPrimary = getMaxPrimary(cores);
             const maxSecondary = getMaxSecondary(cores);
@@ -485,7 +495,7 @@ export default function AppForm() {
                 <div className="ListWrapper">
                     {Object.keys(form).map((k, index) => {
                         const obj = form[k as keyof FormData];
-                        if (obj.options) {
+                        if (form.clinicalStage) {
                             return (
                                 <div key={index} className="InputWrapper">
                                     <div className="LabelIconWrapper">
@@ -501,7 +511,7 @@ export default function AppForm() {
                                         value={obj.value}
                                         onChange={handleChange}
                                     >
-                                        {obj.options.map(op => (
+                                        {obj.options && obj.options.map(op => (
                                             <option key={op}>
                                                 {op}
                                             </option>
