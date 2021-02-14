@@ -9,7 +9,7 @@ import InfoModal from '../../components/InfoModal/InfoModal';
 // import {PDFViewer} from '@react-pdf/renderer';
 // import PDFDocument from "../PDFDocument/PDFDocument";
 import { coreData } from '../../data/coreData';
-import { formData, FormData } from '../../data/formData';
+import { formData, FormData, ClinicalStage } from '../../data/formData';
 import {
     getTotalCoresPositive,
     getCountGGFourOrFive,
@@ -19,18 +19,21 @@ import {
     getMaxSecondary,
     getMaxInvolvedPercentage,
 } from '../../coreHelpers';
-import {
-    HIGH_RISK,
-    INTERMEDIATE_HIGH_RISK,
-    INTERMEDIATE_LOW_RISK,
-    INTERMEDIATE_RISK,
-    LOW_RISK,
-    VERY_HIGH_RISK,
-    VERY_LOW_RISK
-} from '../../data/riskConstants';
+import { INTERMEDIATE_RISK } from '../../data/riskConstants';
 import { Result } from '../../components/Analysis';
-import { parseForm, parseParams } from "../../helpers";
+import { parseForm, parseParams } from '../../helpers';
+import { calculateNumHighRisk, calculateNumIntRiskFactors, calculateRisk, HighRiskParams, calculateIntermediateRisk, calculateCapra } from '../../riskHelpers';
 import './AppForm.css';
+import {
+    T1,
+    T1c,
+    T2a,
+    T2b,
+    T2c,
+    T3a,
+    T3b,
+    T4,
+} from '../../data/riskConstants';
 
 export interface HighRiskFactor {
     psa: { label: string, value: boolean };
@@ -51,10 +54,47 @@ export interface IntRiskFactor {
     gradeGroup: { label: string, value: boolean };
 }
 
+export interface VeryLowRiskFactor {
+    psa: { label: string, value: boolean };
+    psaDensity: { label: string, value: boolean };
+    stage: { label: string, value: boolean };
+    gradeGroup: { label: string, value: boolean };
+    coresPositive: { label: string, value: boolean };
+}
+
 export interface FavorableRiskFactors {
     fiftyPercentCoresPositive: { label: string, value: boolean };
     riskFactorNumber: { label: string, value: boolean };
     gradeGroup: { label: string, value: boolean };
+}
+
+type VeryLowRiskParams = {
+    clinicalStage: ClinicalStage;
+    psa: number;
+    maxGradeGroup: number;
+    psaDensity: number;
+    totalCoresPositive: number;
+    maxInvolvedPercentage: number;
+}
+
+type VeryHighParams = {
+    clinicalStage: ClinicalStage;
+    ggFourAndFiveCount: number;
+    maxPrimary: number;
+    maxGradeGroup: number;
+    psa: number;
+}
+
+type UnfavorableIntParams = {
+    numIntRiskFactors: number;
+    maxGradeGroup: number;
+    percentageCoresPositive: number;
+}
+
+type FavorableIntParams = {
+    percentageCoresPositive: number;
+    maxGradeGroup: number;
+    numIntRiskFactors: number;
 }
 
 export default function AppForm() {
@@ -64,6 +104,22 @@ export default function AppForm() {
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [form, setForm] = useState(formData);
+
+
+
+    const [veryLowRiskFactors, setVeryLowRiskFactors] = useState<VeryLowRiskFactor>({
+        stage: { label: "Stage T1c", value: false },
+        gradeGroup: { label: "Grade Group 1", value: false },
+        psa: { label: "PSA less than 10-20 ng/ml", value: false },
+        psaDensity: { label: "PSA density less than 0.15 ng/ml/g", value: false },
+        coresPositive: { label: "Fewer than 3 cores positive, each with less than 50% involved", value: false },
+    });
+
+    const [lowRiskFactors, setLowRiskFactors] = useState<IntRiskFactor>({
+        stage: { label: "Stage T1-T2a", value: false },
+        gradeGroup: { label: "Grade Group 1", value: false },
+        psa: { label: "PSA is less than 10 ng/ml", value: false },
+    });
 
     const [intRiskFactors, setIntRiskFactors] = useState<IntRiskFactor>({
         stage: { label: "Stage T2b-T2c", value: false },
@@ -201,225 +257,169 @@ export default function AppForm() {
         setForm(newForm);
     };
 
-    const calculateIntermediateRisk = useCallback(
-        (maxGradeGroup: number) => {
-            const clinicalStage = form.clinicalStage.value;
-            const psa = parseFloat(form.psa.value);
-
-            const newIRF = { ...intRiskFactors };
-            const newUF = { ...unfavorableRiskFactors };
-            const newF = { ...favorableRiskFactors };
-
-            // At this stage we've already determined that the patient has at least one of the intermediate risk factors
-            // We can check for the high risk factors exceeding 2-3 IRFs but don't need to check the number int risk factors
-            // for favorable intermediate risk
-
-            let numRF = 0;
-
-            if (maxGradeGroup === 3 || maxGradeGroup === 2) {
-                numRF++
-            }
-            if (clinicalStage === 'T2b' || clinicalStage === 'T2c') {
-                numRF++
-            }
-            if (psa >= 10) {
-                numRF++
-            }
-
-            const percentageCoresPositive = Math.floor((getTotalCoresPositive(cores)) / cores.length)
-            if (clinicalStage === 'T2b' || clinicalStage === 'T2c' || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50 || numRF >= 2) {
-                const newPer = { ...newUF.fiftyPercentCoresPositive };
-                const newGG = { ...newUF.gradeGroup };
-                const newRF = { ...newUF.riskFactorNumber }
-
-                newPer.value = percentageCoresPositive > 50;
-                newGG.value = maxGradeGroup === 3;
-                newRF.value = numRF >= 2;
-
-                newUF.riskFactorNumber = newRF;
-                newUF.gradeGroup = newGG;
-                newUF.fiftyPercentCoresPositive = newPer;
-
-                setUnfavorableRiskFactors(newUF)
-                setIntRiskFactors(newIRF);
-
-                return INTERMEDIATE_HIGH_RISK;
-            }
-
-            if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
-                const newPer = { ...newF.fiftyPercentCoresPositive };
-                const newGG = { ...newF.gradeGroup };
-                const newRF = { ...newF.riskFactorNumber };
-
-                newPer.value = percentageCoresPositive > 50;
-                newGG.value = maxGradeGroup === 1 || maxGradeGroup === 2;
-                newRF.value = numRF === 1;
-
-                newF.riskFactorNumber = newRF;
-                newF.gradeGroup = newGG;
-                newF.fiftyPercentCoresPositive = newPer;
-
-                setFavorableRiskFactors(newF)
-                setIntRiskFactors(newIRF);
-
-                return INTERMEDIATE_LOW_RISK;
-            }
-            return 'x';
-        },
-        [form, cores, favorableRiskFactors, intRiskFactors, unfavorableRiskFactors])
-
-    const calculateRisk = useCallback(
-        (maxPrimary: string, maxGradeGroup: string, ggFourAndFiveCount: string, psaDensity: string, maxInvolvedPercentage: string) => {
-
-            let intMaxPrimary = parseInt(maxPrimary);
-            let intMaxGradeGroup = parseInt(maxGradeGroup);
-            let intGGFourAndFiveCount = parseInt(ggFourAndFiveCount);
-            let intPSADensity = parseInt(psaDensity);
-            let intMaxInvolvedPercentage = parseInt(maxInvolvedPercentage);
-            //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
-
-            const clinicalStage = form.clinicalStage.value;
-            const psa = parseFloat(form.psa.value);
+    const setVeryHighRiskFactorsHelper = useCallback(
+        ({ clinicalStage, ggFourAndFiveCount, maxPrimary, psa, maxGradeGroup }: VeryHighParams) => {
             const newVHRF = { ...vHighRiskFactors };
+            const newGG = { ...newVHRF.gradeGroup };
+            const newStage = { ...newVHRF.stage };
+            const newGleason = { ...newVHRF.gleason };
+            const newRF = { ...newVHRF.highRiskFactors };
+
+            newStage.value = clinicalStage === T3b || clinicalStage === T4;
+            newGG.value = ggFourAndFiveCount >= 4;
+            newGleason.value = maxPrimary === 5;
+            newRF.value = calculateNumHighRisk({ clinicalStage, psa, maxGradeGroup }) >= 2;
+
+            newVHRF.gradeGroup = newGG;
+            newVHRF.stage = newStage;
+            newVHRF.gleason = newGleason;
+            newVHRF.highRiskFactors = newRF;
+
+            setVHighRiskFactors(newVHRF);
+        },
+        [vHighRiskFactors],
+    );
+
+    const setHighRiskFactorsHelper = useCallback(
+        ({ psa, clinicalStage, maxGradeGroup }: HighRiskParams) => {
             const newHRF = { ...highRiskFactors };
+            const newPSA = { ...newHRF.psa };
+            const newStage = { ...newHRF.stage };
+            const newGG = { ...newHRF.gradeGroup };
+
+            newPSA.value = psa > 20;
+            newStage.value = clinicalStage === T3a;
+            newGG.value = maxGradeGroup > 3;
+
+            newHRF.psa = newPSA;
+            newHRF.gradeGroup = newGG;
+            newHRF.stage = newStage;
+
+            setHighRiskFactors(newHRF);
+        },
+        [highRiskFactors],
+    );
+
+    const setIntRiskFactorsHelper = useCallback(
+        ({ psa, clinicalStage, maxGradeGroup }: HighRiskParams) => {
             const newIRF = { ...intRiskFactors };
+            const newPSA = { ...newIRF.psa };
+            const newStage = { ...newIRF.stage };
+            const newGradeGroup = { ...newIRF.gradeGroup };
 
-            let risk = '';
-            if (intMaxPrimary === 5 || intGGFourAndFiveCount > 4 || clinicalStage === 'T3b' || clinicalStage === 'T4') {
-                const newGG = { ...newVHRF.gradeGroup }
-                const newStage = { ...newVHRF.stage }
-                const newGleason = { ...newVHRF.gleason }
+            newPSA.value = psa >= 10 && psa < 20;
+            newStage.value = clinicalStage === T2b || clinicalStage === T2c;
+            newGradeGroup.value = maxGradeGroup > 1;
 
-                newStage.value = clinicalStage === 'T3b' || clinicalStage === 'T4';
-                newGG.value = intGGFourAndFiveCount >= 4;
-                newGleason.value = intMaxPrimary === 5;
+            newIRF.psa = newPSA;
+            newIRF.stage = newStage;
+            newIRF.gradeGroup = newGradeGroup;
+            setIntRiskFactors(newIRF);
+        },
+        [intRiskFactors],
+    );
 
-                newVHRF.gradeGroup = newGG;
-                newVHRF.stage = newStage;
-                newVHRF.gleason = newGleason;
+    const setUnfavorableIntRiskFactorsHelper = useCallback(
+        ({ numIntRiskFactors, maxGradeGroup, percentageCoresPositive }: UnfavorableIntParams) => {
+            const newUF = { ...unfavorableRiskFactors };
+            const newPer = { ...newUF.fiftyPercentCoresPositive };
+            const newGG = { ...newUF.gradeGroup };
+            const newRF = { ...newUF.riskFactorNumber }
 
-                setVHighRiskFactors(newVHRF);
-                risk = VERY_HIGH_RISK;
-            }
-            // This means at least two of the three high risk factors that should bump it to very high risk
-            if ((psa > 20 && (clinicalStage === 'T3a' || intMaxGradeGroup > 3)) || ((psa > 20 || clinicalStage === 'T3a') && intMaxGradeGroup > 3) || (clinicalStage === 'T3a' && (psa > 20 || intMaxGradeGroup > 3))) {
-                const newRF = { ...newVHRF.highRiskFactors };
+            newPer.value = percentageCoresPositive > 50;
+            newGG.value = maxGradeGroup === 3;
+            newRF.value = numIntRiskFactors >= 2;
 
-                newRF.value = true;
+            newUF.riskFactorNumber = newRF;
+            newUF.gradeGroup = newGG;
+            newUF.fiftyPercentCoresPositive = newPer;
 
-                newVHRF.highRiskFactors = newRF;
+            setUnfavorableRiskFactors(newUF)
+        },
+        [unfavorableRiskFactors],
+    );
 
-                setVHighRiskFactors(newVHRF);
+    const setFavorableIntRiskFactorsHelper = useCallback(
+        ({ percentageCoresPositive, numIntRiskFactors, maxGradeGroup }: FavorableIntParams) => {
+            const newF = { ...favorableRiskFactors };
+            const newPer = { ...newF.fiftyPercentCoresPositive };
+            const newGG = { ...newF.gradeGroup };
+            const newRF = { ...newF.riskFactorNumber };
 
-                if (!risk){
-                    risk = VERY_HIGH_RISK;
-                }
-            }
-            if (psa > 20 || clinicalStage === 'T3a' || intMaxGradeGroup > 3) {
-                const newPSA = { ...newHRF.psa };
-                const newStage = { ...newHRF.stage };
-                const newGG = { ...newHRF.gradeGroup };
+            newPer.value = percentageCoresPositive < 50;
+            newGG.value = maxGradeGroup === 1 || maxGradeGroup === 2;
+            newRF.value = numIntRiskFactors === 1;
 
-                newPSA.value = psa > 20;
-                newStage.value = clinicalStage === 'T3a';
-                newGG.value = intMaxGradeGroup > 3;
+            newF.riskFactorNumber = newRF;
+            newF.gradeGroup = newGG;
+            newF.fiftyPercentCoresPositive = newPer;
 
-                newHRF.psa = newPSA;
-                newHRF.gradeGroup = newGG;
-                newHRF.stage = newStage;
+            setFavorableRiskFactors(newF)
+        },
+        [favorableRiskFactors],
+    );
 
-                setHighRiskFactors(newHRF);
-                if (!risk){
-                    risk = HIGH_RISK;
-                }
-            }
-            //this means if they have a clinical stage above T1 and T2a
-            if (psa >= 10 || intMaxGradeGroup > 1 || clinicalStage === 'T2b' || clinicalStage === 'T2c' || clinicalStage === 'T3a' || clinicalStage === 'T3b' || clinicalStage === 'T4') {
-                const newPSA = { ...newIRF.psa };
-                const newStage = { ...newIRF.stage };
-                const newGradeGroup = { ...newIRF.gradeGroup };
+    const setLowRiskFactorsHelper = useCallback(
+        ({ clinicalStage, psa, maxGradeGroup }: HighRiskParams) => {
+            // Must have all of the following for very low risk, if doesn't pass then you can calculate low risk
+            const newL = { ...lowRiskFactors };
+            const newStage = { ...newL.stage };
+            const newPSA = { ...newL.psa };
+            const newGG = { ...newL.gradeGroup };
+            newStage.value = (clinicalStage === T1 || clinicalStage === T2a)
+            newPSA.value = psa < 10
+            newGG.value = maxGradeGroup === 1;
 
-                newPSA.value = psa >= 10 && psa < 20;
-                newStage.value = clinicalStage === 'T2b' || clinicalStage === 'T2c';
-                newGradeGroup.value = intMaxGradeGroup > 1;
+            newL.stage = newStage;
+            newL.gradeGroup = newGG;
+            newL.psa = newPSA;
 
-                newIRF.psa = newPSA;
-                newIRF.stage = newStage;
-                newIRF.gradeGroup = newGradeGroup;
+            setLowRiskFactors(newL);
 
-                setIntRiskFactors(newIRF);
-                risk = INTERMEDIATE_RISK;
-                if (!risk){
-                    return risk;
-                }
-            }
-            //the clinical stages are the only ones possible for low risk
-            if (intPSADensity < 0.15 || cores.length >= 3 || intMaxInvolvedPercentage > 50 || clinicalStage === 'T1' || clinicalStage === 'T2a') {
-                if (!risk) {
-                    risk = LOW_RISK;
-                }
-            }
-            //basically if the clinical stage is T1c
-            if (!risk) {
-                return VERY_LOW_RISK;
-            }
-            return risk;
-        }
-        , [cores, form, highRiskFactors, intRiskFactors, vHighRiskFactors])
+        },
+        [lowRiskFactors],
+    )
 
-    const calculateCapra = useCallback(
-        (maxPrimary: string, maxSecondary: string, corePercentagePositive: string) => {
+    const setVeryLowRiskFactorsHelper = useCallback(
+        ({ clinicalStage, psa, maxGradeGroup, psaDensity, totalCoresPositive, maxInvolvedPercentage } : VeryLowRiskParams) => {
+            const newVL = { ...veryLowRiskFactors };
+            const newStage = { ...newVL.stage };
+            const newPSA = { ...newVL.psa };
+            const newPSADensity = { ...newVL.psaDensity };
+            const newGG = { ...newVL.gradeGroup };
+            const newCoresPositive = { ...newVL.coresPositive}
 
-            let intMaxPrimary = parseInt(maxPrimary);
-            let inMaxSecondary = parseInt(maxSecondary);
-            const clinicalStage = form.clinicalStage.value;
-            let capra = 0;
+            newStage.value = clinicalStage === T1c;
+            newPSA.value = psa < 10
+            newPSADensity.value = psaDensity < 0.15;
+            newGG.value = maxGradeGroup === 1;
+            newCoresPositive.value = (totalCoresPositive <= 3 && maxInvolvedPercentage <= 50);
 
-            if (parseInt(form.age.value) > 49) {
-                capra++;
-            }
-            // If the psa is less than six do nothing, if it is greater than six but less than 10 add one
-            if (parseFloat(form.psa.value) > 6 && parseFloat(form.psa.value) < 10) {
-                capra++;
-            }
-            // If the psa is between 10 and 20 add two
-            if (parseFloat(form.psa.value) > 10 && parseFloat(form.psa.value) < 20) {
-                capra += 2
-            }
-            if (parseFloat(form.psa.value) > 20 && parseFloat(form.psa.value) < 30) {
-                capra += 3
-            }
-            if (parseFloat(form.psa.value) > 30 && parseFloat(form.psa.value) < 40) {
-                capra += 4
-            }
-            if (intMaxPrimary > 3) {
-                capra += 3
-            } else if (inMaxSecondary > 3) {
-                capra++
-            }
-            if (clinicalStage === 'T3a' || clinicalStage === 'T3b') {
-                capra++
-            }
-            if (parseInt(corePercentagePositive) >= 34) {
-                capra++
-            }
-            return capra.toString()
-        }
-        , [form])
+            newVL.stage = newStage;
+            newVL.gradeGroup = newGG;
+            newVL.psa = newPSA;
+            newVL.psaDensity = newPSADensity;
+            newVL.coresPositive = newCoresPositive;
 
+            setVeryLowRiskFactors(newVL);
+        },
+        [veryLowRiskFactors],
+    )
 
     const calculateAnalysis = useCallback(
         async () => {
-            let corePercentagePositive = 'NA';
-            let psaDensity = 'NA';
+            let percentageCoresPositive = 0;
+            let psaDensity = 0;
             const totalCoresPositive = getTotalCoresPositive(cores);
             const totalCores = cores.length;
+            const psa = parseFloat(form.psa.value);
+            const clinicalStage = form.clinicalStage.value as ClinicalStage;
 
             if (totalCores && totalCoresPositive) {
-                corePercentagePositive = Math.round(totalCoresPositive / totalCores * 100).toString();
+                percentageCoresPositive = Math.round(totalCoresPositive / totalCores * 100);
             }
             if (form.psa.value && form.prostateSize.value) {
-                psaDensity = (Math.round(parseFloat(form.psa.value) / parseInt(form.prostateSize.value) * 100) / 100).toString();
+                psaDensity = ((psa / parseInt(form.prostateSize.value) * 100) / 100);
             }
             const maxPrimary = getMaxPrimary(cores);
             const maxSecondary = getMaxSecondary(cores);
@@ -427,29 +427,39 @@ export default function AppForm() {
             const ggFourAndFiveCount = getCountGGFourOrFive(cores);
             const maxInvolvedPercentage = getMaxInvolvedPercentage(cores);
             const maxGleasonSum = getMaxGleasonSum(cores);
-            let risk = calculateRisk(maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage);
-            let capra = calculateCapra(maxPrimary, maxSecondary, corePercentagePositive)
+            const numIntRiskFactors = calculateNumIntRiskFactors({ maxGradeGroup, clinicalStage, psa });
+
+            setVeryHighRiskFactorsHelper({ clinicalStage, ggFourAndFiveCount, maxGradeGroup, maxPrimary, psa });
+            setHighRiskFactorsHelper({ psa, clinicalStage, maxGradeGroup });
+            setIntRiskFactorsHelper({ psa, clinicalStage, maxGradeGroup });
+            setLowRiskFactorsHelper({ clinicalStage, psa, maxGradeGroup});
+            setVeryLowRiskFactorsHelper({clinicalStage, psa, maxGradeGroup, psaDensity, totalCoresPositive, maxInvolvedPercentage})
+            setFavorableIntRiskFactorsHelper({ percentageCoresPositive, numIntRiskFactors, maxGradeGroup });
+            setUnfavorableIntRiskFactorsHelper({ percentageCoresPositive, numIntRiskFactors, maxGradeGroup });
+
+            let risk = calculateRisk({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage, psa, clinicalStage, totalCoresPositive });
+            let capra = calculateCapra({ maxPrimary, maxSecondary, percentageCoresPositive, age: parseInt(form.age.value), psa, clinicalStage })
             if (risk === INTERMEDIATE_RISK) {
-                risk = calculateIntermediateRisk(parseInt(maxGradeGroup));
+                risk = calculateIntermediateRisk({ maxGradeGroup, percentageCoresPositive, psa, numIntRiskFactors, clinicalStage });
             }
             setResult({
-                corePercentagePositive,
-                maxInvolvedPercentage,
-                psaDensity,
-                maxGleasonSum,
-                maxGradeGroup,
-                maxPrimary,
-                maxSecondary,
-                ggFourAndFiveCount,
+                corePercentagePositive: percentageCoresPositive.toString(),
+                maxInvolvedPercentage: maxInvolvedPercentage.toString(),
+                psaDensity: psaDensity.toString(),
+                maxGleasonSum: maxGleasonSum.toString(),
+                maxGradeGroup: maxGradeGroup.toString(),
+                maxPrimary: maxPrimary.toString(),
+                maxSecondary: maxSecondary.toString(),
+                ggFourAndFiveCount: ggFourAndFiveCount.toString(),
                 risk,
                 capra,
             });
-        }, [form, cores, calculateIntermediateRisk, calculateRisk, calculateCapra]);
+        }, [form, cores, setVeryLowRiskFactorsHelper, setLowRiskFactorsHelper, setIntRiskFactorsHelper, setFavorableIntRiskFactorsHelper, setHighRiskFactorsHelper, setUnfavorableIntRiskFactorsHelper, setVeryHighRiskFactorsHelper]);
 
     return (
         <div className="Container">
             <div className="TitleWrapper">
-                <h1>NCCN Risk Nomogram</h1>
+                <h1>Prostate Cancer Risk Nomogram</h1>
 
                 <button
                     className="LabelIconAppFunction"
@@ -485,7 +495,7 @@ export default function AppForm() {
                 <div className="ListWrapper">
                     {Object.keys(form).map((k, index) => {
                         const obj = form[k as keyof FormData];
-                        if (obj.options) {
+                        if (form.clinicalStage) {
                             return (
                                 <div key={index} className="InputWrapper">
                                     <div className="LabelIconWrapper">
@@ -501,7 +511,7 @@ export default function AppForm() {
                                         value={obj.value}
                                         onChange={handleChange}
                                     >
-                                        {obj.options.map(op => (
+                                        {obj.options && obj.options.map(op => (
                                             <option key={op}>
                                                 {op}
                                             </option>
@@ -589,6 +599,8 @@ export default function AppForm() {
                     vHighRiskFactors={vHighRiskFactors}
                     favorableRiskFactors={favorableRiskFactors}
                     unfavorableRiskFactors={unfavorableRiskFactors}
+                    lowRiskFactors={lowRiskFactors}
+                    veryLowRiskFactors={veryLowRiskFactors}
                 />
             )}
             {showInfoModal &&
@@ -607,7 +619,6 @@ export default function AppForm() {
                     }}
                 />
             }
-
         </div>
     );
 }

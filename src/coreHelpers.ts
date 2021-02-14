@@ -17,7 +17,7 @@ export const getCountGGFourOrFive = (cores : CoreData[]) =>{
                 count++;
             }
         })
-        return count.toString();
+        return count;
     };
 
 export const getMaxGradeGroup = (cores : CoreData[]) => {
@@ -27,7 +27,7 @@ export const getMaxGradeGroup = (cores : CoreData[]) => {
                 maxGG = cr.gradeGroup.value
             }
         })
-        return maxGG;
+        return parseInt(maxGG);
     };
 
 export const getMaxGleasonSum = (cores : CoreData[]) => {
@@ -37,7 +37,7 @@ export const getMaxGleasonSum = (cores : CoreData[]) => {
                 maxGS = cr.gleasonSum.value
             }
         })
-        return maxGS;
+        return parseInt(maxGS);
     };
 
 
@@ -48,7 +48,7 @@ export const getMaxPrimary = (cores : CoreData[]) => {
                 maxPrimary = cr.gleasonPrimary.value
             }
         })
-        return maxPrimary;
+        return parseInt(maxPrimary);
     };
 
 export const getMaxSecondary = (cores : CoreData[]) =>{
@@ -58,15 +58,15 @@ export const getMaxSecondary = (cores : CoreData[]) =>{
                 maxSecondary = cr.gleasonSecondary.value
             }
         })
-        return maxSecondary;
+        return parseInt(maxSecondary);
     };
 
 export const getMaxInvolvedPercentage = (cores : CoreData[]) => {
-        let maxInvolvedPercentage = "0";
+        let maxInvolvedPercentage = 0;
         cores.forEach(cr => {
-            if (parseInt(cr.percentageInvolved.value) > parseInt(maxInvolvedPercentage)) {
-                maxInvolvedPercentage = cr.percentageInvolved.value
+            if (parseInt(cr.percentageInvolved.value) > maxInvolvedPercentage) {
+                maxInvolvedPercentage = parseInt(cr.percentageInvolved.value);
             }
         })
-        return maxInvolvedPercentage || 'NA';
+        return maxInvolvedPercentage;
 };
