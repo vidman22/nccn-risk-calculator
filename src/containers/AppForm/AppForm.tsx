@@ -495,7 +495,7 @@ export default function AppForm() {
                 <div className="ListWrapper">
                     {Object.keys(form).map((k, index) => {
                         const obj = form[k as keyof FormData];
-                        if (form.clinicalStage) {
+                        if (obj.options) {
                             return (
                                 <div key={index} className="InputWrapper">
                                     <div className="LabelIconWrapper">
@@ -511,7 +511,7 @@ export default function AppForm() {
                                         value={obj.value}
                                         onChange={handleChange}
                                     >
-                                        {obj.options && obj.options.map(op => (
+                                        {obj.options.map(op => (
                                             <option key={op}>
                                                 {op}
                                             </option>
