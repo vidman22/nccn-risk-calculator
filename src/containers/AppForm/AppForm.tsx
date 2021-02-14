@@ -428,7 +428,8 @@ export default function AppForm() {
             const maxInvolvedPercentage = getMaxInvolvedPercentage(cores);
             const maxGleasonSum = getMaxGleasonSum(cores);
             const numIntRiskFactors = calculateNumIntRiskFactors({ maxGradeGroup, clinicalStage, psa });
-
+            const numHighRiskFactors = calculateNumHighRisk({ clinicalStage, psa, maxGradeGroup });
+            
             setVeryHighRiskFactorsHelper({ clinicalStage, ggFourAndFiveCount, maxGradeGroup, maxPrimary, psa });
             setHighRiskFactorsHelper({ psa, clinicalStage, maxGradeGroup });
             setIntRiskFactorsHelper({ psa, clinicalStage, maxGradeGroup });
@@ -437,7 +438,7 @@ export default function AppForm() {
             setFavorableIntRiskFactorsHelper({ percentageCoresPositive, numIntRiskFactors, maxGradeGroup });
             setUnfavorableIntRiskFactorsHelper({ percentageCoresPositive, numIntRiskFactors, maxGradeGroup });
 
-            let risk = calculateRisk({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage, psa, clinicalStage, totalCoresPositive });
+            let risk = calculateRisk({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage, psa, clinicalStage, totalCoresPositive, numHighRiskFactors });
             let capra = calculateCapra({ maxPrimary, maxSecondary, percentageCoresPositive, age: parseInt(form.age.value), psa, clinicalStage })
             if (risk === INTERMEDIATE_RISK) {
                 risk = calculateIntermediateRisk({ maxGradeGroup, percentageCoresPositive, psa, numIntRiskFactors, clinicalStage });

@@ -51,16 +51,17 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         &emsp;
                         The Nomogram is only designed for men with localized prostate cancer, Stage T1 through T4.
                         The Nomogram is not for men with advanced disease Stage N1 positive lymph nodes, and/or
-                        </p>
-                    <p>
-                        &emsp;
                         Stage M1 distant metastasis. Those men are at very high risk and should find a team of
                         prostate cancer specialists to aggressively deal with their cancer. The team should include a
                         Urologic Surgical Oncologist, a Radiation Oncologist, and a Medical Oncologist.
+                        </p>
+                    <p>
+                        &emsp;
                         For men believed to have localized disease, prostate cancer treatment should be proportional
-                        to the cancer diagnosis risk stratification. Very low risk men probably do not need treated, at
-                        least not until the cancer shows signs of becoming more aggressive. That avoids or delays
-                        treatment side effects that reduce quality of life.
+                        to the cancer diagnosis risk stratification. Those diagnosed with Very low risk stratification
+                        probably do not need treated, at least not until Active Surveillance indicates the cancer shows
+                        signs of becoming more aggressive. That avoids or delays treatment side effects that reduce
+                        quality of life.
                         </p>
 
                     <div>
@@ -76,20 +77,30 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         </ol>
                     </div>
                     <div>
-
+                    &emsp;
                         Some men will be diagnosed with a very aggressive variant of prostate cancer that grows
                         quickly, has the potential to spread around the body, and is life threatening. Those aggressive
                         cancers may have better prognosis with multiple, aggressive therapies, applied early. Those
-                        high risk men accept the treatment side effects risks in hopes of cure or at least long term
+                        Very High Risk men accept the treatment side effects in hopes of cure or at least long term
                         prostate cancer control.
+                        <br />
+                        &emsp;
+                        Patients with Intermediate Risk have a more difficult treatment decision because
+                        IntermediatIntermediate Risk has more options and personal preferences to consider and
+                        discuss with their doctors. Additional genomic testing may assist with the decision making
+                        about cancer risk and treatment aggressiveness.
+                        <br />
+                        &emsp;
                         With accurate risk stratification, the patient and his doctors can make informed treatment
-                        decisions to control the cancer with the least side effects.
-                        Diagnosis Data Requirements Entered Into The Nomogram
+                        decisions to control the cancer with the fewest side effects.
+                        <br />
+                        <br />
+                        <strong>Diagnosis Data Requirements Entered into The Nomogram</strong>
 
                     <ol>
-                            <li>AGE at the time of diagnosis</li>
-                            <li>PSA at the time of diagnosis</li>
-                            <li>CLINICAL STAGE Clinical Stage refers to where cancer is in and around the prostate,
+                            <li><strong>AGE</strong> at the time of diagnosis</li>
+                            <li><strong>PSA</strong> at the time of diagnosis</li>
+                            <li><strong>CLINICAL STAGE</strong> Clinical Stage refers to where cancer is in and around the prostate,
                             as determined by the Digital Rectal Exam (DRE) that is typically performed by the
                             urologist who determines the diagnosis. Ask the doctor or phone the doctor’s office to
                             obtain the Clinical Stage. Note: biopsy and imaging staging is not included in Clinical
@@ -115,20 +126,20 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                                     </tbody>
                                 </table>
                             </li>
-                            <li>PROSTATE SIZE Measured in cubic centimeters (cc) or milliliters (ml). Important for
+                            <li><strong>PROSTATE SIZE</strong> Measured in cubic centimeters (cc) or milliliters (ml), or grams (gm). This is important for
                             choosing some therapy options such as radiation, and useful for determining the PSA
                             Density calculation that predicts risk of cancer already outside the prostate. PSA
-                            density = PSA/Size. If density is &gt;0.15 it raises the question from where is the extra
-                            PSA coming.
+                            density = PSA/Size. If density is &gt;0.15 it raises the question from where the extra
+                            PSA is coming.
                             Prostate size can be found in the Trans Rectal UltraSound (TRUS) report written by the
                             urologist, or from imaging tests such as the Multi Parametric MRI.
                         </li>
-                            <li>BIOPSY CORE DATA The biopsy core data may be the most important risk
+                            <li><strong>BIOPSY CORE DATA</strong> The biopsy core data may be the most important risk
                             stratification information from the original diagnosis. It can also be the most difficult to
                             understand. This Nomogram does not require the user to understand the medical
                             terms in the biopsy report, such as what is the significance of a Gleason score. It only
-                            requires the user to get a copy of the written diagnostic radiologist’s written report from
-                            the doctor and to enter the data for each biopsy core. Then the Nomogram displays
+                            requires the user to get a copy of the written report from
+                            the doctor or pathologist and to enter the data for each biopsy core. Then the Nomogram displays
                             the data in simple spreadsheet format, and the raw data from all the cores is evaluated
                             into CAPRA and NCCN risk stratification.
                             Because there is no agreed universal format for writing the biopsy report, it can be
@@ -145,17 +156,17 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             </li>
                         </ol>
                         <div>
-                            USING THE NOMOGRAM
+                            <strong>USING THE NOMOGRAM</strong>
                         <ol>
-                                <li>Enter the Age, PSA, Clinical Stage (from the DRE) and prostate size in ml or cc.</li>
+                                <li>Enter the Age, PSA, Clinical Stage (from the DRE) and prostate size in ml, cc, or gm.</li>
                                 <li>Enter the biopsy core details.</li>
-                                <li>Index is the counter of the number of cores</li>
-                                <li>Core ID is the location in the prostate from which the core was extracted. This data is not used in the CAPRA and NCCN calculations, but is interesting for better understanding where is the cancer in the prostate. The prostate is labeled Base at the top, Mid Gland in the middle, and Apex at the bottom. The position is further broken down to Left, Center, and Right.</li>
+                                <li>Index is the counter of the number of biopsy cores</li>
+                                <li>Core ID is the location in the prostate from which the core was extracted. This data is not used in the CAPRA and NCCN calculations, but is interesting for better understanding where the cancer is in the prostate. The prostate is labeled Base at the top, Mid Gland in the middle, and Apex at the bottom. The position is further broken down to Left, Center, and Right.</li>
                                 <li>Length is the measurement of the core in millimeters.</li>
-                                <li>Percent Involved is calculated by the pathologist and is an important indicator of risk the cancer may already be microscopically outside the prostate.</li>
+                                <li>Percent Involved is calculated by the pathologist and is an important indicator of risk that the cancer may already be outside the prostate.</li>
                                 <li>Primary is the primary Gleason Score from 3 to 5.</li>
                                 <li>Secondary is the secondary Gleason Score from 3 to 5.</li>
-                                <li>Sum is the Gleason sum calculated from the Primary and Secondary</li>
+                                <li>Sum is the Gleason sum calculated from the Primary and Secondary.</li>
                                 <li>Gleason Grade Group is calculated by the Nomogram</li>
                             </ol>
                         </div>

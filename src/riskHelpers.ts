@@ -26,6 +26,7 @@ type CalculateRiskParams = {
     psa: number;
     clinicalStage: ClinicalStage;
     totalCoresPositive: number;
+    numHighRiskFactors: number;
 }
 
 type CalculateIntRiskParams = {
@@ -75,7 +76,7 @@ export const calculateNumIntRiskFactors = ({ maxGradeGroup, clinicalStage, psa }
     return numRF;
 }
 
-export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage, psa, clinicalStage, totalCoresPositive }: CalculateRiskParams) => {
+export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage, psa, clinicalStage, totalCoresPositive, numHighRiskFactors }: CalculateRiskParams) => {
     //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
     console.log("maxPrimary,", maxPrimary);
     console.log("maxGradeGroup", maxGradeGroup );
@@ -92,7 +93,7 @@ export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, p
     // If MaxPrimary = 5, goto Very High Risk ; MaxPrimary
     // If NumGG4or5 &gt;=4 cores with Group 4 or Group 5 goto Very High Risk ;
     // NumGG4or5
-    if (maxPrimary === 5 || ggFourAndFiveCount >= 4 || clinicalStage === T3b || clinicalStage === T4) {
+    if (maxPrimary === 5 || ggFourAndFiveCount >= 4 || clinicalStage === T3b || clinicalStage === T4 || numHighRiskFactors >= 2 ) {
         risk = VERY_HIGH_RISK;
     }
     // intMaxGradeGroup is 4 or 5 i.e. greater than 3
