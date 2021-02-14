@@ -9,7 +9,7 @@ import {FormData} from '../../data/formData';
 import RiskFactorDisplay from '../RiskFactorDisplay';
 import './AnalysisModal.css';
 import {CoreData} from '../../data/coreData';
-import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VHighRiskFactor} from "../../containers/AppForm/AppForm";
+import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../../containers/AppForm/AppForm";
 
 type Props = {
     visible: boolean;
@@ -22,6 +22,8 @@ type Props = {
     unfavorableRiskFactors: FavorableRiskFactors;
     vHighRiskFactors: VHighRiskFactor;
     highRiskFactors: HighRiskFactor;
+    lowRiskFactors: IntRiskFactor;
+    veryLowRiskFactors: VeryLowRiskFactor;
 }
 
 export default function ShareLinkModal({
@@ -34,7 +36,9 @@ export default function ShareLinkModal({
                                            vHighRiskFactors,
                                            highRiskFactors,
                                            favorableRiskFactors,
-                                           unfavorableRiskFactors
+                                           unfavorableRiskFactors,
+                                           lowRiskFactors,
+                                           veryLowRiskFactors
                                        }: Props) {
     const [showCopied, setShowCopied] = useState(false);
     const [link, setLink] = useState('');
@@ -92,6 +96,8 @@ export default function ShareLinkModal({
                         intRiskFactors={intRiskFactors}
                         highRiskFactors={highRiskFactors}
                         vHighRiskFactors={vHighRiskFactors}
+                        lowRiskFactors={lowRiskFactors}
+                        veryLowRiskFactors={veryLowRiskFactors}
                         capra={result.capra}
                     />
                     <div className="LinkContainer">
@@ -121,6 +127,8 @@ export default function ShareLinkModal({
                                                         intRiskFactors={intRiskFactors}
                                                         highRiskFactors={highRiskFactors}
                                                         vHighRiskFactors={vHighRiskFactors}
+                                                        lowRiskFactors={lowRiskFactors}
+                                                        veryLowRiskFactors={veryLowRiskFactors}
                                                         coreData={cores}
                                                         resultData={result}
                                                         formData={form}/>}

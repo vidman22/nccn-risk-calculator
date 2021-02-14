@@ -1,10 +1,8 @@
 import React from 'react';
-import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VHighRiskFactor} from "../containers/AppForm/AppForm";
+import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../containers/AppForm/AppForm";
 import {getRisk} from './Analysis';
 import './Analysis.css';
-
 import {HIGH_RISK, INTERMEDIATE_HIGH_RISK, INTERMEDIATE_LOW_RISK, VERY_HIGH_RISK} from '../data/riskConstants';
-
 
 type Props = {
     intRiskFactors: IntRiskFactor;
@@ -12,6 +10,8 @@ type Props = {
     unfavorableRiskFactors: FavorableRiskFactors;
     vHighRiskFactors: VHighRiskFactor;
     highRiskFactors: HighRiskFactor;
+    lowRiskFactors: IntRiskFactor;
+    veryLowRiskFactors: VeryLowRiskFactor;
     riskAssessment: string;
     capra: string;
 }
@@ -23,6 +23,8 @@ const RiskFactorDisplay = ({
                                unfavorableRiskFactors,
                                vHighRiskFactors,
                                highRiskFactors,
+                               lowRiskFactors,
+                                veryLowRiskFactors,
                                capra
                            }: Props) => {
     const veryHighClasses = ['VeryHigh', riskAssessment === VERY_HIGH_RISK ? 'ThisRisk' : ''];
@@ -58,7 +60,7 @@ const RiskFactorDisplay = ({
                         return (
                             <div
                                 className={unfavorableRiskFactors[k as keyof FavorableRiskFactors].value ? "Factor" : "NonFactor"}
-                                key={index + "high"}>{unfavorableRiskFactors[k as keyof FavorableRiskFactors].label}</div>
+                                key={index + "unfavorable"}>{unfavorableRiskFactors[k as keyof FavorableRiskFactors].label}</div>
                         )
                     })}
                 </div>
@@ -68,7 +70,7 @@ const RiskFactorDisplay = ({
                         return (
                             <div
                                 className={favorableRiskFactors[k as keyof FavorableRiskFactors].value ? "Factor" : "NonFactor"}
-                                key={index + "high"}>{favorableRiskFactors[k as keyof FavorableRiskFactors].label}</div>
+                                key={index + "favorable"}>{favorableRiskFactors[k as keyof FavorableRiskFactors].label}</div>
                         )
                     })}
                 </div>
@@ -77,7 +79,25 @@ const RiskFactorDisplay = ({
                     {Object.keys(intRiskFactors).map((k: string, index: number) => {
                         return (
                             <div className={intRiskFactors[k as keyof IntRiskFactor].value ? "Factor" : "NonFactor"}
-                                 key={index + "high"}>{intRiskFactors[k as keyof IntRiskFactor].label}</div>
+                                 key={index + "intermediate"}>{intRiskFactors[k as keyof IntRiskFactor].label}</div>
+                        )
+                    })}
+                </div>
+                <div className="Int">
+                    <h4>Low Risk Factors</h4>
+                    {Object.keys(lowRiskFactors).map((k: string, index: number) => {
+                        return (
+                            <div className={lowRiskFactors[k as keyof IntRiskFactor].value ? "Factor" : "NonFactor"}
+                                 key={index + "low"}>{lowRiskFactors[k as keyof IntRiskFactor].label}</div>
+                        )
+                    })}
+                </div>
+                <div className="Int">
+                    <h4>Very Low Risk Factors</h4>
+                    {Object.keys(veryLowRiskFactors).map((k: string, index: number) => {
+                        return (
+                            <div className={veryLowRiskFactors[k as keyof VeryLowRiskFactor].value ? "Factor" : "NonFactor"}
+                                 key={index + "verylow"}>{veryLowRiskFactors[k as keyof VeryLowRiskFactor].label}</div>
                         )
                     })}
                 </div>
