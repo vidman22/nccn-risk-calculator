@@ -37,7 +37,7 @@
     margin: .2rem 0;
 }
 
-.VeryHigh, .High, .Int, .IntUnfavorable, .IntFavorable {
+.VeryHigh, .High, .Int, .IntUnfavorable, .IntFavorable, .Low, .VeryLow {
     display: flex;
     flex-direction: column;
     padding: .5rem;

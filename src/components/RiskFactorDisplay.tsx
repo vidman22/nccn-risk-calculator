@@ -2,7 +2,7 @@ import React from 'react';
 import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../containers/AppForm/AppForm";
 import {getRisk} from './Analysis';
 import './Analysis.css';
-import {HIGH_RISK, INTERMEDIATE_HIGH_RISK, INTERMEDIATE_LOW_RISK, VERY_HIGH_RISK} from '../data/riskConstants';
+import {HIGH_RISK, INTERMEDIATE_HIGH_RISK, INTERMEDIATE_LOW_RISK, LOW_RISK, VERY_HIGH_RISK, VERY_LOW_RISK} from '../data/riskConstants';
 
 type Props = {
     intRiskFactors: IntRiskFactor;
@@ -31,6 +31,8 @@ const RiskFactorDisplay = ({
     const highClasses = ['High', riskAssessment === HIGH_RISK ? 'ThisRisk' : ''];
     const intFavorableClasses = ['IntFavorable', riskAssessment === INTERMEDIATE_LOW_RISK ? 'ThisRisk' : ''];
     const intUnfavorableClasses = ['IntUnfavorable', riskAssessment === INTERMEDIATE_HIGH_RISK ? 'ThisRisk' : ''];
+    const lowRiskClasses = ['Low', riskAssessment === LOW_RISK ? 'ThisRisk' : ''];
+    const veryLowRiskClasses = ['VeryLow', riskAssessment === VERY_LOW_RISK ? 'ThisRisk' : ''];
     return (
         <>
             <h2>NCCN Risk Stratification: {getRisk(riskAssessment)}</h2>
@@ -83,7 +85,7 @@ const RiskFactorDisplay = ({
                         )
                     })}
                 </div>
-                <div className="Int">
+                <div className={lowRiskClasses.join(" ")}>
                     <h4>Low Risk Factors</h4>
                     {Object.keys(lowRiskFactors).map((k: string, index: number) => {
                         return (
@@ -92,7 +94,7 @@ const RiskFactorDisplay = ({
                         )
                     })}
                 </div>
-                <div className="Int">
+                <div className={veryLowRiskClasses.join(" ")}>
                     <h4>Very Low Risk Factors</h4>
                     {Object.keys(veryLowRiskFactors).map((k: string, index: number) => {
                         return (

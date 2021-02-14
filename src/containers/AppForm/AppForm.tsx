@@ -419,7 +419,7 @@ export default function AppForm() {
                 percentageCoresPositive = Math.round(totalCoresPositive / totalCores * 100);
             }
             if (form.psa.value && form.prostateSize.value) {
-                psaDensity = ((psa / parseInt(form.prostateSize.value) * 100) / 100);
+                psaDensity = ( Math.round(psa / parseInt(form.prostateSize.value) * 100) / 100);
             }
             const maxPrimary = getMaxPrimary(cores);
             const maxSecondary = getMaxSecondary(cores);

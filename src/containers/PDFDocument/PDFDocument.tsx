@@ -4,7 +4,7 @@ import {FormData} from '../../data/formData';
 import {Document, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
 import {getRisk, Result} from '../../components/Analysis';
 import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../AppForm/AppForm";
-import {HIGH_RISK, INTERMEDIATE_HIGH_RISK, INTERMEDIATE_LOW_RISK, LOW_RISK, VERY_HIGH_RISK} from "../../data/riskConstants";
+import {HIGH_RISK, INTERMEDIATE_HIGH_RISK, INTERMEDIATE_LOW_RISK, LOW_RISK, VERY_HIGH_RISK, VERY_LOW_RISK} from "../../data/riskConstants";
 
 const styles = StyleSheet.create({
     page: {
@@ -116,7 +116,7 @@ const MyDocument = ({
     const lowActive = riskAssessment === LOW_RISK;
     const lowItemStyleActive = lowActive ? [ styles.riskItemActive, styles.riskItem, { color: "#fff"}] : [ styles.riskItemActive ];
     const lowItemStyleInactive = lowActive ? [ styles.riskItemActive, styles.riskItem, { color: "#fff"}] : [ styles.riskItem ];
-    const veryLowActive = riskAssessment === VERY_HIGH_RISK;
+    const veryLowActive = riskAssessment === VERY_LOW_RISK;
     const veryLowItemStyleActive = veryLowActive ? [ styles.riskItemActive, styles.riskItem, { color: "#fff"}] : [ styles.riskItemActive ];
     const veryLowItemStyleInactive = veryLowActive ? [ styles.riskItemActive, styles.riskItem, { color: "#fff"}] : [ styles.riskItem ];
 
@@ -176,23 +176,23 @@ const MyDocument = ({
                             )
                         })}
                     </View>
-                    <View style={styles.riskBlock}>
+                    <View style={lowActive ? styles.active : styles.riskBlock}>
                         <Text>Low Risk Factors</Text>
                         {Object.keys(lowRiskFactors).map((k: string, index: number) => {
                             return (
                                 <Text
                                     style={lowRiskFactors[k as keyof IntRiskFactor].value ? lowItemStyleActive : lowItemStyleInactive}
-                                    key={index + "int"}>{lowRiskFactors[k as keyof IntRiskFactor].label}</Text>
+                                    key={index + "low"}>{lowRiskFactors[k as keyof IntRiskFactor].label}</Text>
                             )
                         })}
                     </View>
-                    <View style={styles.riskBlock}>
+                    <View style={veryLowActive ? styles.active : styles.riskBlock}>
                         <Text>Very Low Risk Factors</Text>
                         {Object.keys(veryLowRiskFactors).map((k: string, index: number) => {
                             return (
                                 <Text
                                     style={veryLowRiskFactors[k as keyof VeryLowRiskFactor].value ? veryLowItemStyleActive : veryLowItemStyleInactive }
-                                    key={index + "int"}>{veryLowRiskFactors[k as keyof VeryLowRiskFactor].label}</Text>
+                                    key={index + "verylow"}>{veryLowRiskFactors[k as keyof VeryLowRiskFactor].label}</Text>
                             )
                         })}
                     </View>

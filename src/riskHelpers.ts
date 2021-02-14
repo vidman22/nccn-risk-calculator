@@ -108,7 +108,7 @@ export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, p
         }
     }
     // Must have all of the following for very low risk, if doesn't pass then you can calculate low risk
-    if (clinicalStage === T1c && maxGradeGroup === 1 && psa < 10 && psaDensity < 0.15 && (totalCoresPositive >= 3 && maxInvolvedPercentage <= 50)  ){
+    if (clinicalStage === T1c && maxGradeGroup === 1 && psa < 10 && psaDensity < 0.15 && (totalCoresPositive <= 3 && maxInvolvedPercentage <= 50)  ){
         if (!risk) {
             risk = VERY_LOW_RISK
         }
