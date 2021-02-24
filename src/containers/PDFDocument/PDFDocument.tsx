@@ -226,7 +226,7 @@ const MyDocument = ({
                     </View>
                 </View>
 
-                <View style={styles.section} wrap={false}>
+                <View style={styles.section} wrap={true}>
                     <Text>Core Data</Text>
                     <View style={{padding: 20}}>
                         <View style={styles.header}>

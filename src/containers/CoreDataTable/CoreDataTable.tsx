@@ -59,7 +59,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
         if ((name === 'gleasonPrimary' || name === 'gleasonSecondary') && (parseInt(value) > 0 && parseInt(value) < 3)) {
             setShowWarning(true);
         }
-
         setCores(newCores);
     }
 
@@ -91,9 +90,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                             </th>
                         ))}
                         <th className="TableColLabel">
-
                         </th>
-
                     </tr>
                 </thead>
                 <tbody className="CoreDataBody">
@@ -109,7 +106,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                                     className="CoreCell"
                                     key={index + k}
                                 >
-
                                     <input
                                         className="FormInput"
                                         name={k}
@@ -121,7 +117,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                                         value={obj.value}
                                         onChange={(e) => handleChange(e, rowIndex)}
                                     />
-
                                 </td>
                             )
                         })}

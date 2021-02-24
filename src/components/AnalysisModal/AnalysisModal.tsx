@@ -1,17 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCopy, faPrint, faTimes} from '@fortawesome/free-solid-svg-icons';
-import Analysis, {Result} from '../Analysis';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
+import Analysis, { Result } from '../Analysis';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import PDFDocument from '../../containers/PDFDocument/PDFDocument';
-import {PDFDownloadLink} from '@react-pdf/renderer';
-import {FormData} from '../../data/formData';
+import { FormData } from '../../data/formData';
 import RiskFactorDisplay from '../RiskFactorDisplay';
+import LinkWrapper from '../MemoizedPDF/MemoizedPDF';
 import './AnalysisModal.css';
-import {CoreData} from '../../data/coreData';
-import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../../containers/AppForm/AppForm";
+import { CoreData } from '../../data/coreData';
+import { FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor } from "../../containers/AppForm/AppForm";
 
-type Props = {
+export type Props = {
     visible: boolean;
     result: Result;
     cores: CoreData[];
@@ -27,19 +26,19 @@ type Props = {
 }
 
 export default function ShareLinkModal({
-                                           visible,
-                                           onDismiss,
-                                           result,
-                                           cores,
-                                           form,
-                                           intRiskFactors,
-                                           vHighRiskFactors,
-                                           highRiskFactors,
-                                           favorableRiskFactors,
-                                           unfavorableRiskFactors,
-                                           lowRiskFactors,
-                                           veryLowRiskFactors
-                                       }: Props) {
+    visible,
+    onDismiss,
+    result,
+    cores,
+    form,
+    intRiskFactors,
+    vHighRiskFactors,
+    highRiskFactors,
+    favorableRiskFactors,
+    unfavorableRiskFactors,
+    lowRiskFactors,
+    veryLowRiskFactors
+}: Props) {
     const [showCopied, setShowCopied] = useState(false);
     const [link, setLink] = useState('');
     const cssClasses = [
@@ -62,7 +61,6 @@ export default function ShareLinkModal({
                 })
             })
             pattern = pattern + "&ptage=" + (form.age.value || form.age.initialValue) + "&stage=" + (form.clinicalStage.value || form.clinicalStage.initialValue) + "&psa=" + (form.psa.value || form.psa.initialValue) + "&size=" + (form.prostateSize.value || form.prostateSize.initialValue);
-
             return window.location.origin + '/?' + pattern;
 
         }, [cores, form])
@@ -84,7 +82,7 @@ export default function ShareLinkModal({
             <div className={cssClasses.join(' ')}>
                 <div className="AlignRight">
                     <button className="NewBackButton" onClick={onDismiss}>
-                        <FontAwesomeIcon icon={faTimes}/>
+                        <FontAwesomeIcon icon={faTimes} />
                     </button>
                 </div>
 
@@ -101,14 +99,14 @@ export default function ShareLinkModal({
                         capra={result.capra}
                     />
                     <div className="LinkContainer">
-                        <Analysis result={result}/>
+                        <Analysis result={result} />
                     </div>
-                    <div style={{cursor: "pointer"}} className="LinkContainer">
+                    <div style={{ cursor: "pointer" }} className="LinkContainer">
                         <CopyToClipboard
                             text={link}
                             onCopy={() => setShowCopied(true)}>
                             <div className="InnerCopyFlex">
-                                <FontAwesomeIcon style={{marginLeft: ".25rem", marginRight: "1rem"}} icon={faCopy}/>
+                                <FontAwesomeIcon style={{ marginLeft: ".25rem", marginRight: "1rem" }} icon={faCopy} />
                                 {showCopied ?
                                     <span className="FadeCopied">
                                         Copied
@@ -120,28 +118,18 @@ export default function ShareLinkModal({
                         </CopyToClipboard>
                     </div>
                     <div className="LinkContainer">
-                        <PDFDownloadLink document={<PDFDocument
-                                                        riskAssessment={result.risk}
-                                                        unfavorableRiskFactors={unfavorableRiskFactors}
-                                                        favorableRiskFactors={favorableRiskFactors}
-                                                        intRiskFactors={intRiskFactors}
-                                                        highRiskFactors={highRiskFactors}
-                                                        vHighRiskFactors={vHighRiskFactors}
-                                                        lowRiskFactors={lowRiskFactors}
-                                                        veryLowRiskFactors={veryLowRiskFactors}
-                                                        coreData={cores}
-                                                        resultData={result}
-                                                        formData={form}/>}
-                                         fileName="nccn-risk-result.pdf">
-                            {({blob, url, loading, error}) => (
-                                <div className="InnerCopyFlex">
-                                    <div className="DownloadPdfIcon">
-                                        <FontAwesomeIcon icon={faPrint}/>
-                                    </div>
-                                    <span>Download PDF</span>
-                                </div>
-                            )}
-                        </PDFDownloadLink>
+                        <LinkWrapper
+                            result={result}
+                            cores={cores}
+                            form={form}
+                            intRiskFactors={intRiskFactors}
+                            vHighRiskFactors={vHighRiskFactors}
+                            highRiskFactors={highRiskFactors}
+                            favorableRiskFactors={favorableRiskFactors}
+                            unfavorableRiskFactors={unfavorableRiskFactors}
+                            lowRiskFactors={lowRiskFactors}
+                            veryLowRiskFactors={veryLowRiskFactors}
+                        />
                     </div>
                 </div>
             </div>

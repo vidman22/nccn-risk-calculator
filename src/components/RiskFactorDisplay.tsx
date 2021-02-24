@@ -33,6 +33,7 @@ const RiskFactorDisplay = ({
     const intUnfavorableClasses = ['IntUnfavorable', riskAssessment === INTERMEDIATE_HIGH_RISK ? 'ThisRisk' : ''];
     const lowRiskClasses = ['Low', riskAssessment === LOW_RISK ? 'ThisRisk' : ''];
     const veryLowRiskClasses = ['VeryLow', riskAssessment === VERY_LOW_RISK ? 'ThisRisk' : ''];
+
     return (
         <>
             <h2>NCCN Risk Stratification: {getRisk(riskAssessment)}</h2>
@@ -106,7 +107,6 @@ const RiskFactorDisplay = ({
 
             </div>
         </>
-
     )
 }
 

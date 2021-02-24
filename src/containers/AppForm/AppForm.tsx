@@ -105,8 +105,6 @@ export default function AppForm() {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [form, setForm] = useState(formData);
 
-
-
     const [veryLowRiskFactors, setVeryLowRiskFactors] = useState<VeryLowRiskFactor>({
         stage: { label: "Stage T1c", value: false },
         gradeGroup: { label: "Grade Group 1", value: false },
@@ -375,7 +373,6 @@ export default function AppForm() {
             newL.psa = newPSA;
 
             setLowRiskFactors(newL);
-
         },
         [lowRiskFactors],
     )
@@ -570,7 +567,7 @@ export default function AppForm() {
                     <button
                         onClick={async () => {
                             // setShowPdf(true)
-                            await calculateAnalysis()
+                            await calculateAnalysis();
                             setShowAnalysis(true)
                         }}
                         type="button"
