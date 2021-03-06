@@ -19,11 +19,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
     // const [scrollPosition, setSrollPosition] = useState(0);
     const [showWarning, setShowWarning] = useState(false);
 
-    // const handleScroll = () => {
-    //     const position = window.pageYOffset;
-    //     setSrollPosition(position);
-    // };
-
     const calculateGradeGroup = (gleasonPrimary: number, gleasonSecondary: number) => {
         if (gleasonPrimary < 3 || gleasonSecondary < 3) {
             return '0';

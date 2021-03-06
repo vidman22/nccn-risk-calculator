@@ -143,7 +143,7 @@ export const coreData = {
 } as CoreData;
 
 export const coreHeaders = [
-    { name: 'Index', description: 'The core\'s index' },
+    { name: 'Core #', description: 'The core\'s number' },
     { name: 'Core ID', description: 'This is the arbitrary label from the lab, not needed for calculation' },
     { name: 'Length', description: 'The length of the core in millimeters' },
     { name: '% Involved', description: 'The percentage of the core that shows abnormality' },
