@@ -8,7 +8,7 @@ import AnalysisModal from '../../components/AnalysisModal/AnalysisModal';
 import InfoModal from '../../components/InfoModal/InfoModal';
 // import {PDFViewer} from '@react-pdf/renderer';
 // import PDFDocument from "../PDFDocument/PDFDocument";
-import { coreData } from '../../data/coreData';
+import { coreData, CoreData } from '../../data/coreData';
 import { formData, FormData, ClinicalStage } from '../../data/formData';
 import {
     getTotalCoresPositive,
@@ -102,6 +102,7 @@ export default function AppForm() {
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showAnalysis, setShowAnalysis] = useState(false);
+    const [coresValid, setCoresValid] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [form, setForm] = useState(formData);
 
@@ -127,13 +128,13 @@ export default function AppForm() {
 
     const [unfavorableRiskFactors, setUnfavorableRiskFactors] = useState<FavorableRiskFactors>({
         fiftyPercentCoresPositive: { label: "50% or more of biopsy cores positive", value: false },
-        riskFactorNumber: { label: "Has 2 or 3 Int Risk Factors", value: false },
+        riskFactorNumber: { label: "Has 2 or 3 Intermediate Risk Factors", value: false },
         gradeGroup: { label: "Grade Group 3", value: false },
     });
 
     const [favorableRiskFactors, setFavorableRiskFactors] = useState<FavorableRiskFactors>({
         fiftyPercentCoresPositive: { label: "Less than 50% of biopsy cores positive", value: false },
-        riskFactorNumber: { label: "Has 1 Int Risk Factor", value: false },
+        riskFactorNumber: { label: "Has 1 Intermediate Risk Factor", value: false },
         gradeGroup: { label: "Grade Group 1 or 2", value: false },
     });
 
@@ -191,7 +192,6 @@ export default function AppForm() {
             }
             return;
         } else if (!hasParams) {
-            console.log("no params or storage")
             return;
         }
         const queryArray = parseParams(query)
@@ -250,7 +250,13 @@ export default function AppForm() {
         const name = e.target.name as keyof FormData;
         const newForm = { ...form };
         const newElement = newForm[name];
+        const newValidation = { ...newElement.validation };
+        newValidation.valid = true;
+        newValidation.touched = true;
+        newValidation.msg = "";
+        newElement.validation = newValidation;
         newElement.value = value;
+
         newForm[name] = newElement;
         setForm(newForm);
     };
@@ -378,13 +384,13 @@ export default function AppForm() {
     )
 
     const setVeryLowRiskFactorsHelper = useCallback(
-        ({ clinicalStage, psa, maxGradeGroup, psaDensity, totalCoresPositive, maxInvolvedPercentage } : VeryLowRiskParams) => {
+        ({ clinicalStage, psa, maxGradeGroup, psaDensity, totalCoresPositive, maxInvolvedPercentage }: VeryLowRiskParams) => {
             const newVL = { ...veryLowRiskFactors };
             const newStage = { ...newVL.stage };
             const newPSA = { ...newVL.psa };
             const newPSADensity = { ...newVL.psaDensity };
             const newGG = { ...newVL.gradeGroup };
-            const newCoresPositive = { ...newVL.coresPositive}
+            const newCoresPositive = { ...newVL.coresPositive }
 
             newStage.value = clinicalStage === T1c;
             newPSA.value = psa < 10
@@ -401,10 +407,63 @@ export default function AppForm() {
             setVeryLowRiskFactors(newVL);
         },
         [veryLowRiskFactors],
+    );
+
+    const validateCores = useCallback(
+        () => {
+            let isValid = true;
+            if (cores.length > 1) {
+                return true
+            }
+            cores.forEach((core, index) => {
+                Object.keys(core).forEach((k, index) => {
+                    const obj = core[k as keyof CoreData];
+                    if (obj.value === "") {
+                        isValid = false;
+                    }
+                })
+            });
+            if (!isValid) {
+                setCoresValid(false);
+            }
+            console.log("final cores valid", isValid);
+            return isValid;
+        },
+        [cores],
+    );
+
+    const validateForm = useCallback(
+        () => {
+            let isValid = true;
+            Object.keys(formData).forEach((k, index) => {
+                const obj = formData[k as keyof FormData];
+                if (!obj.validation.valid) {
+                    const newForm = { ...form };
+                    const newElement = newForm[k as keyof FormData];
+                    const newValidation = { ...newElement.validation };
+                    newValidation.valid = false;
+                    newValidation.touched = false;
+                    newValidation.msg = "please add a value";
+                    newElement.validation = newValidation;
+                    newForm[k as keyof FormData] = newElement;
+                    setForm(newForm);
+                }
+                isValid = isValid && obj.validation.valid
+                console.log("isValid", k, isValid);
+            })
+            console.log("final isValid", isValid);
+            return isValid;
+        },
+        [form],
     )
 
     const calculateAnalysis = useCallback(
         async () => {
+            const coresValid = validateCores();
+            const formValid = validateForm();
+            if (!coresValid || !formValid) {
+                return;
+            }
             let percentageCoresPositive = 0;
             let psaDensity = 0;
             const totalCoresPositive = getTotalCoresPositive(cores);
@@ -416,7 +475,7 @@ export default function AppForm() {
                 percentageCoresPositive = Math.round(totalCoresPositive / totalCores * 100);
             }
             if (form.psa.value && form.prostateSize.value) {
-                psaDensity = ( Math.round(psa / parseInt(form.prostateSize.value) * 100) / 100);
+                psaDensity = (Math.round(psa / parseInt(form.prostateSize.value) * 100) / 100);
             }
             const maxPrimary = getMaxPrimary(cores);
             const maxSecondary = getMaxSecondary(cores);
@@ -426,12 +485,12 @@ export default function AppForm() {
             const maxGleasonSum = getMaxGleasonSum(cores);
             const numIntRiskFactors = calculateNumIntRiskFactors({ maxGradeGroup, clinicalStage, psa });
             const numHighRiskFactors = calculateNumHighRisk({ clinicalStage, psa, maxGradeGroup });
-            
+
             setVeryHighRiskFactorsHelper({ clinicalStage, ggFourAndFiveCount, maxGradeGroup, maxPrimary, psa });
             setHighRiskFactorsHelper({ psa, clinicalStage, maxGradeGroup });
             setIntRiskFactorsHelper({ psa, clinicalStage, maxGradeGroup });
-            setLowRiskFactorsHelper({ clinicalStage, psa, maxGradeGroup});
-            setVeryLowRiskFactorsHelper({clinicalStage, psa, maxGradeGroup, psaDensity, totalCoresPositive, maxInvolvedPercentage})
+            setLowRiskFactorsHelper({ clinicalStage, psa, maxGradeGroup });
+            setVeryLowRiskFactorsHelper({ clinicalStage, psa, maxGradeGroup, psaDensity, totalCoresPositive, maxInvolvedPercentage })
             setFavorableIntRiskFactorsHelper({ percentageCoresPositive, numIntRiskFactors, maxGradeGroup });
             setUnfavorableIntRiskFactorsHelper({ percentageCoresPositive, numIntRiskFactors, maxGradeGroup });
 
@@ -452,7 +511,20 @@ export default function AppForm() {
                 risk,
                 capra,
             });
-        }, [form, cores, setVeryLowRiskFactorsHelper, setLowRiskFactorsHelper, setIntRiskFactorsHelper, setFavorableIntRiskFactorsHelper, setHighRiskFactorsHelper, setUnfavorableIntRiskFactorsHelper, setVeryHighRiskFactorsHelper]);
+            setShowAnalysis(true)
+        }, [
+        form,
+        cores,
+        setVeryLowRiskFactorsHelper,
+        setLowRiskFactorsHelper,
+        setIntRiskFactorsHelper,
+        setFavorableIntRiskFactorsHelper,
+        setHighRiskFactorsHelper,
+        setUnfavorableIntRiskFactorsHelper,
+        setVeryHighRiskFactorsHelper,
+        validateCores,
+        setShowAnalysis,
+        validateForm]);
 
     return (
         <div className="Container">
@@ -495,7 +567,38 @@ export default function AppForm() {
                         const obj = form[k as keyof FormData];
                         if (obj.options) {
                             return (
-                                <div key={index} className="InputWrapper">
+                                <div className="ValidationWrapper"
+                                    key={index}
+                                >
+                                    <div className="InputWrapper">
+                                        <div className="LabelIconWrapper">
+                                            <FontAwesomeIcon icon={faInfoCircle} />
+                                            <label className="FormLabel">
+                                                {obj.label}
+                                            </label>
+                                            <span>{obj.description}</span>
+                                        </div>
+                                        <select
+                                            className="SelectField"
+                                            name={k}
+                                            value={obj.value}
+                                            onChange={handleChange}
+                                        >
+                                            {obj.options.map(op => (
+                                                <option key={op}>
+                                                    {op}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            )
+                        }
+                        return (
+                            <div className="ValidationWrapper"
+                                key={index}
+                            >
+                                <div className="InputWrapper">
                                     <div className="LabelIconWrapper">
                                         <FontAwesomeIcon icon={faInfoCircle} />
                                         <label className="FormLabel">
@@ -503,45 +606,20 @@ export default function AppForm() {
                                         </label>
                                         <span>{obj.description}</span>
                                     </div>
-                                    <select
-                                        className="SelectField"
+                                    <input
+                                        className="FormInput"
+                                        style={{ width: "80px" }}
                                         name={k}
+                                        min={obj.min || ''}
+                                        max={obj.max || ''}
+                                        step={obj.step || "1"}
+                                        type={obj.type}
+                                        placeholder={obj.placeholder}
                                         value={obj.value}
                                         onChange={handleChange}
-                                    >
-                                        {obj.options.map(op => (
-                                            <option key={op}>
-                                                {op}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    />
                                 </div>
-                            )
-                        }
-                        return (
-                            <div
-                                className="InputWrapper"
-                                key={index}
-                            >
-                                <div className="LabelIconWrapper">
-                                    <FontAwesomeIcon icon={faInfoCircle} />
-                                    <label className="FormLabel">
-                                        {obj.label}
-                                    </label>
-                                    <span>{obj.description}</span>
-                                </div>
-                                <input
-                                    className="FormInput"
-                                    style={{ width: "80px" }}
-                                    name={k}
-                                    min={obj.min || ''}
-                                    max={obj.max || ''}
-                                    step={obj.step || "1"}
-                                    type={obj.type}
-                                    placeholder={obj.placeholder}
-                                    value={obj.value}
-                                    onChange={handleChange}
-                                />
+                                {!obj.validation.valid && <div className="ValidationError">{obj.validation.msg}</div>}
                             </div>
                         );
                     })}
@@ -567,8 +645,7 @@ export default function AppForm() {
                     <button
                         onClick={async () => {
                             // setShowPdf(true)
-                            await calculateAnalysis();
-                            setShowAnalysis(true)
+                            calculateAnalysis();
                         }}
                         type="button"
                         className="ButtonAppFunction"
@@ -579,12 +656,16 @@ export default function AppForm() {
                     </button>
                 </div>
             </div>
+
             <CoreDataTable
                 addCore={addCore}
                 setCores={setCores}
                 removeCore={removeCore}
+                setCoresValid={setCoresValid}
+                coresValid={coresValid}
                 cores={cores}
             />
+
             {showAnalysis && (
                 <AnalysisModal
                     visible={showAnalysis}

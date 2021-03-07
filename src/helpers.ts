@@ -25,7 +25,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     },
                     min: '',
                     max: '',
-                    placeholder: "ID",
+                    placeholder: "location",
                     disabled: false,
                 })
                 break;

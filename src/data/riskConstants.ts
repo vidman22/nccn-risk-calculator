@@ -13,4 +13,7 @@ export const T2b = 'T2b';
 export const T2c = 'T2c';
 export const T3a = 'T3a';
 export const T3b = 'T3b';
+export const T3c = 'T3c';
 export const T4 = 'T4';
+export const N1 = 'N1';
+export const M1 = 'M1';

@@ -24,7 +24,7 @@ const RiskFactorDisplay = ({
                                vHighRiskFactors,
                                highRiskFactors,
                                lowRiskFactors,
-                                veryLowRiskFactors,
+                               veryLowRiskFactors,
                                capra
                            }: Props) => {
     const veryHighClasses = ['VeryHigh', riskAssessment === VERY_HIGH_RISK ? 'ThisRisk' : ''];

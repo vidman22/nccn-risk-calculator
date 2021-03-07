@@ -19,7 +19,7 @@
 
 .ListWrapper {
     width: 100%;
-    height: 20vh;
+    height: 30vh;
     min-height: 150px;
     display: flex;
     flex-direction: column;
@@ -28,8 +28,18 @@
     align-items: center;
 }
 
-.InputWrapper {
+.ValidationWrapper{
     width: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 4px;
+    padding: 8px 0px;
+}
+
+.InputWrapper {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -37,6 +47,10 @@
     margin: 4px 4px;
     padding: 8px 0px;
     border-bottom: 1px solid #eee;
+}
+
+.ValidationError {
+    color: red;
 }
 
 /* .InputWrapper:last-child{
@@ -174,7 +188,7 @@
     background-color: #0858B8;
     color: #fff;
     padding: 10px 16px;
-    margin: 0;
+    margin: 0 .5rem 0 0;
     border-radius: 4px;
     font-family: 'Roboto', sans-serif;
     font-size: large;

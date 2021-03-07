@@ -19,12 +19,14 @@ export default function ConfirmationModal({ visible, confirmAction, onDismiss }:
         <>
             <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;
             <div className={cssClasses.join(' ')}>
-                <div className="AlignRight">
-                    <button className="NewBackButton" onClick={onDismiss}>
-                        <FontAwesomeIcon icon={faTimes} />
-                    </button>
+                <div className="ConfirmationHeader">
+                    <h2>Are you sure you want to clear your core data?</h2>
+                    <div className="AlignHeaderRight">
+                        <button className="NewBackButton" onClick={onDismiss}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                    </div>
                 </div>
-                <h2>Are you sure you want to clear your core data?</h2>
                 <span>This action is irreversible</span>
                 <div className="ModalButtonWrappers">
                     <button className="ClearButton" onClick={onDismiss}>Cancel</button>

@@ -12,10 +12,12 @@ type Props = {
     addCore: () => void;
     removeCore: (index: number) => void;
     setCores: (cores: CoreData[]) => void;
+    setCoresValid: (bool: boolean) => void;
+    coresValid: boolean;
     cores: CoreData[];
 }
 
-export default function CoreDataTable({ addCore, removeCore, setCores, cores }: Props) {
+export default function CoreDataTable({ addCore, removeCore, setCores, cores, setCoresValid, coresValid }: Props) {
     // const [scrollPosition, setSrollPosition] = useState(0);
     const [showWarning, setShowWarning] = useState(false);
 
@@ -54,12 +56,15 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
         if ((name === 'gleasonPrimary' || name === 'gleasonSecondary') && (parseInt(value) > 0 && parseInt(value) < 3)) {
             setShowWarning(true);
         }
+        setCoresValid(true);
         setCores(newCores);
     }
 
     return (
         <div className="CoreDataContainer">
-            {showWarning && <span className="CoreWarning">Scores less than 3 are not factored into risk</span>}
+            {showWarning && <span className="CoreWarning">Gleason scores less than 3 are not factored into risk</span>}
+            {!coresValid && <div className="CoreWarning">Please add core data</div>}
+
             <div className="CoreDataTitle">
 
                 <div className="LabelIconWrapper">
@@ -103,6 +108,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores }: 
                                 >
                                     <input
                                         className="FormInput"
+                                        style={k === "coreID" ? {width: "100px"} : {}}
                                         name={k}
                                         disabled={obj.disabled}
                                         min={obj.min || '0'}

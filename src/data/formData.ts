@@ -6,16 +6,20 @@ import {
     T2c,
     T3a,
     T3b,
+    T3c,
     T4,
+    N1,
+    M1,
+
 } from './riskConstants';
 
 type Validation = {
     touched: boolean;
-    error: string;
+    valid: boolean;
     msg: string;
 }
 
-export type ClinicalStage = 'T1' | 'T1c' | 'T2a' | 'T2b' | 'T2c' | 'T3a' | 'T3b' | 'T4';
+export type ClinicalStage = 'T1' | 'T1c' | 'T2a' | 'T2b' | 'T2c' | 'T3a' | 'T3b' | 'T3c' | 'T4' | 'N1' | 'M1';
 
 export interface FormValue {
     value: string;
@@ -23,6 +27,7 @@ export interface FormValue {
     type: string;
     step?: string;
     options?: ClinicalStage[];
+    validation: Validation;
     label: string;
     min: string;
     max: string;
@@ -44,7 +49,7 @@ export const formData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: false,
             msg: "",
         },
         label: "Age",
@@ -60,7 +65,7 @@ export const formData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: false,
             msg: "",
         },
         label: "PSA",
@@ -81,10 +86,14 @@ export const formData = {
             T2c,
             T3a,
             T3b,
-            T4],
+            T3c,
+            T4,
+            N1,
+            M1,
+            ],
         validation: {
-            touched: false,
-            error: "",
+            touched: true,
+            valid: true,
             msg: "",
         },
         label: "Clinical Stage",
@@ -99,7 +108,7 @@ export const formData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: true,
             msg: "",
         },
         label: "Prostate Size",

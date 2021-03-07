@@ -10,7 +10,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-left: 1rem;
+    margin: auto;
     padding: 0;
 }
 
@@ -62,10 +62,11 @@
 
 .CoreWarning{
     width: 400px;
-    background-color: #0858B8;
+    background-color: red;
     color: #fff;
     text-align: center;
     padding: 5px;
+    font-size: 1.25rem;
     border-radius: 4px;
     white-space: normal;
     position: absolute; 

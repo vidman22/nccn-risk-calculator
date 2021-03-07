@@ -230,7 +230,7 @@ const MyDocument = ({
                     <Text>Core Data</Text>
                     <View style={{padding: 20}}>
                         <View style={styles.header}>
-                            <Text style={styles.coreCell}>Core ID</Text>
+                            <Text style={styles.coreCell}>Core Location</Text>
                             <Text style={styles.coreCell}>Length</Text>
                             <Text style={styles.coreCell}>% Involved</Text>
                             <Text style={styles.coreCell}>G Primary</Text>
