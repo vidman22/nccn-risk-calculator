@@ -7,7 +7,8 @@ import {
     LOW_RISK,
     INTERMEDIATE_HIGH_RISK,
     INTERMEDIATE_LOW_RISK,
-    VERY_LOW_RISK
+    VERY_LOW_RISK,
+    INTERMEDIATE_RISK
 } from '../data/riskConstants';
 
 export interface Result {
@@ -40,6 +41,8 @@ export const getRisk = (risk : string) => {
             return 'Favorable Intermediate Risk';
         case INTERMEDIATE_HIGH_RISK:
             return 'Unfavorable Intermediate Risk';
+        case INTERMEDIATE_RISK:
+            return 'Intermediate Risk';
         default:
             return 'NA';
     }

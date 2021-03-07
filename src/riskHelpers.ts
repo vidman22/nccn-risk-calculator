@@ -122,29 +122,28 @@ export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, p
     return risk;
 }
 
-export const calculateIntermediateRisk = ({ maxGradeGroup, percentageCoresPositive, psa, numIntRiskFactors, clinicalStage }: CalculateIntRiskParams) => {
+export const calculateIntermediateRisk = ({ maxGradeGroup, percentageCoresPositive, numIntRiskFactors }: CalculateIntRiskParams) => {
     // At this stage we've already determined that the patient has at least one of the intermediate risk factors
     // We can check for the high risk factors exceeding 2-3 IRFs but don't need to check the number int risk factors
     // for favorable intermediate risk
-    if (clinicalStage === T2b || clinicalStage === T2c || maxGradeGroup === 3 || psa >= 10 || percentageCoresPositive > 50 || numIntRiskFactors >= 2) {
+    if ( maxGradeGroup === 3 || percentageCoresPositive >= 50 || numIntRiskFactors >= 2 ) {
         return INTERMEDIATE_HIGH_RISK;
     }
 
-    if (maxGradeGroup >= 2 && percentageCoresPositive < 50) {
+    if (maxGradeGroup >= 1 && percentageCoresPositive < 50 && numIntRiskFactors === 1) {
         return INTERMEDIATE_LOW_RISK;
     }
-    return 'x';
+    return INTERMEDIATE_RISK;
 };
 
 export const calculateCapra = ({ maxPrimary, maxSecondary, percentageCoresPositive, age, psa, clinicalStage }: CalculateCapraParams) => {
-
     let capra = 0;
 
     if (age > 49) {
         capra++;
     }
     // If the psa is less than six do nothing, if it is greater than six but less than 10 add one
-    if (psa > 6 && psa < 10) {
+    if (psa > 6.1 && psa <= 10) {
         capra++;
     }
     // If the psa is between 10 and 20 add two
