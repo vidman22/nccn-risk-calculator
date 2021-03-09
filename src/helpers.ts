@@ -148,7 +148,7 @@ export const parseForm: (query: URLSearchParams, form: FormData ) => FormData = 
     const newForm = {...form};
     query.forEach((value, key) => {
         switch (key) {
-            case 'ptage':
+            case 'age':
                 const newAge = {...newForm.age}
                 let newValidation = {...newAge.validation};
                 newAge.value = value;
@@ -156,13 +156,13 @@ export const parseForm: (query: URLSearchParams, form: FormData ) => FormData = 
                 newAge.validation = newValidation;
                 newForm.age = newAge;
                 break;
-            case 'totalCores':
+            case 'cores':
                 const newTotalCores = {...newForm.totalCores}
                 newValidation = {...newTotalCores.validation};
                 newTotalCores.value = value;
                 newValidation.valid = true;
                 newTotalCores.validation = newValidation;
-                newForm.age = newTotalCores;
+                newForm.totalCores = newTotalCores;
                 break;
             case 'stage':
                 const newStage = {...newForm.clinicalStage};
