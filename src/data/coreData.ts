@@ -1,6 +1,6 @@
 type Validation = {
     touched: boolean;
-    error: string;
+    valid: boolean;
     msg: string;
 }
 
@@ -36,7 +36,7 @@ export const coreData = {
         type: "text",
         validation: {
             touched: false,
-            error: "",
+            valid: false,
             msg: "",
         },
         min: '',
@@ -52,7 +52,7 @@ export const coreData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: false,
             msg: "",
         },
         min: '0',
@@ -68,7 +68,7 @@ export const coreData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: false,
             msg: "",
         },
         min: '0',
@@ -84,7 +84,7 @@ export const coreData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: false,
             msg: "",
         },
         min: '0',
@@ -100,7 +100,7 @@ export const coreData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: false,
             msg: "",
         },
         min: '0',
@@ -116,7 +116,7 @@ export const coreData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: true,
             msg: "",
         },
         min: '0',
@@ -132,7 +132,7 @@ export const coreData = {
         type: "number",
         validation: {
             touched: false,
-            error: "",
+            valid: true,
             msg: "",
         },
         min: '0',

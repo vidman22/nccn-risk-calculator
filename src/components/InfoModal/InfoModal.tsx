@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+    vHighRiskFactorsData,
+    highRiskFactorsData,
+    favorableRiskFactorsData,
+    unfavorableRiskFactorsData,
+    intRiskFactorsData,
+    lowRiskFactorsData,
+    veryLowRiskFactorsData,
+    HighRiskFactor,
+    VHighRiskFactor,
+    IntRiskFactor,
+    VeryLowRiskFactor,
+    FavorableRiskFactors,
+} from '../../containers/AppForm/AppForm';
 import './InfoModal.css';
 
 type Props = {
@@ -77,7 +91,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         </ol>
                     </div>
                     <div>
-                    &emsp;
+                        &emsp;
                         Some men will be diagnosed with a very aggressive variant of prostate cancer that grows
                         quickly, has the potential to spread around the body, and is life threatening. Those aggressive
                         cancers may have better prognosis with multiple, aggressive therapies, applied early. Those
@@ -97,7 +111,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         <br />
                         <strong>Diagnosis Data Requirements Entered into The Nomogram</strong>
 
-                    <ol>
+                        <ol>
                             <li><strong>AGE</strong> at the time of diagnosis</li>
                             <li><strong>PSA</strong> at the time of diagnosis</li>
                             <li><strong>CLINICAL STAGE</strong> Clinical Stage refers to where cancer is in and around the prostate,
@@ -107,22 +121,26 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             Stage. It is DRE data only.
                             <table>
                                     <thead>
-                                        <th>T1c</th>
-                                        <th>T2a</th>
-                                        <th>T2b</th>
-                                        <th>T2c</th>
-                                        <th>T3a</th>
-                                        <th>T3b</th>
-                                        <th>T4</th>
+                                        <tr>
+                                            <th>T1c</th>
+                                            <th>T2a</th>
+                                            <th>T2b</th>
+                                            <th>T2c</th>
+                                            <th>T3a</th>
+                                            <th>T3b</th>
+                                            <th>T4</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                        <td>Cannont be felt with the finger</td>
-                                        <td>1/2 of one side only</td>
-                                        <td>Tumor invades more than 1/2 of one side only</td>
-                                        <td> Tumor felt on both sides</td>
-                                        <td>Felt outside the prostate capsule</td>
-                                        <td>Invades the seminal vesicles</td>
-                                        <td>Invades local tissues - bladder, rectum, etc.</td>
+                                        <tr>
+                                            <td>Cannont be felt with the finger</td>
+                                            <td>1/2 of one side only</td>
+                                            <td>Tumor invades more than 1/2 of one side only</td>
+                                            <td> Tumor felt on both sides</td>
+                                            <td>Felt outside the prostate capsule</td>
+                                            <td>Invades the seminal vesicles</td>
+                                            <td>Invades local tissues - bladder, rectum, etc.</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </li>
@@ -156,8 +174,80 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             </li>
                         </ol>
                         <div>
+                            <h2>NCCN Risk Stratification</h2>
+                            {/* <h2>CAPRA Score: {capra}</h2> */}
+                            <div className="RiskWrapper">
+                                <div className="NoRisk" style={{ display: 'flex' }}>
+                                    <h4>Very High Risk Factors</h4>
+                                    {Object.keys(vHighRiskFactorsData).map((k, index: number) => {
+                                        return (
+                                            <div className="NonFactor"
+                                                key={index + "veryHigh"}>{vHighRiskFactorsData[k as keyof VHighRiskFactor].label}</div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="NoRisk" style={{ display: 'flex' }}>
+                                    <h4>High Risk Factors</h4>
+                                    {Object.keys(highRiskFactorsData).map((k, index: number) => {
+                                        return (
+                                            <div className="NonFactor"
+                                                key={index + "high"}>{highRiskFactorsData[k as keyof HighRiskFactor].label}</div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="NoRisk" style={{ display: 'flex' }}>
+                                    <h4>Unfavorable Intermediate Risk Factors</h4>
+                                    {Object.keys(unfavorableRiskFactorsData).map((k, index: number) => {
+                                        return (
+                                            <div
+                                                className="NonFactor"
+                                                key={index + "unfavorable"}>{unfavorableRiskFactorsData[k as keyof FavorableRiskFactors].label}</div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="NoRisk" style={{ display: 'flex' }}>
+                                    <h4>Favorable Intermediate Risk Factors</h4>
+                                    {Object.keys(favorableRiskFactorsData).map((k, index: number) => {
+                                        return (
+                                            <div
+                                                className="NonFactor"
+                                                key={index + "favorable"}>{favorableRiskFactorsData[k as keyof FavorableRiskFactors].label}</div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="NoRisk" style={{ display: 'flex' }}>
+                                    <h4>Intermediate Risk Factors</h4>
+                                    {Object.keys(intRiskFactorsData).map((k: string, index: number) => {
+                                        return (
+                                            <div className="NonFactor"
+                                                key={index + "intermediate"}>{intRiskFactorsData[k as keyof IntRiskFactor].label}</div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="NoRisk" style={{ display: 'flex' }}>
+                                    <h4>Low Risk FactorsData</h4>
+                                    {Object.keys(lowRiskFactorsData).map((k: string, index: number) => {
+                                        return (
+                                            <div className="NonFactor"
+                                                key={index + "low"}>{lowRiskFactorsData[k as keyof IntRiskFactor].label}</div>
+                                        )
+                                    })}
+                                </div>
+                                <div className="NoRisk" style={{ display: 'flex' }}>
+                                    <h4>Very Low Risk Factors</h4>
+                                    {Object.keys(veryLowRiskFactorsData).map((k: string, index: number) => {
+                                        return (
+                                            <div className={veryLowRiskFactorsData[k as keyof VeryLowRiskFactor].value ? "Factor" : "NonFactor"}
+                                                key={index + "verylow"}>{veryLowRiskFactorsData[k as keyof VeryLowRiskFactor].label}</div>
+                                        )
+                                    })}
+                                </div>
+
+                            </div>
+                        </div>
+                        <div>
                             <strong>USING THE NOMOGRAM</strong>
-                        <ol>
+                            <ol>
                                 <li>Enter the Age, PSA, Clinical Stage (from the DRE) and prostate size in ml, cc, or gm.</li>
                                 <li>Enter the biopsy core details.</li>
                                 <li>Index is the counter of the number of biopsy cores</li>

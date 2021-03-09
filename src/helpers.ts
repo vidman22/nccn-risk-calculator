@@ -1,15 +1,15 @@
+import { CoreValue } from "./data/coreData";
 import { FormData } from "./data/formData";
 
 
 export const parseParams: (query : URLSearchParams) => any = (query : URLSearchParams) => {
-    const queryArray = [] as any;
+    const queryArray = [] as CoreValue[];
 
     query.forEach((value, key) => {
         const check = key.match(/[^0-9]/);
         if (!check) {
             return;
         }
-
         switch (check[0]) {
             case 'a':
                 queryArray.push({
@@ -20,7 +20,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     type: "text",
                     validation: {
                         touched: false,
-                        error: "",
+                        valid: true,
                         msg: "",
                     },
                     min: '',
@@ -38,7 +38,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     type: "number",
                     validation: {
                         touched: false,
-                        error: "",
+                        valid: true,
                         msg: "",
                     },
                     min: '0',
@@ -56,7 +56,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     type: "number",
                     validation: {
                         touched: false,
-                        error: "",
+                        valid: true,
                         msg: "",
                     },
                     min: '0',
@@ -74,7 +74,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     type: "number",
                     validation: {
                         touched: false,
-                        error: "",
+                        valid: true,
                         msg: "",
                     },
                     min: '0',
@@ -92,7 +92,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     type: "number",
                     validation: {
                         touched: false,
-                        error: "",
+                        valid: true,
                         msg: "",
                     },
                     min: '0',
@@ -110,7 +110,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     type: "number",
                     validation: {
                         touched: false,
-                        error: "",
+                        valid: true,
                         msg: "",
                     },
                     min: '0',
@@ -128,7 +128,7 @@ export const parseParams: (query : URLSearchParams) => any = (query : URLSearchP
                     type: "number",
                     validation: {
                         touched: false,
-                        error: "",
+                        valid: true,
                         msg: "",
                     },
                     min: '0',
@@ -150,22 +150,42 @@ export const parseForm: (query: URLSearchParams, form: FormData ) => FormData = 
         switch (key) {
             case 'ptage':
                 const newAge = {...newForm.age}
+                let newValidation = {...newAge.validation};
                 newAge.value = value;
+                newValidation.valid = true;
+                newAge.validation = newValidation;
                 newForm.age = newAge;
+                break;
+            case 'totalCores':
+                const newTotalCores = {...newForm.totalCores}
+                newValidation = {...newTotalCores.validation};
+                newTotalCores.value = value;
+                newValidation.valid = true;
+                newTotalCores.validation = newValidation;
+                newForm.age = newTotalCores;
                 break;
             case 'stage':
                 const newStage = {...newForm.clinicalStage};
+                newValidation = {...newStage.validation};
                 newStage.value = value;
+                newValidation.valid = true;
+                newStage.validation = newValidation;
                 newForm.clinicalStage = newStage;
                 break;
             case 'psa':
                 const newPSA = {...newForm.psa};
+                newValidation = {...newPSA.validation};
                 newPSA.value = value;
+                newValidation.valid = true;
+                newPSA.validation = newValidation;
                 newForm.psa = newPSA
                 break;
             case 'size':
                 const newSize = {...newForm.prostateSize};
+                newValidation = {...newSize.validation};
                 newSize.value = value;
+                newValidation.valid = true;
+                newSize.validation = newValidation;
                 newForm.prostateSize = newSize;
                 break;
             default:

@@ -7,7 +7,7 @@ import {
     VERY_HIGH_RISK,
     VERY_LOW_RISK
 } from './data/riskConstants';
-import { T1, T1c, T2a, T2b, T2c, T3a, T3b, T4 } from './data/riskConstants';
+import { T1c, T2a, T2b, T2c, T3a, T3b, T4 } from './data/riskConstants';
 
 import { ClinicalStage } from './data/formData';
 
@@ -114,7 +114,7 @@ export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, p
             risk = VERY_LOW_RISK
         }
     }
-    if ( maxGradeGroup === 1 && psa < 10 && (clinicalStage === T1 || clinicalStage === T2a)) {
+    if ( maxGradeGroup === 1 && psa < 10 && (clinicalStage === T1c || clinicalStage === T2a)) {
         if (!risk) {
             risk = LOW_RISK;
         }

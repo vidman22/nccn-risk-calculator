@@ -59,10 +59,13 @@
 .CoreCell p{
     font-size: 22px;
 }
+.CoreValidationError {
+    border-color:rgba(255, 0, 0, 0.9);
+}
 
 .CoreWarning{
     width: 400px;
-    background-color: red;
+    background-color: rgba(255, 0, 0, 0.9);
     color: #fff;
     text-align: center;
     padding: 5px;
@@ -71,8 +74,8 @@
     white-space: normal;
     position: absolute; 
     z-index: 1;
-    top: 10%;
-    left: 70%;
+    top: 5%;
+    left: 45%;
     margin-left: -112px;
     transition: opacity 300ms;
 }

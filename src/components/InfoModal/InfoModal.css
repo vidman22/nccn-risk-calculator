@@ -5,7 +5,9 @@
     height: 90vh;
     line-height: 1.6rem;
     font-size: 1rem;
-    padding: 2rem 3rem;
+    left: 20%;
+    padding: 2rem 4rem;
+    width: 60%;
 }
 
 .InfoModal h2{
@@ -13,7 +15,6 @@
 }
 
 .InfoTextWrapper{
-    width: 60%;
     margin: auto;
 }
 

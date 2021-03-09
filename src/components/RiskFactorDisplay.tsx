@@ -27,18 +27,18 @@ const RiskFactorDisplay = ({
                                veryLowRiskFactors,
                                capra
                            }: Props) => {
-    const veryHighClasses = ['VeryHigh', riskAssessment === VERY_HIGH_RISK ? 'ThisRisk' : ''];
-    const highClasses = ['High', riskAssessment === HIGH_RISK ? 'ThisRisk' : ''];
-    const intFavorableClasses = ['IntFavorable', riskAssessment === INTERMEDIATE_LOW_RISK ? 'ThisRisk' : ''];
-    const intUnfavorableClasses = ['IntUnfavorable', riskAssessment === INTERMEDIATE_HIGH_RISK ? 'ThisRisk' : ''];
-    const intClasses = ['Int', riskAssessment === INTERMEDIATE_RISK ? 'ThisRisk' : ''];
-    const lowRiskClasses = ['Low', riskAssessment === LOW_RISK ? 'ThisRisk' : ''];
-    const veryLowRiskClasses = ['VeryLow', riskAssessment === VERY_LOW_RISK ? 'ThisRisk' : ''];
+    const veryHighClasses = ['NoRisk', riskAssessment === VERY_HIGH_RISK ? 'ThisRisk' : ''];
+    const highClasses = ['NoRisk', riskAssessment === HIGH_RISK ? 'ThisRisk' : ''];
+    const intFavorableClasses = ['NoRisk', riskAssessment === INTERMEDIATE_LOW_RISK ? 'ThisRisk' : ''];
+    const intUnfavorableClasses = ['NoRisk', riskAssessment === INTERMEDIATE_HIGH_RISK ? 'ThisRisk' : ''];
+    const intClasses = ['NoRisk', riskAssessment === INTERMEDIATE_RISK ? 'ThisRisk' : ''];
+    const lowRiskClasses = ['NoRisk', riskAssessment === LOW_RISK ? 'ThisRisk' : ''];
+    const veryLowRiskClasses = ['NoRisk', riskAssessment === VERY_LOW_RISK ? 'ThisRisk' : ''];
 
     return (
         <>
-            <h2>NCCN Risk Stratification: {getRisk(riskAssessment)}</h2>
-            <h2>CAPRA Score: {capra}</h2>
+            <h2>Your NCCN Risk Stratification: {getRisk(riskAssessment)}</h2>
+            {/* <h2>CAPRA Score: {capra}</h2> */}
             <div className="RiskWrapper">
                 <div className={veryHighClasses.join(' ')}>
                     <h4>Very High Risk Factors</h4>
@@ -59,7 +59,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={intUnfavorableClasses.join(" ")}>
-                    <h4>Unfavorable Int Risk Factors</h4>
+                    <h4>Unfavorable Intermediate Risk Factors</h4>
                     {Object.keys(unfavorableRiskFactors).map((k, index: number) => {
                         return (
                             <div

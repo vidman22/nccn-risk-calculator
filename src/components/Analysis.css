@@ -37,8 +37,8 @@
     margin: .2rem 0;
 }
 
-.VeryHigh, .High, .Int, .IntUnfavorable, .IntFavorable, .Low, .VeryLow {
-    display: flex;
+.NoRisk {
+    /* display: none; */
     flex-direction: column;
     padding: .5rem;
     text-align: left;
@@ -62,6 +62,7 @@
 }
 
 .ThisRisk {
+    display: flex;
     background: #4e48e9;
     color: #fff;
 }
@@ -69,8 +70,6 @@
 .ThisRisk > .NonFactor{
     color: white;
 }
-
-
 
 @media only screen and (max-width: 1050px){
     .ResultContainer{

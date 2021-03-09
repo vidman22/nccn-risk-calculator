@@ -11,7 +11,6 @@ import InfoModal from '../../components/InfoModal/InfoModal';
 import { coreData, CoreData } from '../../data/coreData';
 import { formData, FormData, ClinicalStage } from '../../data/formData';
 import {
-    getTotalCoresPositive,
     getCountGGFourOrFive,
     getMaxGradeGroup,
     getMaxGleasonSum,
@@ -25,7 +24,8 @@ import { parseForm, parseParams } from '../../helpers';
 import { calculateNumHighRisk, calculateNumIntRiskFactors, calculateRisk, HighRiskParams, calculateIntermediateRisk, calculateCapra } from '../../riskHelpers';
 import './AppForm.css';
 import {
-    T1,
+    T1a,
+    T1b,
     T1c,
     T2a,
     T2b,
@@ -33,6 +33,8 @@ import {
     T3a,
     T3b,
     T4,
+    N1,
+    M1,
 } from '../../data/riskConstants';
 
 export interface HighRiskFactor {
@@ -97,6 +99,51 @@ type FavorableIntParams = {
     numIntRiskFactors: number;
 }
 
+export const vHighRiskFactorsData = {
+    stage: { label: "Stage T3b - T4", value: false },
+    gradeGroup: { label: "More than 4 cores with Grade Group 4 or 5", value: false },
+    gleason: { label: "Primary Gleason has pattern 5", value: false },
+    highRiskFactors: { label: "Has 2-3 high risk factors", value: false },
+};
+
+export const highRiskFactorsData = {
+    stage: { label: "Stage T3a", value: false },
+    gradeGroup: { label: "Grade Group 4 or 5", value: false },
+    psa: { label: "PSA is greater than 20 ng/ml", value: false },
+};
+
+export const favorableRiskFactorsData = {
+    fiftyPercentCoresPositive: { label: "Less than 50% of biopsy cores positive", value: false },
+    riskFactorNumber: { label: "Has 1 Intermediate Risk Factor", value: false },
+    gradeGroup: { label: "Grade Group 1 or 2", value: false },
+}
+
+export const unfavorableRiskFactorsData = {
+    fiftyPercentCoresPositive: { label: "50% or more of biopsy cores positive", value: false },
+    riskFactorNumber: { label: "Has 2 or 3 Intermediate Risk Factors", value: false },
+    gradeGroup: { label: "Grade Group 3", value: false },
+};
+
+export const intRiskFactorsData = {
+    stage: { label: "Stage T2b-T2c", value: false },
+    gradeGroup: { label: "Grade Group 2 or 3", value: false },
+    psa: { label: "PSA 10-20 ng/ml", value: false },
+};
+
+export const lowRiskFactorsData = {
+    stage: { label: "Stage T1-T2a", value: false },
+    gradeGroup: { label: "Grade Group 1", value: false },
+    psa: { label: "PSA is less than 10 ng/ml", value: false },
+};
+
+export const veryLowRiskFactorsData = {
+    stage: { label: "Stage T1c", value: false },
+    gradeGroup: { label: "Grade Group 1", value: false },
+    psa: { label: "PSA less than 10-20 ng/ml", value: false },
+    psaDensity: { label: "PSA density less than 0.15 ng/ml/g", value: false },
+    coresPositive: { label: "Fewer than 3 cores positive, each with less than 50% involved", value: false },
+};
+
 export default function AppForm() {
     const query = new URLSearchParams(useLocation().search);
     const [saved, setSaved] = useState(false);
@@ -106,50 +153,13 @@ export default function AppForm() {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [form, setForm] = useState(formData);
 
-    const [veryLowRiskFactors, setVeryLowRiskFactors] = useState<VeryLowRiskFactor>({
-        stage: { label: "Stage T1c", value: false },
-        gradeGroup: { label: "Grade Group 1", value: false },
-        psa: { label: "PSA less than 10-20 ng/ml", value: false },
-        psaDensity: { label: "PSA density less than 0.15 ng/ml/g", value: false },
-        coresPositive: { label: "Fewer than 3 cores positive, each with less than 50% involved", value: false },
-    });
-
-    const [lowRiskFactors, setLowRiskFactors] = useState<IntRiskFactor>({
-        stage: { label: "Stage T1-T2a", value: false },
-        gradeGroup: { label: "Grade Group 1", value: false },
-        psa: { label: "PSA is less than 10 ng/ml", value: false },
-    });
-
-    const [intRiskFactors, setIntRiskFactors] = useState<IntRiskFactor>({
-        stage: { label: "Stage T2b-T2c", value: false },
-        gradeGroup: { label: "Grade Group 2 or 3", value: false },
-        psa: { label: "PSA 10-20 ng/ml", value: false },
-    });
-
-    const [unfavorableRiskFactors, setUnfavorableRiskFactors] = useState<FavorableRiskFactors>({
-        fiftyPercentCoresPositive: { label: "50% or more of biopsy cores positive", value: false },
-        riskFactorNumber: { label: "Has 2 or 3 Intermediate Risk Factors", value: false },
-        gradeGroup: { label: "Grade Group 3", value: false },
-    });
-
-    const [favorableRiskFactors, setFavorableRiskFactors] = useState<FavorableRiskFactors>({
-        fiftyPercentCoresPositive: { label: "Less than 50% of biopsy cores positive", value: false },
-        riskFactorNumber: { label: "Has 1 Intermediate Risk Factor", value: false },
-        gradeGroup: { label: "Grade Group 1 or 2", value: false },
-    });
-
-    const [highRiskFactors, setHighRiskFactors] = useState<HighRiskFactor>({
-        stage: { label: "Stage T3a", value: false },
-        gradeGroup: { label: "Grade Group 4 or 5", value: false },
-        psa: { label: "PSA is greater than 20 ng/ml", value: false },
-    });
-
-    const [vHighRiskFactors, setVHighRiskFactors] = useState<VHighRiskFactor>({
-        stage: { label: "Stage T3b - T4", value: false },
-        gradeGroup: { label: "More than 4 cores with Grade Group 4 or 5", value: false },
-        gleason: { label: "Primary Gleason has pattern 5", value: false },
-        highRiskFactors: { label: "Has 2-3 high risk factors", value: false },
-    });
+    const [veryLowRiskFactors, setVeryLowRiskFactors] = useState<VeryLowRiskFactor>(veryLowRiskFactorsData);
+    const [lowRiskFactors, setLowRiskFactors] = useState<IntRiskFactor>(lowRiskFactorsData);
+    const [intRiskFactors, setIntRiskFactors] = useState<IntRiskFactor>(intRiskFactorsData);
+    const [unfavorableRiskFactors, setUnfavorableRiskFactors] = useState<FavorableRiskFactors>(unfavorableRiskFactorsData);
+    const [favorableRiskFactors, setFavorableRiskFactors] = useState<FavorableRiskFactors>(favorableRiskFactorsData);
+    const [highRiskFactors, setHighRiskFactors] = useState<HighRiskFactor>(highRiskFactorsData);
+    const [vHighRiskFactors, setVHighRiskFactors] = useState<VHighRiskFactor>(vHighRiskFactorsData);
 
     // const [showPdf, setShowPdf] = useState(false);
 
@@ -170,6 +180,7 @@ export default function AppForm() {
         const newCores = [...cores];
         newCores.push(coreData);
         setCores(newCores);
+        setCoresValid(true);
     }
 
     useEffect(() => {
@@ -251,9 +262,11 @@ export default function AppForm() {
         const newForm = { ...form };
         const newElement = newForm[name];
         const newValidation = { ...newElement.validation };
+
         newValidation.valid = true;
         newValidation.touched = true;
-        newValidation.msg = "";
+        newValidation.msg = '';
+
         newElement.validation = newValidation;
         newElement.value = value;
 
@@ -370,7 +383,7 @@ export default function AppForm() {
             const newStage = { ...newL.stage };
             const newPSA = { ...newL.psa };
             const newGG = { ...newL.gradeGroup };
-            newStage.value = (clinicalStage === T1 || clinicalStage === T2a)
+            newStage.value = (clinicalStage === T1c || clinicalStage === T2a)
             newPSA.value = psa < 10
             newGG.value = maxGradeGroup === 1;
 
@@ -412,21 +425,29 @@ export default function AppForm() {
     const validateCores = useCallback(
         () => {
             let isValid = true;
-            if (cores.length > 1) {
-                return true
-            }
-            cores.forEach((core, index) => {
-                Object.keys(core).forEach((k, index) => {
-                    const obj = core[k as keyof CoreData];
-                    if (obj.value === "") {
-                        isValid = false;
+            const newCores = [...cores];
+            newCores.forEach((_, index) => {
+                const newCore = {...cores[index]};
+                Object.keys(newCore).forEach((k) => {
+                    const newObj = {...newCore[k as keyof CoreData]};
+                    const newValidation = {...newObj.validation};
+                    if (k !== 'gradeGroup'){
+                        if (!newObj.value || newObj.value === "0") {
+                            newValidation.valid = false;
+                            newValidation.touched = true;
+                            newValidation.msg = "add a value";
+                            isValid = false;
+                        }
                     }
+                    newObj.validation = newValidation;
+                    newCore[k as keyof CoreData] = newObj;
                 })
+                newCores[index] = newCore;
             });
+            setCores(newCores);
             if (!isValid) {
                 setCoresValid(false);
             }
-            console.log("final cores valid", isValid);
             return isValid;
         },
         [cores],
@@ -437,21 +458,38 @@ export default function AppForm() {
             let isValid = true;
             Object.keys(formData).forEach((k, index) => {
                 const obj = formData[k as keyof FormData];
-                if (!obj.validation.valid) {
-                    const newForm = { ...form };
-                    const newElement = newForm[k as keyof FormData];
-                    const newValidation = { ...newElement.validation };
+                const newForm = { ...form };
+                const newElement = newForm[k as keyof FormData];
+                const newValidation = { ...newElement.validation };
+                if (!newElement.value || newElement.value === "0") {
                     newValidation.valid = false;
-                    newValidation.touched = false;
-                    newValidation.msg = "please add a value";
-                    newElement.validation = newValidation;
-                    newForm[k as keyof FormData] = newElement;
-                    setForm(newForm);
+                    newValidation.touched = true;
+                    newValidation.msg = "Please add a value";
+                    isValid = false;
                 }
-                isValid = isValid && obj.validation.valid
-                console.log("isValid", k, isValid);
+                if (k === 'clinicalStage') {
+                    switch (obj.value) {
+                        case T1a:
+                        case T1b:
+                            newValidation.valid = false;
+                            newValidation.touched = true;
+                            newValidation.msg = "This value indicates an incidental cancer finding and cannot be used for risk analysis.";
+                            break;
+                        case M1:
+                        case N1:
+                            newValidation.valid = false;
+                            newValidation.touched = true;
+                            newValidation.msg = "High risk stage of M1 and N1 cannot be used in calculation. Those patients are encouraged to seek prostate cancer care at a center of excellence that specializes in treating high risk prostate cancer.";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                newElement.validation = newValidation;
+                newForm[k as keyof FormData] = newElement;
+                isValid = isValid && newValidation.valid;
+                setForm(newForm);
             })
-            console.log("final isValid", isValid);
             return isValid;
         },
         [form],
@@ -459,15 +497,15 @@ export default function AppForm() {
 
     const calculateAnalysis = useCallback(
         async () => {
-            const coresValid = validateCores();
             const formValid = validateForm();
-            if (!coresValid || !formValid) {
+            const isCoresValid = validateCores();
+            if (!isCoresValid || !formValid) {
                 return;
             }
             let percentageCoresPositive = 0;
             let psaDensity = 0;
-            const totalCoresPositive = getTotalCoresPositive(cores);
-            const totalCores = cores.length;
+            const totalCoresPositive = cores.length;
+            const totalCores = parseInt(form.totalCores.value);
             const psa = parseFloat(form.psa.value);
             const clinicalStage = form.clinicalStage.value as ClinicalStage;
 
@@ -522,22 +560,21 @@ export default function AppForm() {
         setHighRiskFactorsHelper,
         setUnfavorableIntRiskFactorsHelper,
         setVeryHighRiskFactorsHelper,
-        validateCores,
         setShowAnalysis,
+        validateCores,
         validateForm]);
 
     return (
         <div className="Container">
             <div className="TitleWrapper">
                 <h1>Prostate Cancer Risk Nomogram</h1>
-
                 <button
                     className="LabelIconAppFunction"
                     onClick={() => {
                         setShowInfoModal(true)
                     }}>
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                    <span>How is this calculated?</span>
+                    <FontAwesomeIcon icon={faInfoCircle} size={'2x'} />
+                    <span>Click to see how this is is this calculated</span>
                 </button>
             </div>
             <div className="AppFormContainer">
@@ -572,7 +609,7 @@ export default function AppForm() {
                                 >
                                     <div className="InputWrapper">
                                         <div className="LabelIconWrapper">
-                                            <FontAwesomeIcon icon={faInfoCircle} />
+                                            <FontAwesomeIcon icon={faInfoCircle} size={'1x'} />
                                             <label className="FormLabel">
                                                 {obj.label}
                                             </label>
@@ -591,6 +628,7 @@ export default function AppForm() {
                                             ))}
                                         </select>
                                     </div>
+                                    {!obj.validation.valid && <div className="ValidationError">{obj.validation.msg}</div>}
                                 </div>
                             )
                         }
@@ -644,7 +682,7 @@ export default function AppForm() {
                     </button>
                     <button
                         onClick={async () => {
-                            // setShowPdf(true)
+                            // setShowPdf(true);
                             calculateAnalysis();
                         }}
                         type="button"

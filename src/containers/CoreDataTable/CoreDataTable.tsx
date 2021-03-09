@@ -40,12 +40,26 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
         const newCores = [...cores];
         const newCore = { ...newCores[index] };
         const newElement = { ...newCore[name] };
+        const newValidation = { ...newElement.validation};
+
+        newValidation.valid = true;
+        newValidation.msg = "";
+        newValidation.touched = true;
+
+
         newElement.value = value;
+        newElement.validation = newValidation;
 
         newCore[name] = newElement;
         const newGleasonSum = { ...newCore.gleasonSum }
         const newGradeGroup = { ...newCore.gradeGroup }
+        const newGleasonSumValidation =  {...newGleasonSum.validation};
+        const newGradeGroupValidation =  {...newGradeGroup.validation};
+        newGleasonSumValidation.valid = true;
+        newGradeGroupValidation.valid = true;
 
+        newGleasonSum.validation = newGleasonSumValidation;
+        newGradeGroup.validation = newGradeGroupValidation;
         newGleasonSum.value = (parseInt(newCore.gleasonPrimary.value || newCore.gleasonPrimary.initialValue) + parseInt(newCore.gleasonSecondary.value || newCore.gleasonSecondary.initialValue)).toString();
         const calculatedGradeGroup = calculateGradeGroup(parseInt(newCore.gleasonPrimary.value), parseInt(newCore.gleasonSecondary.value));
         newGradeGroup.value = calculatedGradeGroup ? calculatedGradeGroup.toString() : newGradeGroup.value;
@@ -63,16 +77,13 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
     return (
         <div className="CoreDataContainer">
             {showWarning && <span className="CoreWarning">Gleason scores less than 3 are not factored into risk</span>}
-            {!coresValid && <div className="CoreWarning">Please add core data</div>}
-
             <div className="CoreDataTitle">
-
                 <div className="LabelIconWrapper">
                     <FontAwesomeIcon icon={faInfoCircle} />
                     <label className="FormLabel">
                         <h2>Core Data</h2>
                     </label>
-                    <span>Enter all cores tested, even the negative ones</span>
+                    <span>Enter only positive cores tested</span>
                 </div>
             </div>
             <table className="CoreDataTable">
@@ -81,7 +92,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                         {coreHeaders.map((cr, index) => (
                             <th key={index} className="TableColLabel">
                                 <div className="LabelIconWrapper">
-                                    <FontAwesomeIcon icon={faInfoCircle} />
+                                    <FontAwesomeIcon icon={faInfoCircle} size={'1x'} />
                                     <label className="FormLabel">
                                         {cr.name}
                                     </label>
@@ -103,11 +114,11 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                             const obj = core[k as keyof CoreData];
                             return (
                                 <td
-                                    className="CoreCell"
+                                    className={"CoreCell"}
                                     key={index + k}
                                 >
                                     <input
-                                        className="FormInput"
+                                        className={["FormInput", (!obj.validation.valid && obj.validation.touched) && "CoreValidationError"].join(" ")}
                                         style={k === "coreID" ? {width: "100px"} : {}}
                                         name={k}
                                         disabled={obj.disabled}

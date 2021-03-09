@@ -1,14 +1,14 @@
 import { CoreData } from './data/coreData';
 
-export const getTotalCoresPositive = (cores : CoreData[]) => {
-        let count = 0;
-        cores.forEach(cr => {
-            if (parseInt(cr.gleasonPrimary.value) > 2 || parseInt(cr.gleasonPrimary.value) > 2) {
-                count++;
-            }
-        })
-        return count;
-}
+// export const getTotalCoresPositive = (cores : CoreData[]) => {
+//         let count = 0;
+//         cores.forEach(cr => {
+//             if (parseInt(cr.gleasonPrimary.value) > 2 || parseInt(cr.gleasonPrimary.value) > 2) {
+//                 count++;
+//             }
+//         })
+//         return count;
+// }
 
 export const getCountGGFourOrFive = (cores : CoreData[]) =>{
         let count = 0;
