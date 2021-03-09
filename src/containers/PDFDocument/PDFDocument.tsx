@@ -206,6 +206,7 @@ const MyDocument = ({
                             <Text>PSA: {formData.psa.value || "0"}</Text>
                             <Text>Clinical Stage: {formData.clinicalStage.value || "0"}</Text>
                             <Text>Prostate Size: {formData.prostateSize.value || "0"}</Text>
+                            <Text>Total Cores: {formData.totalCores.value || "0"}</Text>
                         </View>
                     </View>
                 </View>
