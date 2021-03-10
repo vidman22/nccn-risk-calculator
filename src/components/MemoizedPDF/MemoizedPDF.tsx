@@ -35,7 +35,7 @@ const LinkWrapper = ({
             fileName="prostate-risk-result.pdf">
             {({ blob, url, loading, error }) => (
                 <div className="InnerCopyFlex">
-                    {error ? <div>{error}</div> :
+                    {error ? <div>{error.message}</div> :
                         <div className="DownloadPdfIcon">
                             <FontAwesomeIcon icon={faPrint} />
                         </div>
