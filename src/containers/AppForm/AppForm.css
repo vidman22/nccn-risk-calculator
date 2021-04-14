@@ -266,7 +266,7 @@
     .AlignRight {
         margin: 1rem 0rem;
     }
-    .InputWrapper {
+    .ValidationWrapper, .InputWrapper {
         width: 100%;
     }
 }
