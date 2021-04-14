@@ -479,7 +479,7 @@ export default function AppForm() {
                         case N1:
                             newValidation.valid = false;
                             newValidation.touched = true;
-                            newValidation.msg = "High risk stage of M1 and N1 cannot be used in calculation. Those patients are encouraged to seek prostate cancer care at a center of excellence that specializes in treating high risk prostate cancer.";
+                            newValidation.msg = "Metastatic stage diagnosis of positive lymph node (N1) or distant metastasis (M1) cannot use this nomogram. This very high risk diagnosis should be handled by a multi-expert team of urologist, radiation oncologist, medical oncologist, and other specialties such as genetic testing where the doctors specialize in very high risk prostate cancer.";
                             break;
                         default:
                             break;
