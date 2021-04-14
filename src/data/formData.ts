@@ -7,7 +7,6 @@ import {
     T2c,
     T3a,
     T3b,
-    T3c,
     T4,
     N1,
     M1,
@@ -20,7 +19,7 @@ type Validation = {
     msg: string;
 }
 
-export type ClinicalStage = 'T1a' | 'T1b' | 'T1c' | 'T2a' | 'T2b' | 'T2c' | 'T3a' | 'T3b' | 'T3c' | 'T4' | 'N1' | 'M1';
+export type ClinicalStage = 'T1a' | 'T1b' | 'T1c' | 'T2a' | 'T2b' | 'T2c' | 'T3a' | 'T3b' | 'T4' | 'N1' | 'M1';
 
 export interface FormValue {
     value: string;
@@ -77,8 +76,8 @@ export const formData = {
         description: "The latest PSA score: this ranges from 0-10,000",
     },
     totalCores: {
-        value: '6',
-        initialValue: '6',
+        value: '',
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -89,7 +88,7 @@ export const formData = {
         min: '6',
         max: '50',
         placeholder: "6",
-        description: "Input the total number of cores extracted in the biopsy",
+        description: "Input the total number of cores extracted in the biopsy, min - 6",
     },
     prostateSize: {
         value: '10',
@@ -119,7 +118,6 @@ export const formData = {
             T2c,
             T3a,
             T3b,
-            T3c,
             T4,
             N1,
             M1,
