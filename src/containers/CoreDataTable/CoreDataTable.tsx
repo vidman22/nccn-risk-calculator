@@ -108,7 +108,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                     {cores && cores.map((core, rowIndex) =>
                     (<tr key={rowIndex} className="CoreRow">
                         <td className="CoreCell">
-                            <p>{rowIndex + 1}</p>
+                            <span>{rowIndex + 1}</span>
                         </td>
                         {Object.keys(core).map((k, index) => {
                             const obj = core[k as keyof CoreData];
@@ -117,6 +117,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                                     className={"CoreCell"}
                                     key={index + k}
                                 >
+                                    {obj.validation.msg && <p>{obj.validation.msg}</p>}
                                     <input
                                         className={["FormInput", (!obj.validation.valid && obj.validation.touched) && "CoreValidationError"].join(" ")}
                                         style={k === "coreID" ? {width: "100px"} : {}}

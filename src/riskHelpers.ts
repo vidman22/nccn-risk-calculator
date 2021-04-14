@@ -83,7 +83,7 @@ export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, p
     console.log("ggFourAndFiveCount", ggFourAndFiveCount );
     console.log("psaDensity", psaDensity );
     console.log("maxInvolvedPercentage",maxInvolvedPercentage );
-    console.log(" psa", psa );
+    console.log("psa", psa );
     console.log("clinicalStage", clinicalStage,);
     console.log("totalCoresPositive", totalCoresPositive);
     let risk = '';

@@ -431,11 +431,27 @@ export default function AppForm() {
                 Object.keys(newCore).forEach((k) => {
                     const newObj = {...newCore[k as keyof CoreData]};
                     const newValidation = {...newObj.validation};
-                    if (k !== 'gradeGroup'){
+                    if (k !== 'gradeGroup' && k !== 'gleasonSum'){
                         if (!newObj.value || newObj.value === "0") {
                             newValidation.valid = false;
                             newValidation.touched = true;
                             newValidation.msg = "add a value";
+                            isValid = false;
+                        }
+                    }
+                    if (k === 'gleasonPrimary') {
+                        if (parseInt(newObj.value) > 5) {
+                            newValidation.valid = false;
+                            newValidation.touched = true;
+                            newValidation.msg = "too high";
+                            isValid = false;
+                        }
+                    }
+                    if (k === 'gleasonSecondary') {
+                        if (parseInt(newObj.value) > 5) {
+                            newValidation.valid = false;
+                            newValidation.touched = true;
+                            newValidation.msg = "too high";
                             isValid = false;
                         }
                     }
@@ -682,7 +698,6 @@ export default function AppForm() {
                     </button>
                     <button
                         onClick={async () => {
-                            // setShowPdf(true);
                             calculateAnalysis();
                         }}
                         type="button"

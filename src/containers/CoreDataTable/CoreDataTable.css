@@ -38,6 +38,7 @@
 }
 
 .CoreCell {
+    position: relative;
     padding: 8px 0px;
     border-bottom: 1px solid #eee;
 }
@@ -57,9 +58,18 @@
 }
 
 .CoreCell p{
+    position: absolute;
+    left: 10px;
+    top: -25px;
+    font-size: 14px;
+    width: 100px;
+    color:rgba(255, 0, 0, 0.9);
+}
+.CoreCell span{
     font-size: 22px;
 }
 .CoreValidationError {
+    border-radius: 4px;
     border-color:rgba(255, 0, 0, 0.9);
 }
 
