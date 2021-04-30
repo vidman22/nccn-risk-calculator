@@ -41,7 +41,7 @@ export const coreData = {
         },
         min: '',
         max: '',
-        placeholder: "location",
+        placeholder: '0',
         disabled: false,
     },
     length: {
@@ -144,7 +144,6 @@ export const coreData = {
 
 export const coreHeaders = [
     { name: 'Core #', description: 'The core\'s number' },
-    { name: 'Core Location', description: 'Identifier corresponding to the location of the core, not needed for calculation' },
     { name: 'Length', description: 'The length of the core in millimeters' },
     { name: '% Involved', description: 'The percentage of the core that shows abnormality' },
     { name: 'Primary', description: 'This is the Gleason Primary score of the core' },

@@ -107,9 +107,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                 <tbody className="CoreDataBody">
                     {cores && cores.map((core, rowIndex) =>
                     (<tr key={rowIndex} className="CoreRow">
-                        <td className="CoreCell">
-                            <span>{rowIndex + 1}</span>
-                        </td>
                         {Object.keys(core).map((k, index) => {
                             const obj = core[k as keyof CoreData];
                             return (
@@ -120,7 +117,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                                     {obj.validation.msg && <p>{obj.validation.msg}</p>}
                                     <input
                                         className={["FormInput", (!obj.validation.valid && obj.validation.touched) && "CoreValidationError"].join(" ")}
-                                        style={k === "coreID" ? {width: "100px"} : {}}
                                         name={k}
                                         disabled={obj.disabled}
                                         min={obj.min || '0'}

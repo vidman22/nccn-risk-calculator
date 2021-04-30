@@ -87,8 +87,8 @@ export const formData = {
         label: "Total Cores",
         min: '6',
         max: '50',
-        placeholder: "6",
-        description: "Input the total number of cores extracted in the biopsy, min - 6",
+        placeholder: '0',
+        description: "Input the total number of cores extracted in the biopsy; the min value is 6.",
     },
     prostateSize: {
         value: '10',
