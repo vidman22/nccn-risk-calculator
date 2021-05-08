@@ -150,7 +150,7 @@ export default function AppForm() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [coresValid, setCoresValid] = useState(true);
-    const [showInfoModal, setShowInfoModal] = useState(false);
+    const [showInfoModal, setShowInfoModal] = useState(true);
     const [form, setForm] = useState(formData);
 
     const [veryLowRiskFactors, setVeryLowRiskFactors] = useState<VeryLowRiskFactor>(veryLowRiskFactorsData);
@@ -446,12 +446,24 @@ export default function AppForm() {
                             newValidation.msg = "too high";
                             isValid = false;
                         }
+                        if (parseInt(newObj.value) < 3) {
+                            newValidation.valid = false;
+                            newValidation.touched = true;
+                            newValidation.msg = "too low";
+                            isValid = false;
+                        }
                     }
                     if (k === 'gleasonSecondary') {
                         if (parseInt(newObj.value) > 5) {
                             newValidation.valid = false;
                             newValidation.touched = true;
                             newValidation.msg = "too high";
+                            isValid = false;
+                        }
+                        if (parseInt(newObj.value) < 3) {
+                            newValidation.valid = false;
+                            newValidation.touched = true;
+                            newValidation.msg = "too low";
                             isValid = false;
                         }
                     }

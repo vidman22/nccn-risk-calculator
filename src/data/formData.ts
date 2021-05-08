@@ -103,7 +103,7 @@ export const formData = {
         min: '10',
         max: '200',
         placeholder: "10",
-        description: "Input the size of the prostate in cc (cubic centimeters)",
+        description: "Input the size of the prostate in cc (cubic centimeters), ml (milliliters), or grams",
     },
     clinicalStage: {
         value: 'T1c',

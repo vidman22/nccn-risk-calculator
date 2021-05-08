@@ -40,6 +40,9 @@
 }
 
 .NewBackButton {
+    position: absolute;
+    right: -4rem;
+    top: -1rem;
     font-size: 1rem;
     transition: all 120ms ease-in;
 }
@@ -70,7 +73,6 @@
 
 .NewBackButton:hover{
     color: #0858B8;
-    transform: rotateZ(90deg);
 }
 
 .ModalOpen {

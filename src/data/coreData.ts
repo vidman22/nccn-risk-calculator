@@ -55,8 +55,8 @@ export const coreData = {
             valid: false,
             msg: "",
         },
-        min: '0',
-        max: '40',
+        min: '1',
+        max: '35',
         placeholder: "0",
         disabled: false,
     },
@@ -143,7 +143,7 @@ export const coreData = {
 } as CoreData;
 
 export const coreHeaders = [
-    { name: 'Core #', description: 'The core\'s number' },
+    { name: 'Core ID/#', description: 'The core\'s id or number'},
     { name: 'Length', description: 'The length of the core in millimeters' },
     { name: '% Involved', description: 'The percentage of the core that shows abnormality' },
     { name: 'Primary', description: 'This is the Gleason Primary score of the core' },
