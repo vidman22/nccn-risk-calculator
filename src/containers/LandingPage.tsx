@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import CoreDataTable from './CoreDataTable/CoreDataTable';
 import AppForm from './AppForm/AppForm';
@@ -22,7 +22,7 @@ import {
 } from '../coreHelpers';
 import { INTERMEDIATE_RISK } from '../data/riskConstants';
 import { Result } from '../components/Analysis';
-import { parseForm, parseParams } from '../helpers';
+import { parseForm, parseCores } from '../helpers';
 import { calculateNumHighRisk, calculateNumIntRiskFactors, calculateRisk, HighRiskParams, calculateIntermediateRisk, calculateCapra } from '../riskHelpers';
 import {
     T1a,
@@ -145,15 +145,19 @@ export const veryLowRiskFactorsData = {
     coresPositive: { label: "Fewer than 3 cores positive, each with less than 50% involved", value: false },
 };
 
+function useQuery(){
+    return new URLSearchParams(useLocation().search);
+}
+
 const LandingPage = () => {
-    const query = new URLSearchParams(useLocation().search);
+    const query = useQuery();
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [coresValid, setCoresValid] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(true);
     const [form, setForm] = useState(formData);
-
+    const loadNumber = useRef<number>();
     const [veryLowRiskFactors, setVeryLowRiskFactors] = useState<VeryLowRiskFactor>(veryLowRiskFactorsData);
     const [lowRiskFactors, setLowRiskFactors] = useState<IntRiskFactor>(lowRiskFactorsData);
     const [intRiskFactors, setIntRiskFactors] = useState<IntRiskFactor>(intRiskFactorsData);
@@ -192,7 +196,8 @@ const LandingPage = () => {
     }, [saved])
 
     useEffect(() => {
-
+        if (loadNumber.current) return;
+        loadNumber.current = 1;
         const splitArray = [] as any;
         const hasParams = query.has('0a');
         let savedForm = localStorage.getItem("form");
@@ -207,11 +212,12 @@ const LandingPage = () => {
         } else if (!hasParams) {
             return;
         }
-        const queryArray = parseParams(query)
+ 
+        const queryArray = parseCores(query)
         const newForm = parseForm(query, form);
 
         let tmpObj = {} as any;
-        queryArray.forEach((el: any, index: number) => {
+        queryArray.forEach((el: any) => {
             tmpObj[el.key] = el;
             if ((Object.keys(tmpObj).length) % 7 === 0) {
                 splitArray.push(tmpObj);
@@ -220,8 +226,7 @@ const LandingPage = () => {
         });
         setForm(newForm);
         setCores(splitArray);
-        // eslint-disable-next-line
-    }, [])
+    }, [form, query])
 
     const removeCore = (index: number) => {
         if (cores.length < 2) {
@@ -594,6 +599,15 @@ const LandingPage = () => {
         validateCores,
         validateForm]);
 
+    const handleNext = () => {
+        if (!validateForm()) return;
+        setStep(s => s + 1);
+    }
+    const handleCalculateAnalysis = async () => {
+        if (!validateCores()) return;
+        await calculateAnalysis()
+    }
+
     return (
         <div className='w-full'>
             <div className='flex items-center justify-center pt-8'>
@@ -610,14 +624,14 @@ const LandingPage = () => {
             </div>
             <div className='w-full sm:w-3/4 md:w-7/12 flex items-center justify-end m-auto mt-2'>
                 <button
-                    className='border border-gray-200 px-2 py-1 rounded mr-2 bg-white'
+                    className='border border-gray-200 px-3 py-1 rounded mr-2 bg-white'
                     type='button'
                     onClick={() => setShowConfirmation(true)}>
                     Clear
                     </button>
                 <button
-                    className='border border-gray-200 px-2 py-1 rounded text-white bg-white'
-                    style={{ backgroundColor: "#0858B8", color: "#fff" }}
+                    className='border border-gray-200 px-3 py-1 rounded text-white bg-white'
+                    style={{ backgroundColor: "#0858B8" }}
                     type='button'
                     onClick={() => {
                         localStorage.setItem("savedCores", "true");
@@ -629,7 +643,7 @@ const LandingPage = () => {
                     </button>
             </div>
             {saved &&
-                <div className="FadeCopied">
+                <div style={{top: '1rem', right: '2rem'}} className="absolute bg-gray-600 p-2 rounded text-white FadeCopied">
                     Info saved to browser
                 </div>
             }
@@ -678,7 +692,7 @@ const LandingPage = () => {
                 <div className='flex justify-between mt-6'>
                     {step > 0 ?
                         <button
-                            className='border border-gray-200 px-2 py-1 rounded bg-white'
+                            className='border border-gray-200 px-3 py-1 rounded bg-white'
                             onClick={() => setStep(s => s - 1)}
                         >
                             Back
@@ -688,17 +702,17 @@ const LandingPage = () => {
                     }
                     {step > 0 ?
                         <button
-                            className='border border-gray-200 px-2 py-1 rounded bg-white'
+                            className='border border-gray-200 px-3 py-1 rounded bg-white'
                             style={{ backgroundColor: "#0858B8", color: "#fff" }}
-                            onClick={async () => calculateAnalysis()}
+                            onClick={() => handleCalculateAnalysis()}
                         >
                             Analysis
                             </button>
                         :
                         <button
-                            className='border border-gray-200 px-2 py-1 rounded bg-white'
+                            className='border px-3 py-1 rounded bg-white'
                             style={{ backgroundColor: "#0858B8", color: "#fff" }}
-                            onClick={() => setStep(s => s + 1)}
+                            onClick={() => handleNext()}
                         >
                             Next
                     </button>

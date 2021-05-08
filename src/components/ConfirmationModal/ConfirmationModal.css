@@ -16,28 +16,6 @@
 .BackdropClosed {
     display: none;
 }
-.ModalButtonWrappers{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.AlignHeaderRight{
-    position: absolute;
-    display: block;
-    top: 1rem;
-    right: 1.5rem;
-}
-
-.AlignHeaderRight button{
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #555;
-}
-.AlignHeaderRight button:hover{
-    color: #00a8cc;
-}
 
 .NewBackButton {
     position: absolute;
@@ -61,20 +39,6 @@
     transition: all 0.3s ease-out;
 }
 
-.ConfirmationHeader {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-.ConfirmationHeader h2{
-    margin: 1rem auto;
-}
-
-.NewBackButton:hover{
-    color: #0858B8;
-}
-
 .ModalOpen {
     animation: openModal 0.4s ease-out forwards;
 }
@@ -83,13 +47,9 @@
     animation: closeModal 1s ease-out forwards;
 }
 
-
-
 .fade-slide-enter-active {
     animation: openModal 0.4s ease-out forwards;
 }
-
-
 
 .fade-slide-exit-active {
     animation: closeModal 1s ease-out forwards;

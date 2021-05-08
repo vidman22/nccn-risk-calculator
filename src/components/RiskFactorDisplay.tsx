@@ -37,11 +37,10 @@ const RiskFactorDisplay = ({
 
     return (
         <>
-            <h2>Your NCCN Risk Stratification: {getRisk(riskAssessment)}</h2>
-            {/* <h2>CAPRA Score: {capra}</h2> */}
-            <div className="RiskWrapper">
+            <div className='w-full flex justify-start text-xl font-medium mb-2'>Your NCCN Risk Stratification: <span className='font-normal text-gray-600 ml-2'>{getRisk(riskAssessment)}</span></div>
+            <div className='flex flex-col justify-between border border-gray-800 rounded-md m-auto'>
                 <div className={veryHighClasses.join(' ')}>
-                    <h4>Very High Risk Factors</h4>
+                    <h4 className='font-medium text-lg'>Very High Risk Factors</h4>
                     {Object.keys(vHighRiskFactors).map((k, index: number) => {
                         return (
                             <div className={vHighRiskFactors[k as keyof VHighRiskFactor].value ? "Factor" : "NonFactor"}
@@ -50,7 +49,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={highClasses.join(" ")}>
-                    <h4>High Risk Factors</h4>
+                    <h4 className='font-medium text-lg'>High Risk Factors</h4>
                     {Object.keys(highRiskFactors).map((k, index: number) => {
                         return (
                             <div className={highRiskFactors[k as keyof HighRiskFactor].value ? "Factor" : "NonFactor"}
@@ -59,7 +58,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={intUnfavorableClasses.join(" ")}>
-                    <h4>Unfavorable Intermediate Risk Factors</h4>
+                    <h4 className='font-medium text-lg'>Unfavorable Intermediate Risk Factors</h4>
                     {Object.keys(unfavorableRiskFactors).map((k, index: number) => {
                         return (
                             <div
@@ -69,7 +68,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={intFavorableClasses.join(" ")}>
-                    <h4>Favorable Int Risk Factors</h4>
+                    <h4 className='font-medium text-lg'>Favorable Int Risk Factors</h4>
                     {Object.keys(favorableRiskFactors).map((k, index: number) => {
                         return (
                             <div
@@ -79,7 +78,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={intClasses.join(" ")}>
-                    <h4>Intermediate Risk Factors</h4>
+                    <h4 className='font-medium text-lg'>Intermediate Risk Factors</h4>
                     {Object.keys(intRiskFactors).map((k: string, index: number) => {
                         return (
                             <div className={intRiskFactors[k as keyof IntRiskFactor].value ? "Factor" : "NonFactor"}
@@ -88,7 +87,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={lowRiskClasses.join(" ")}>
-                    <h4>Low Risk Factors</h4>
+                    <h4 className='font-medium text-lg'>Low Risk Factors</h4>
                     {Object.keys(lowRiskFactors).map((k: string, index: number) => {
                         return (
                             <div className={lowRiskFactors[k as keyof IntRiskFactor].value ? "Factor" : "NonFactor"}
@@ -97,7 +96,7 @@ const RiskFactorDisplay = ({
                     })}
                 </div>
                 <div className={veryLowRiskClasses.join(" ")}>
-                    <h4>Very Low Risk Factors</h4>
+                    <h4 className='font-medium text-lg'>Very Low Risk Factors</h4>
                     {Object.keys(veryLowRiskFactors).map((k: string, index: number) => {
                         return (
                             <div className={veryLowRiskFactors[k as keyof VeryLowRiskFactor].value ? "Factor" : "NonFactor"}

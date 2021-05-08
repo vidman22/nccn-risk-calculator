@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { XIcon, DocumentDuplicateIcon } from '@heroicons/react/solid';
 import Analysis, { Result } from '../Analysis';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { FormData } from '../../data/formData';
@@ -8,6 +7,7 @@ import RiskFactorDisplay from '../RiskFactorDisplay';
 import LinkWrapper from '../MemoizedPDF/MemoizedPDF';
 import './AnalysisModal.css';
 import { CoreData } from '../../data/coreData';
+
 import { FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor } from "../../containers/LandingPage";
 
 export type Props = {
@@ -60,7 +60,7 @@ export default function ShareLinkModal({
                     }
                 })
             })
-            pattern = pattern + "&age=" + (form.age.value || form.age.initialValue) + "&stage=" + (form.clinicalStage.value || form.clinicalStage.initialValue) + "&psa=" + (form.psa.value || form.psa.initialValue) + "&size=" + (form.prostateSize.value || form.prostateSize.initialValue) +"&cores" + (form.totalCores.value || form.totalCores.initialValue);
+            pattern = pattern + "&age=" + (form.age.value || form.age.initialValue) + "&stage=" + (form.clinicalStage.value || form.clinicalStage.initialValue) + "&psa=" + (form.psa.value || form.psa.initialValue) + "&size=" + (form.prostateSize.value || form.prostateSize.initialValue) +"&cores=" + (form.totalCores.value || form.totalCores.initialValue);
             return window.location.origin + '/?' + pattern;
 
         }, [cores, form])
@@ -78,15 +78,13 @@ export default function ShareLinkModal({
     return (
         <>
             <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>
-            ;
             <div className={cssClasses.join(' ')}>
-                <div className="AlignRight">
-                    <button className="NewBackButton" onClick={onDismiss}>
-                        <FontAwesomeIcon icon={faTimes} />
+                <div className='flex relative'>
+                    <button className='absolute' style={{top: '0rem', right: '0rem'}} onClick={onDismiss}>
+                        <XIcon className='h-5 w-5 text-gray-900 hover:text-green-500 duration-75 transition-all' />
                     </button>
                 </div>
-
-                <div className="AnalysisWrapper">
+                <div className='block m-auto w-full sm:w-11/12'>
                     <RiskFactorDisplay
                         riskAssessment={result.risk}
                         unfavorableRiskFactors={unfavorableRiskFactors}
@@ -98,17 +96,17 @@ export default function ShareLinkModal({
                         veryLowRiskFactors={veryLowRiskFactors}
                         capra={result.capra}
                     />
-                    <div className="LinkContainer">
+                    <div className='w-full my-2 rounded'>
                         <Analysis result={result} />
                     </div>
-                    <div style={{ cursor: "pointer" }} className="LinkContainer">
+                    <div className='cursor-pointer flex justify-center text-gray-700 items-center border border-gray-600 rounded-lg py-2 hover:bg-gray-600 hover:text-gray-50 transition-all duration-75'>
                         <CopyToClipboard
                             text={link}
                             onCopy={() => setShowCopied(true)}>
-                            <div className="InnerCopyFlex">
-                                <FontAwesomeIcon style={{ marginLeft: ".25rem", marginRight: "1rem" }} icon={faCopy} />
+                            <div className='flex justify-center items-center'>
+                                <DocumentDuplicateIcon className='h-5 w-5' style={{ marginLeft: ".2rem", marginRight: "1rem" }} />
                                 {showCopied ?
-                                    <span className="FadeCopied">
+                                    <span className='text-white bg-gray-600 rounded FadeCopied'>
                                         Copied
                                     </span>
                                     :
@@ -117,7 +115,7 @@ export default function ShareLinkModal({
                             </div>
                         </CopyToClipboard>
                     </div>
-                    <div className="LinkContainer">
+                    <div className='w-full mt-2 rounded'>
                         <LinkWrapper
                             result={result}
                             cores={cores}

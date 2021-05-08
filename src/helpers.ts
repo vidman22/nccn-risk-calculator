@@ -2,7 +2,7 @@ import { CoreValue } from "./data/coreData";
 import { FormData } from "./data/formData";
 
 
-export const parseParams: (query : URLSearchParams) => any = (query : URLSearchParams) => {
+export const parseCores: (query : URLSearchParams) => any = (query : URLSearchParams) => {
     const queryArray = [] as CoreValue[];
 
     query.forEach((value, key) => {
@@ -150,42 +150,42 @@ export const parseForm: (query: URLSearchParams, form: FormData ) => FormData = 
         switch (key) {
             case 'age':
                 const newAge = {...newForm.age}
-                let newValidation = {...newAge.validation};
+                const newAgeValidation = {...newAge.validation};
                 newAge.value = value;
-                newValidation.valid = true;
-                newAge.validation = newValidation;
+                newAgeValidation.valid = true;
+                newAge.validation = newAgeValidation;
                 newForm.age = newAge;
                 break;
             case 'cores':
                 const newTotalCores = {...newForm.totalCores}
-                newValidation = {...newTotalCores.validation};
+                const newCoreValidation = {...newTotalCores.validation};
                 newTotalCores.value = value;
-                newValidation.valid = true;
-                newTotalCores.validation = newValidation;
+                newCoreValidation.valid = true;
+                newTotalCores.validation = newCoreValidation;
                 newForm.totalCores = newTotalCores;
                 break;
             case 'stage':
                 const newStage = {...newForm.clinicalStage};
-                newValidation = {...newStage.validation};
+                const newStageValidation = {...newStage.validation};
                 newStage.value = value;
-                newValidation.valid = true;
-                newStage.validation = newValidation;
+                newStageValidation.valid = true;
+                newStage.validation = newStageValidation;
                 newForm.clinicalStage = newStage;
                 break;
             case 'psa':
                 const newPSA = {...newForm.psa};
-                newValidation = {...newPSA.validation};
+                const newPSAValidation = {...newPSA.validation};
                 newPSA.value = value;
-                newValidation.valid = true;
-                newPSA.validation = newValidation;
+                newPSAValidation.valid = true;
+                newPSA.validation = newPSAValidation;
                 newForm.psa = newPSA
                 break;
             case 'size':
                 const newSize = {...newForm.prostateSize};
-                newValidation = {...newSize.validation};
+                const newSizeValidation = {...newSize.validation};
                 newSize.value = value;
-                newValidation.valid = true;
-                newSize.validation = newValidation;
+                newSizeValidation.valid = true;
+                newSize.validation = newSizeValidation;
                 newForm.prostateSize = newSize;
                 break;
             default:

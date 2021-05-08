@@ -64,7 +64,7 @@ const AppForm = ({ handleChange, form }: Props) => {
                     </div>
                     <select
                         className='w-full border border-gray-200 h-8 text-lg rounded-sm ml-1'
-                        name={form.clinicalStage.label}
+                        name={'clinicalStage'}
                         value={form.clinicalStage.value}
                         onChange={handleChange}
                     >

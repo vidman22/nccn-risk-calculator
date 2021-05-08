@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { XIcon } from '@heroicons/react/solid';
 import {
     vHighRiskFactorsData,
     highRiskFactorsData,
@@ -40,12 +39,12 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
         <>
             <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;
             <div className={cssClasses.join(' ')}>
-                <div className="AlignRight">
-                    <button className="NewBackButton" onClick={onDismiss}>
-                        <FontAwesomeIcon icon={faTimes} />
+                <div className='relative'>
+                    <button style={{ top: '0rem', right: '-1rem' }} className='absolute' onClick={onDismiss}>
+                        <XIcon className='h-5 w-5 text-gray-900 hover:text-green-500 duration-75 transition-all' />
                     </button>
                 </div>
-                <h2>ROUNDY/VIDMAR PROSTATE CANCER RISK NOMOGRAM USER GUIDE</h2>
+                <h2 className='text-gray-800 text-xl mb-4 font-medium'>ROUNDY PROSTATE CANCER RISK NOMOGRAM USER GUIDE</h2>
                 <div className="InfoTextWrapper">
 
                     <p>

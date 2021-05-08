@@ -50,32 +50,32 @@ export const getRisk = (risk : string) => {
 const Analysis: React.FC<Props> = ({ result }: Props) => {
 
     return (
-        <div className="AnalysisContainer">
+        <div className=''>
 
-            <div className="ResultContainer">
+            <div className='border border-gray-800 rounded-lg p-2 flex flex-col h-32 flex-wrap text-left'>
                 <p>
-                    <span>Percentage of Cores Positive: </span>{result.corePercentagePositive}%
+                    <span className='font-medium'>Percentage of Cores Positive: </span>{result.corePercentagePositive}%
                 </p>
                 <p>
-                    <span>Highest Involved Percentage: </span>{result.maxInvolvedPercentage}%
+                    <span className='font-medium'>Highest Involved Percentage: </span>{result.maxInvolvedPercentage}%
                 </p>
                 <p>
-                    <span>PSA Density: </span>{result.psaDensity}
+                    <span className='font-medium'>PSA Density: </span>{result.psaDensity}
                 </p>
                 <p>
-                    <span>Max Primary: </span>{result.maxPrimary}
+                    <span className='font-medium'>Max Primary: </span>{result.maxPrimary}
                 </p>
                 <p>
-                    <span>Max Secondary: </span>{result.maxSecondary}
+                    <span className='font-medium'>Max Secondary: </span>{result.maxSecondary}
                 </p>
                 <p>
-                    <span>Max Gleason Sum: </span>{result.maxGleasonSum}
+                    <span className='font-medium'>Max Gleason Sum: </span>{result.maxGleasonSum}
                 </p>
                 <p>
-                    <span>Number of Cores with 4/5 Grade Group: </span>{result.ggFourAndFiveCount}
+                    <span className='font-medium'>Number of Cores with 4/5 Grade Group: </span>{result.ggFourAndFiveCount}
                 </p>
                 <p>
-                    <span>Max Grade Group: </span>{result.maxGradeGroup}
+                    <span className='font-medium'>Max Grade Group: </span>{result.maxGradeGroup}
                 </p>
             </div>
         </div>
