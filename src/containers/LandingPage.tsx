@@ -278,7 +278,9 @@ const LandingPage = () => {
         newElement.value = value;
 
         newForm[name] = newElement;
+        console.log('newForm', newForm);
         setForm(newForm);
+        validateForm();
     };
 
     const setVeryHighRiskFactorsHelper = useCallback(
@@ -491,8 +493,8 @@ const LandingPage = () => {
     const validateForm = useCallback(
         () => {
             let isValid = true;
-            Object.keys(formData).forEach((k, index) => {
-                const obj = formData[k as keyof FormData];
+            Object.keys(form).forEach((k) => {
+                const obj = form[k as keyof FormData];
                 const newForm = { ...form };
                 const newElement = newForm[k as keyof FormData];
                 const newValidation = { ...newElement.validation };

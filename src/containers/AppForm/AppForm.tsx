@@ -75,7 +75,7 @@ const AppForm = ({ handleChange, form }: Props) => {
                         ))}
                     </select>
                 </div>
-                {!form.clinicalStage.validation.valid && <div style={{ bottom: '-1.25rem' }} className='absolute text-sm font-medium text-red-500'>{form.clinicalStage.validation.msg}</div>}
+                {!form.clinicalStage.validation.valid && <div style={{ top: '-6.25rem' }} className='absolute text-sm bg-white rounded p-4 shadow-lg font-medium text-red-500'>{form.clinicalStage.validation.msg}</div>}
             </div>
         </div>
     );
