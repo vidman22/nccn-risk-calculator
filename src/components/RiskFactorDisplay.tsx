@@ -1,5 +1,5 @@
 import React from 'react';
-import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../containers/AppForm/AppForm";
+import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../containers/LandingPage";
 import {getRisk} from './Analysis';
 import './Analysis.css';
 import {HIGH_RISK, INTERMEDIATE_HIGH_RISK, INTERMEDIATE_LOW_RISK, LOW_RISK, VERY_HIGH_RISK, VERY_LOW_RISK, INTERMEDIATE_RISK} from '../data/riskConstants';

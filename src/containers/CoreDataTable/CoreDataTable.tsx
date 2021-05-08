@@ -6,7 +6,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import DeleteIcon from '../../components/DeleteIcon/DeleteIcon';
 import { gradeGroupTable } from '../../data/gradeGroup';
 import { CoreData, coreHeaders } from '../../data/coreData';
-import './CoreDataTable.css';
+import Tippy from '@tippyjs/react';
 
 type Props = {
     addCore: () => void;
@@ -40,7 +40,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
         const newCores = [...cores];
         const newCore = { ...newCores[index] };
         const newElement = { ...newCore[name] };
-        const newValidation = { ...newElement.validation};
+        const newValidation = { ...newElement.validation };
 
         newValidation.valid = true;
         newValidation.msg = "";
@@ -53,8 +53,8 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
         newCore[name] = newElement;
         const newGleasonSum = { ...newCore.gleasonSum }
         const newGradeGroup = { ...newCore.gradeGroup }
-        const newGleasonSumValidation =  {...newGleasonSum.validation};
-        const newGradeGroupValidation =  {...newGradeGroup.validation};
+        const newGleasonSumValidation = { ...newGleasonSum.validation };
+        const newGradeGroupValidation = { ...newGradeGroup.validation };
         newGleasonSumValidation.valid = true;
         newGradeGroupValidation.valid = true;
 
@@ -75,48 +75,45 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
     }
 
     return (
-        <div className="CoreDataContainer">
-            {showWarning && <span className="CoreWarning">Gleason scores less than 3 are not factored into risk</span>}
-            <div className="CoreDataTitle">
-                <div className="LabelIconWrapper">
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                    <label className="FormLabel">
-                        <h2>Core Data</h2>
-                    </label>
-                    <span>Enter only positive cores tested</span>
-                </div>
+        <div className='relative'>
+            {showWarning && <span style={{right: 0}} className='absolute text-red-500 border-2 rounded px-2 border-red-400'>Gleason scores less than 3 are not factored into risk</span>}
+            <div className='flex items-center my-2'>
+                <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content='Enter only positive cores tested'>
+                    <div className='mr-2'>
+                        <FontAwesomeIcon className='text-gray-400 mr-1 m' icon={faInfoCircle} />
+                    </div>
+                </Tippy>
+                <h2 className='text-lg font-medium'>Core Data</h2>
             </div>
-            <table className="CoreDataTable">
-                <thead>
-                    <tr className="TableHeader">
-                        {coreHeaders.map((cr, index) => (
-                            <th key={index} className="TableColLabel">
-                                <div className="LabelIconWrapper">
-                                    <FontAwesomeIcon icon={faInfoCircle} size={'1x'} />
-                                    <label className="FormLabel">
-                                        {cr.name}
-                                    </label>
-                                    <span>{cr.description}</span>
+            <div className="flex flex-col w-full">
+                <div className='flex w-full'>
+                    {coreHeaders.map((cr, index) => (
+                        <div key={index} className='flex items-center font-medium text-left truncate w-32 mr-2'>
+                            <Tippy content={cr.description} className='bg-gray-400 text-white rounded-md px-2 cursor-pointer'>
+                                <div className='mr-1'>
+                                    <FontAwesomeIcon className='text-gray-400 mr-1 m' icon={faInfoCircle} />
                                 </div>
-                            </th>
-                        ))}
-                        <th className="TableColLabel">
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className="CoreDataBody">
+                            </Tippy>
+                            {cr.name}
+                        </div>
+                    ))}
+                    <div className='w-12'>
+                    </div>
+                </div>
+                <div className='flex flex-col w-full'>
                     {cores && cores.map((core, rowIndex) =>
-                    (<tr key={rowIndex} className="CoreRow">
+                    (<div key={rowIndex} className='flex w-full mt-4 items-center'>
                         {Object.keys(core).map((k, index) => {
                             const obj = core[k as keyof CoreData];
+                            if (index > 4) return null;
                             return (
-                                <td
-                                    className={"CoreCell"}
+                                <div
+                                    className='relative w-32 mr-2'
                                     key={index + k}
                                 >
-                                    {obj.validation.msg && <p>{obj.validation.msg}</p>}
+                                    {obj.validation.msg && <p style={{bottom: '-1.25rem'}} className='absolute text-red-500'>{obj.validation.msg}</p>}
                                     <input
-                                        className={["FormInput", (!obj.validation.valid && obj.validation.touched) && "CoreValidationError"].join(" ")}
+                                        className='h-8 px-2 text-lg border border-gray-200 rounded-sm w-full'
                                         name={k}
                                         disabled={obj.disabled}
                                         min={obj.min || '0'}
@@ -126,17 +123,17 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                                         value={obj.value}
                                         onChange={(e) => handleChange(e, rowIndex)}
                                     />
-                                </td>
+                                </div>
                             )
                         })}
-                        <td className="CoreCell">
+                        <div className='w-12'>
                             <DeleteIcon onClick={() => removeCore(rowIndex)} icon={faMinusCircle} />
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
                     ))}
-                </tbody>
-            </table>
-            <div style={{ marginTop: "1rem" }}>
+                </div>
+            </div>
+            <div className='w-full flex justify-center mt-3'>
                 <Icon onClick={() => addCore()} icon={faPlusCircle} />
             </div>
         </div>

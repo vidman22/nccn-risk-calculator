@@ -8,7 +8,7 @@ import RiskFactorDisplay from '../RiskFactorDisplay';
 import LinkWrapper from '../MemoizedPDF/MemoizedPDF';
 import './AnalysisModal.css';
 import { CoreData } from '../../data/coreData';
-import { FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor } from "../../containers/AppForm/AppForm";
+import { FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor } from "../../containers/LandingPage";
 
 export type Props = {
     visible: boolean;

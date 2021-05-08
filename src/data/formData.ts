@@ -91,8 +91,8 @@ export const formData = {
         description: "Input the total number of cores extracted in the biopsy; the min value is 6.",
     },
     prostateSize: {
-        value: '10',
-        initialValue: '10',
+        value: '',
+        initialValue: '0',
         type: "number",
         validation: {
             touched: false,
@@ -102,7 +102,7 @@ export const formData = {
         label: "Prostate Size",
         min: '10',
         max: '200',
-        placeholder: "10",
+        placeholder: "0",
         description: "Input the size of the prostate in cc (cubic centimeters), ml (milliliters), or grams",
     },
     clinicalStage: {

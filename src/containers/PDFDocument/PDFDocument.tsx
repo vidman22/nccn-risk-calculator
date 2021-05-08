@@ -3,7 +3,7 @@ import {CoreData} from '../../data/coreData';
 import {FormData} from '../../data/formData';
 import {Document, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
 import {getRisk, Result} from '../../components/Analysis';
-import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../AppForm/AppForm";
+import {FavorableRiskFactors, HighRiskFactor, IntRiskFactor, VeryLowRiskFactor, VHighRiskFactor} from "../LandingPage";
 import {HIGH_RISK, INTERMEDIATE_HIGH_RISK, INTERMEDIATE_LOW_RISK, LOW_RISK, VERY_HIGH_RISK, VERY_LOW_RISK} from "../../data/riskConstants";
 
 const styles = StyleSheet.create({

@@ -14,7 +14,7 @@ import {
     IntRiskFactor,
     VeryLowRiskFactor,
     FavorableRiskFactors,
-} from '../../containers/AppForm/AppForm';
+} from '../../containers/LandingPage';
 import './InfoModal.css';
 
 type Props = {

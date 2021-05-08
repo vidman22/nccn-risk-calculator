@@ -1,19 +1,18 @@
 import React from 'react';
-import AppForm from './containers/AppForm/AppForm';
+import LandingPage from './containers/LandingPage';
 import {
     BrowserRouter as Router,
     Switch,
     Route
 } from 'react-router-dom';
-import './App.css';
 
 function App() {
     return (
-        <div className="App">
+        <div className="block m-0 bg-gray-50 h-screen">
             <Router>
                 <Switch>
                     <Route path="/">
-                        <AppForm />
+                        <LandingPage />
                     </Route>
                 </Switch>
             </Router>
