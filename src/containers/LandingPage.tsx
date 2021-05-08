@@ -7,6 +7,8 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../components/AnalysisModal/AnalysisModal';
 import InfoModal from '../components/InfoModal/InfoModal';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import styled from 'styled-components';
 // import {PDFViewer} from '@react-pdf/renderer';
 // import PDFDocument from "../PDFDocument/PDFDocument";
 import { coreData, CoreData } from '../data/coreData';
@@ -37,6 +39,22 @@ import {
     N1,
     M1,
 } from '../data/riskConstants';
+
+const Fade = styled.div`
+  &.fade-enter {
+    opacity: 0;
+  }
+  &.fade-enter-active {
+    opacity: 1;
+  }
+  &.fade-exit {
+    opacity: 1;
+  }
+  &.fade-exit-active {
+    opacity: 0;
+  }
+  
+`;
 
 export interface HighRiskFactor {
     psa: { label: string, value: boolean };
@@ -145,7 +163,7 @@ export const veryLowRiskFactorsData = {
     coresPositive: { label: "Fewer than 3 cores positive, each with less than 50% involved", value: false },
 };
 
-function useQuery(){
+function useQuery() {
     return new URLSearchParams(useLocation().search);
 }
 
@@ -158,6 +176,7 @@ const LandingPage = () => {
     const [showInfoModal, setShowInfoModal] = useState(true);
     const [form, setForm] = useState(formData);
     const loadNumber = useRef<number>();
+    const nodeRef = useRef(null)
     const [veryLowRiskFactors, setVeryLowRiskFactors] = useState<VeryLowRiskFactor>(veryLowRiskFactorsData);
     const [lowRiskFactors, setLowRiskFactors] = useState<IntRiskFactor>(lowRiskFactorsData);
     const [intRiskFactors, setIntRiskFactors] = useState<IntRiskFactor>(intRiskFactorsData);
@@ -212,7 +231,7 @@ const LandingPage = () => {
         } else if (!hasParams) {
             return;
         }
- 
+
         const queryArray = parseCores(query)
         const newForm = parseForm(query, form);
 
@@ -503,7 +522,7 @@ const LandingPage = () => {
                     newValidation.msg = "Please add a value";
                     isValid = false;
                 }
-                if (k === 'prostateSize'){
+                if (k === 'prostateSize') {
                     if (parseInt(newElement.value) > 35) {
                         newValidation.valid = false;
                         newValidation.touched = true;
@@ -511,7 +530,7 @@ const LandingPage = () => {
                         isValid = false;
                     }
                 }
-                if (k === 'psa'){
+                if (k === 'psa') {
                     if (parseInt(newElement.value) > 10000) {
                         newValidation.valid = false;
                         newValidation.touched = true;
@@ -519,7 +538,7 @@ const LandingPage = () => {
                         isValid = false;
                     }
                 }
-                if (k === 'totalCores'){
+                if (k === 'totalCores') {
                     if (parseInt(newElement.value) > 50) {
                         newValidation.valid = false;
                         newValidation.touched = true;
@@ -674,98 +693,91 @@ const LandingPage = () => {
                     </button>
             </div>
             {saved &&
-                <div style={{top: '1rem', right: '2rem'}} className="absolute bg-gray-600 p-2 rounded text-white FadeCopied">
+                <div style={{ top: '1rem', right: '2rem' }} className="absolute bg-gray-600 p-2 rounded text-white FadeCopied">
                     Info saved to browser
                 </div>
             }
-            <div className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-7/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6'>
-
-                {/*{showPdf &&*/}
-                {/*    <PDFViewer>*/}
-                {/*        <PDFDocument*/}
-                {/*            highRiskFactors={highRiskFactors}*/}
-                {/*            intRiskFactors={intRiskFactors}*/}
-                {/*            vHighRiskFactors={vHighRiskFactors}*/}
-                {/*            favorableRiskFactors={favorableRiskFactors}*/}
-                {/*            unfavorableRiskFactors={unfavorableRiskFactors}*/}
-                {/*            riskAssessment={result.risk}*/}
-                {/*            coreData={cores}*/}
-                {/*            resultData={result}*/}
-                {/*            formData={form}*/}
-                {/*        />*/}
-                {/*    </PDFViewer>}*/}
-
-                {step === 0 && <AppForm form={form} handleChange={handleChange} />}
-                {step === 1 && <CoreDataTable
-                    addCore={addCore}
-                    setCores={setCores}
-                    removeCore={removeCore}
-                    setCoresValid={setCoresValid}
-                    coresValid={coresValid}
-                    cores={cores}
-                />}
-                {showAnalysis && (
-                    <AnalysisModal
-                        visible={showAnalysis}
-                        onDismiss={() => setShowAnalysis(false)}
-                        result={result}
-                        cores={cores}
-                        form={form}
-                        highRiskFactors={highRiskFactors}
-                        intRiskFactors={intRiskFactors}
-                        vHighRiskFactors={vHighRiskFactors}
-                        favorableRiskFactors={favorableRiskFactors}
-                        unfavorableRiskFactors={unfavorableRiskFactors}
-                        lowRiskFactors={lowRiskFactors}
-                        veryLowRiskFactors={veryLowRiskFactors}
-                    />
-                )}
-                <div className='flex justify-between mt-6'>
-                    {step > 0 ?
-                        <button
-                            className='border border-gray-200 px-3 py-1 rounded bg-white'
-                            onClick={() => setStep(s => s - 1)}
-                        >
-                            Back
-                    </button>
-                        :
-                        <div></div>
-                    }
-                    {step > 0 ?
-                        <button
-                            className='border border-gray-200 px-3 py-1 rounded bg-white'
-                            style={{ backgroundColor: "#0858B8", color: "#fff" }}
-                            onClick={() => handleCalculateAnalysis()}
-                        >
-                            Analysis
+            <SwitchTransition mode={'out-in'}>
+            <CSSTransition
+                timeout={0}
+                key={step === 1 ? 'fade' : 'fading'}
+                classNames="fade"
+                nodeRef={nodeRef}
+            >
+                        <Fade ref={nodeRef} className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-7/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6'>
+                            {step === 0 && <AppForm form={form} handleChange={handleChange} />}
+                            {step === 1 && <CoreDataTable
+                                addCore={addCore}
+                                setCores={setCores}
+                                removeCore={removeCore}
+                                setCoresValid={setCoresValid}
+                                coresValid={coresValid}
+                                cores={cores}
+                            />}
+                            <div className='flex justify-between mt-6'>
+                                {step > 0 ?
+                                    <button
+                                        className='border border-gray-200 px-3 py-1 rounded bg-white'
+                                        onClick={() => setStep(s => s - 1)}
+                                    >
+                                        Back
+                                </button>
+                                    :
+                                    <div></div>
+                                }
+                                {step > 0 ?
+                                    <button
+                                        className='border border-gray-200 px-3 py-1 rounded bg-white'
+                                        style={{ backgroundColor: "#0858B8", color: "#fff" }}
+                                        onClick={() => handleCalculateAnalysis()}
+                                    >
+                                        Analysis
                             </button>
-                        :
-                        <button
-                            className='border px-3 py-1 rounded bg-white'
-                            style={{ backgroundColor: "#0858B8", color: "#fff" }}
-                            onClick={() => handleNext()}
-                        >
-                            Next
-                    </button>
-                    }
-                </div>
-                {showInfoModal &&
-                    <InfoModal
-                        visible={showInfoModal}
-                        onDismiss={() => setShowInfoModal(false)}
-                    />
-                }
-                {showConfirmation &&
-                    <ConfirmationModal
-                        visible={showConfirmation}
-                        onDismiss={() => setShowConfirmation(false)}
-                        confirmAction={() => {
-                            clearCores();
-                            setShowConfirmation(false);
-                        }}
-                    />
-                }
-            </div>
+                                    :
+                                    <button
+                                        className='border px-3 py-1 rounded bg-white'
+                                        style={{ backgroundColor: "#0858B8", color: "#fff" }}
+                                        onClick={() => handleNext()}
+                                    >
+                                        Next
+                         </button>
+                                }
+                            </div>
+                        </Fade>
+            </CSSTransition>
+            </SwitchTransition>
+            {showInfoModal &&
+                <InfoModal
+                    visible={showInfoModal}
+                    onDismiss={() => setShowInfoModal(false)}
+                />
+            }
+            {showAnalysis && (
+                <AnalysisModal
+                    visible={showAnalysis}
+                    onDismiss={() => setShowAnalysis(false)}
+                    result={result}
+                    cores={cores}
+                    form={form}
+                    highRiskFactors={highRiskFactors}
+                    intRiskFactors={intRiskFactors}
+                    vHighRiskFactors={vHighRiskFactors}
+                    favorableRiskFactors={favorableRiskFactors}
+                    unfavorableRiskFactors={unfavorableRiskFactors}
+                    lowRiskFactors={lowRiskFactors}
+                    veryLowRiskFactors={veryLowRiskFactors}
+                />
+            )}
+            {showConfirmation &&
+                <ConfirmationModal
+                    visible={showConfirmation}
+                    onDismiss={() => setShowConfirmation(false)}
+                    confirmAction={() => {
+                        clearCores();
+                        setShowConfirmation(false);
+                    }}
+                />
+            }
         </div>
     );
 }

@@ -27,7 +27,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "styled-components": "^5.3.0",
+    "react-transition-group": "^4.4.1",
     "typescript": "^4.2.4",
     "web-vitals": "^1.1.2"
   },
@@ -35,7 +35,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && netlify deploy --prod"
   },
   "eslintConfig": {
     "extends": [
@@ -56,8 +57,11 @@
     ]
   },
   "devDependencies": {
+    "@types/react-transition-group": "^4.4.1",
+    "@types/styled-components": "^5.1.9",
     "autoprefixer": "^9.8.6",
     "postcss": "^7.0.35",
+    "styled-components": "^5.3.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
   }
 }
