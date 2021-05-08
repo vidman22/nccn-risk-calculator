@@ -80,7 +80,6 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                     <div>
                         Side effects can include:
                     <ol>
-
                             <li>urinary incontinence – inability to control urine leakage</li>
                             <li>sexual impotence – inability to achieve or maintain an erection for sex</li>
                             <li>urinary stricture – difficulty to drain the bladder</li>
@@ -173,11 +172,10 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             </li>
                         </ol>
                         <div>
-                            <h2>NCCN Risk Stratification</h2>
-                            {/* <h2>CAPRA Score: {capra}</h2> */}
-                            <div className="RiskWrapper">
+                            <h2 className='w-full flex justify-start text-xl font-medium mb-2'>NCCN Risk Stratification</h2>
+                            <div className='flex flex-col justify-between border border-gray-800 rounded-md m-auto'>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
-                                    <h4>Very High Risk Factors</h4>
+                                    <h4 className='font-medium text-lg'>Very High Risk Factors</h4>
                                     {Object.keys(vHighRiskFactorsData).map((k, index: number) => {
                                         return (
                                             <div className="NonFactor"
@@ -186,7 +184,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                                     })}
                                 </div>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
-                                    <h4>High Risk Factors</h4>
+                                    <h4 className='font-medium text-lg'>High Risk Factors</h4>
                                     {Object.keys(highRiskFactorsData).map((k, index: number) => {
                                         return (
                                             <div className="NonFactor"
@@ -195,7 +193,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                                     })}
                                 </div>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
-                                    <h4>Unfavorable Intermediate Risk Factors</h4>
+                                    <h4 className='font-medium text-lg'>Unfavorable Intermediate Risk Factors</h4>
                                     {Object.keys(unfavorableRiskFactorsData).map((k, index: number) => {
                                         return (
                                             <div
@@ -205,7 +203,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                                     })}
                                 </div>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
-                                    <h4>Favorable Intermediate Risk Factors</h4>
+                                    <h4 className='font-medium text-lg'>Favorable Intermediate Risk Factors</h4>
                                     {Object.keys(favorableRiskFactorsData).map((k, index: number) => {
                                         return (
                                             <div
@@ -215,7 +213,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                                     })}
                                 </div>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
-                                    <h4>Intermediate Risk Factors</h4>
+                                    <h4 className='font-medium text-lg'>Intermediate Risk Factors</h4>
                                     {Object.keys(intRiskFactorsData).map((k: string, index: number) => {
                                         return (
                                             <div className="NonFactor"
@@ -224,7 +222,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                                     })}
                                 </div>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
-                                    <h4>Low Risk FactorsData</h4>
+                                    <h4 className='font-medium text-lg'>Low Risk FactorsData</h4>
                                     {Object.keys(lowRiskFactorsData).map((k: string, index: number) => {
                                         return (
                                             <div className="NonFactor"
@@ -233,7 +231,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                                     })}
                                 </div>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
-                                    <h4>Very Low Risk Factors</h4>
+                                    <h4 className='font-medium text-lg'>Very Low Risk Factors</h4>
                                     {Object.keys(veryLowRiskFactorsData).map((k: string, index: number) => {
                                         return (
                                             <div className={veryLowRiskFactorsData[k as keyof VeryLowRiskFactor].value ? "Factor" : "NonFactor"}
@@ -246,17 +244,17 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         </div>
                         <div>
                             <strong>USING THE NOMOGRAM</strong>
-                            <ol>
-                                <li>Enter the Age, PSA, Clinical Stage (from the DRE) and prostate size in ml, cc, or gm.</li>
-                                <li>Enter the biopsy core details.</li>
-                                <li>Index is the counter of the number of biopsy cores</li>
-                                <li>Core ID is the location in the prostate from which the core was extracted. This data is not used in the CAPRA and NCCN calculations, but is interesting for better understanding where the cancer is in the prostate. The prostate is labeled Base at the top, Mid Gland in the middle, and Apex at the bottom. The position is further broken down to Left, Center, and Right.</li>
-                                <li>Length is the measurement of the core in millimeters.</li>
-                                <li>Percent Involved is calculated by the pathologist and is an important indicator of risk that the cancer may already be outside the prostate.</li>
-                                <li>Primary is the primary Gleason Score from 3 to 5.</li>
-                                <li>Secondary is the secondary Gleason Score from 3 to 5.</li>
-                                <li>Sum is the Gleason sum calculated from the Primary and Secondary.</li>
-                                <li>Gleason Grade Group is calculated by the Nomogram</li>
+                            <ol className='list-decimal ml-4'>
+                                <li className='ml-1 '>Enter the Age, PSA, Clinical Stage (from the DRE) and prostate size in ml, cc, or gm.</li>
+                                <li className='ml-1 '>Enter the biopsy core details.</li>
+                                <li className='ml-1 '>Index is the counter of the number of biopsy cores</li>
+                                <li className='ml-1 '>Core ID is the location in the prostate from which the core was extracted. This data is not used in the CAPRA and NCCN calculations, but is interesting for better understanding where the cancer is in the prostate. The prostate is labeled Base at the top, Mid Gland in the middle, and Apex at the bottom. The position is further broken down to Left, Center, and Right.</li>
+                                <li className='ml-1 '>Length is the measurement of the core in millimeters.</li>
+                                <li className='ml-1 '>Percent Involved is calculated by the pathologist and is an important indicator of risk that the cancer may already be outside the prostate.</li>
+                                <li className='ml-1 '>Primary is the primary Gleason Score from 3 to 5.</li>
+                                <li className='ml-1 '>Secondary is the secondary Gleason Score from 3 to 5.</li>
+                                <li className='ml-1 '>Sum is the Gleason sum calculated from the Primary and Secondary.</li>
+                                <li className='ml-1 '>Gleason Grade Group is calculated by the Nomogram</li>
                             </ol>
                         </div>
                     </div>
