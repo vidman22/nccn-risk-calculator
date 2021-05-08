@@ -101,7 +101,7 @@ export const formData = {
         },
         label: "Prostate Size",
         min: '10',
-        max: '200',
+        max: '35',
         placeholder: "0",
         description: "Input the size of the prostate in cc (cubic centimeters), ml (milliliters), or grams",
     },

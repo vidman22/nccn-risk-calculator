@@ -278,7 +278,6 @@ const LandingPage = () => {
         newElement.value = value;
 
         newForm[name] = newElement;
-        console.log('newForm', newForm);
         setForm(newForm);
         validateForm();
     };
@@ -503,6 +502,36 @@ const LandingPage = () => {
                     newValidation.touched = true;
                     newValidation.msg = "Please add a value";
                     isValid = false;
+                }
+                if (k === 'prostateSize'){
+                    if (parseInt(newElement.value) > 35) {
+                        newValidation.valid = false;
+                        newValidation.touched = true;
+                        newValidation.msg = "must be smaller than 35";
+                        isValid = false;
+                    }
+                }
+                if (k === 'psa'){
+                    if (parseInt(newElement.value) > 10000) {
+                        newValidation.valid = false;
+                        newValidation.touched = true;
+                        newValidation.msg = "must be less than 1000";
+                        isValid = false;
+                    }
+                }
+                if (k === 'totalCores'){
+                    if (parseInt(newElement.value) > 50) {
+                        newValidation.valid = false;
+                        newValidation.touched = true;
+                        newValidation.msg = "must be less than 50";
+                        isValid = false;
+                    }
+                    if (parseInt(newElement.value) < 6) {
+                        newValidation.valid = false;
+                        newValidation.touched = true;
+                        newValidation.msg = "must be at least 6";
+                        isValid = false;
+                    }
                 }
                 if (k === 'clinicalStage') {
                     switch (obj.value) {
