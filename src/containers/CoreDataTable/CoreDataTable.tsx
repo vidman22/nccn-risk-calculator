@@ -78,23 +78,23 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
         <div className='relative'>
             {showWarning && <span style={{right: 0}} className='absolute text-red-500 border-2 rounded px-2 border-red-400'>Gleason scores less than 3 are not factored into risk</span>}
             <div className='flex items-center my-2'>
+                <h2 className='text-2xl font-medium'>Core Data</h2>
                 <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content='Enter only positive cores tested'>
-                    <div className='mr-2'>
-                        <FontAwesomeIcon className='text-gray-400 mr-1 m' icon={faInfoCircle} />
+                    <div className='ml-1'>
+                        <FontAwesomeIcon className='text-gray-400 ml-1' icon={faInfoCircle} />
                     </div>
                 </Tippy>
-                <h2 className='text-lg font-medium'>Core Data</h2>
             </div>
             <div className="flex flex-col w-full">
                 <div className='flex w-full'>
                     {coreHeaders.map((cr, index) => (
                         <div key={index} className='flex items-center font-medium text-left truncate w-32 mr-2'>
+                            <p className='truncate'>{cr.name}</p>
                             <Tippy content={cr.description} className='bg-gray-400 text-white rounded-md px-2 cursor-pointer'>
-                                <div className='mr-1'>
-                                    <FontAwesomeIcon className='text-gray-400 mr-1 m' icon={faInfoCircle} />
+                                <div className='ml-1'>
+                                    <FontAwesomeIcon className='text-gray-400 ml-1 hidden md:block' icon={faInfoCircle} />
                                 </div>
                             </Tippy>
-                            {cr.name}
                         </div>
                     ))}
                     <div className='w-12'>
@@ -105,7 +105,6 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                     (<div key={rowIndex} className='flex w-full mt-4 items-center'>
                         {Object.keys(core).map((k, index) => {
                             const obj = core[k as keyof CoreData];
-                            if (index > 4) return null;
                             return (
                                 <div
                                     className='relative w-32 mr-2'

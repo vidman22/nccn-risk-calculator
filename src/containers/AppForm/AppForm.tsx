@@ -24,14 +24,14 @@ const AppForm = ({ handleChange, form }: Props) => {
                         >
                             <div className='w-full flex flex-col justify-between items-start'>
                                 <div className='flex items-center'>
-                                    <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={obj.description}>
-                                        <div className='mr-1'>
-                                            <FontAwesomeIcon className='text-gray-400 mr-1 m' icon={faInfoCircle} />
-                                        </div>
-                                    </Tippy>
                                     <label className='text-lg w-full'>
                                         {obj.label}
                                     </label>
+                                    <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={obj.description}>
+                                        <div className='ml-1'>
+                                            <FontAwesomeIcon className='text-gray-400 ml-1' icon={faInfoCircle} />
+                                        </div>
+                                    </Tippy>
                                 </div>
                                 <input
                                     className='border border-gray-200 h-8 text-lg px-2 rounded-sm w-full'
@@ -53,14 +53,14 @@ const AppForm = ({ handleChange, form }: Props) => {
             <div className='relative flex flex-col w-full items-center justify-center'>
                 <div className='w-full flex flex-col justify-between items-start'>
                     <div className='flex items-center'>
-                        <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={form.clinicalStage.description}>
-                            <div className='mr-1'>
-                                <FontAwesomeIcon className='text-gray-400 mr-1 m' icon={faInfoCircle} />
-                            </div>
-                        </Tippy>
                         <label className='text-lg w-full'>
                             {form.clinicalStage.label}
                         </label>
+                        <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={form.clinicalStage.description}>
+                            <div className='ml-1'>
+                                <FontAwesomeIcon className='text-gray-400 ml-1' icon={faInfoCircle} />
+                            </div>
+                        </Tippy>
                     </div>
                     <select
                         className='w-full border border-gray-200 h-8 text-lg rounded-sm ml-1'

@@ -10,17 +10,10 @@
 }
 
 .AnalysisModal {
-    position: fixed;
-    z-index: 200;
-    background-color: white;
-    padding: 2rem;
-    text-align: center;
-    border-radius: 8px;
     height: 90vh;
-    overflow-y: scroll;
-    box-sizing: border-box;
     top: 5%;
     left: 7.5%;
     width: 85%;
+    z-index: 200;
     transition: all 0.3s ease-out;
 }

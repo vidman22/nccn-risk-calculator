@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const DeleteIcon = styled(FontAwesomeIcon)`
-    font-size: 20px;
+    font-size: 1rem;
     color: slategray;
     align-self: center;
     width: 24px;

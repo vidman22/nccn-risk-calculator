@@ -148,6 +148,6 @@ export const coreHeaders = [
     { name: '% Involved', description: 'The percentage of the core that shows abnormality' },
     { name: 'Primary', description: 'This is the Gleason Primary score of the core' },
     { name: 'Secondary', description: 'This is the Gleason Secondary score of the core' },
-    // { name: 'Sum', description: 'This is the auto-calculated sum of the Primary and Secondary' },
-    // { name: 'Grade Group', description: 'This is the auto-calculated Grade Group score from the Gleason scores' },
+    { name: 'Sum', description: 'This is the auto-calculated sum of the Primary and Secondary' },
+    { name: 'Grade Group', description: 'This is the auto-calculated Grade Group score from the Gleason scores' },
 ]

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const PlusIcon = styled(FontAwesomeIcon)`
     position: relative;
-    font-size: 24px;
+    font-size: 1rem;
     color: slategray;
     align-self: center;
     width: 24px;

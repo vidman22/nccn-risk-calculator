@@ -9,8 +9,6 @@ import AnalysisModal from '../components/AnalysisModal/AnalysisModal';
 import InfoModal from '../components/InfoModal/InfoModal';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import styled from 'styled-components';
-// import {PDFViewer} from '@react-pdf/renderer';
-// import PDFDocument from "../PDFDocument/PDFDocument";
 import { coreData, CoreData } from '../data/coreData';
 import { formData, FormData, ClinicalStage } from '../data/formData';
 import Tippy from '@tippyjs/react';
@@ -185,8 +183,6 @@ const LandingPage = () => {
     const [highRiskFactors, setHighRiskFactors] = useState<HighRiskFactor>(highRiskFactorsData);
     const [vHighRiskFactors, setVHighRiskFactors] = useState<VHighRiskFactor>(vHighRiskFactorsData);
     const [step, setStep] = useState(0);
-
-    // const [showPdf, setShowPdf] = useState(false);
 
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -668,7 +664,7 @@ const LandingPage = () => {
                         onClick={() => {
                             setShowInfoModal(true)
                         }}>
-                        <FontAwesomeIcon className='text-gray-200 text-lg' icon={faInfoCircle} size={'2x'} />
+                        <FontAwesomeIcon className='text-gray-400' icon={faInfoCircle} />
                     </button>
                 </Tippy>
             </div>
@@ -698,53 +694,59 @@ const LandingPage = () => {
                 </div>
             }
             <SwitchTransition mode={'out-in'}>
-            <CSSTransition
-                timeout={0}
-                key={step === 1 ? 'fade' : 'fading'}
-                classNames="fade"
-                nodeRef={nodeRef}
-            >
-                        <Fade ref={nodeRef} className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-7/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6'>
-                            {step === 0 && <AppForm form={form} handleChange={handleChange} />}
-                            {step === 1 && <CoreDataTable
-                                addCore={addCore}
-                                setCores={setCores}
-                                removeCore={removeCore}
-                                setCoresValid={setCoresValid}
-                                coresValid={coresValid}
-                                cores={cores}
-                            />}
-                            <div className='flex justify-between mt-6'>
-                                {step > 0 ?
-                                    <button
-                                        className='border border-gray-200 px-3 py-1 rounded bg-white'
-                                        onClick={() => setStep(s => s - 1)}
-                                    >
-                                        Back
-                                </button>
-                                    :
-                                    <div></div>
-                                }
-                                {step > 0 ?
-                                    <button
-                                        className='border border-gray-200 px-3 py-1 rounded bg-white'
-                                        style={{ backgroundColor: "#0858B8", color: "#fff" }}
-                                        onClick={() => handleCalculateAnalysis()}
-                                    >
-                                        Analysis
-                            </button>
-                                    :
-                                    <button
-                                        className='border px-3 py-1 rounded bg-white'
-                                        style={{ backgroundColor: "#0858B8", color: "#fff" }}
-                                        onClick={() => handleNext()}
-                                    >
-                                        Next
-                         </button>
-                                }
+                <CSSTransition
+                    timeout={0}
+                    key={step === 1 ? 'fade' : 'fading'}
+                    classNames="fade"
+                    nodeRef={nodeRef}
+                >
+                    <Fade ref={nodeRef} >
+                        {step === 0 &&
+                            <div className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-7/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6'>
+                                <AppForm form={form} handleChange={handleChange} />
                             </div>
-                        </Fade>
-            </CSSTransition>
+                        }
+                        {step === 1 &&
+                            <div className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-10/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6'>
+                                <CoreDataTable
+                                    addCore={addCore}
+                                    setCores={setCores}
+                                    removeCore={removeCore}
+                                    setCoresValid={setCoresValid}
+                                    coresValid={coresValid}
+                                    cores={cores}
+                                />
+                            </div>
+                        }
+                        {step > 0 ?
+                            <div className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-10/12 flex justify-end mt-6'>
+                                <button
+                                    className='border border-gray-200 px-3 py-1 rounded bg-white mr-2'
+                                    onClick={() => setStep(s => s - 1)}
+                                >
+                                    Back
+                                </button>
+                                <button
+                                    className='border border-gray-200 px-3 py-1 rounded bg-white'
+                                    style={{ backgroundColor: "#0858B8", color: "#fff" }}
+                                    onClick={() => handleCalculateAnalysis()}
+                                >
+                                    Analysis
+                            </button>
+                            </div>
+                            :
+                            <div className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-7/12 flex justify-end mt-6'>
+                                <button
+                                    className='border px-3 py-1 rounded bg-white'
+                                    style={{ backgroundColor: "#0858B8", color: "#fff" }}
+                                    onClick={() => handleNext()}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        }
+                    </Fade>
+                </CSSTransition>
             </SwitchTransition>
             {showInfoModal &&
                 <InfoModal

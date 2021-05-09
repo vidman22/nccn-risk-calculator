@@ -57,7 +57,7 @@ export const formData = {
         min: '0',
         max: '100',
         placeholder: "0",
-        description: "The patient's age",
+        description: "Input the patient's age at time of diagnosis.",
     },
     psa: {
         value: '',
@@ -73,7 +73,7 @@ export const formData = {
         min: '0',
         max: '10000',
         placeholder: "0",
-        description: "The latest PSA score: this ranges from 0-10,000",
+        description: "The latest PSA score; this ranges from 0-10,000.",
     },
     totalCores: {
         value: '',
@@ -103,7 +103,7 @@ export const formData = {
         min: '10',
         max: '35',
         placeholder: "0",
-        description: "Input the size of the prostate in cc (cubic centimeters), ml (milliliters), or grams",
+        description: "Input the size of the prostate in cc (cubic centimeters), ml (milliliters), or grams.",
     },
     clinicalStage: {
         value: 'T1c',
@@ -131,7 +131,7 @@ export const formData = {
         min: '0',
         max: '5',
         placeholder: "T1c",
-        description: "What is the clinical stage? Select from the dropdown.",
+        description: "Select the cancer stage from the dropdown.",
     },
    
    

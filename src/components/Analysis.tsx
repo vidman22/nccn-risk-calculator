@@ -50,9 +50,7 @@ export const getRisk = (risk : string) => {
 const Analysis: React.FC<Props> = ({ result }: Props) => {
 
     return (
-        <div className=''>
-
-            <div className='border border-gray-800 rounded-lg p-2 flex flex-col h-32 flex-wrap text-left'>
+            <div className='border border-gray-800 rounded-lg p-2 flex flex-col h-full sm:h-32 flex-wrap text-left'>
                 <p>
                     <span className='font-medium'>Percentage of Cores Positive: </span>{result.corePercentagePositive}%
                 </p>
@@ -78,7 +76,6 @@ const Analysis: React.FC<Props> = ({ result }: Props) => {
                     <span className='font-medium'>Max Grade Group: </span>{result.maxGradeGroup}
                 </p>
             </div>
-        </div>
     );
 }
 export default Analysis;
