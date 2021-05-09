@@ -24,7 +24,7 @@ type Props = {
 export default function ShareLinkModal({ visible, onDismiss }: Props) {
     const [showCopied, setShowCopied] = useState(false);
     const cssClasses = [
-        "fixed bg-white overflow-y-scroll z-50 py-4 px-8 text-left rounded-lg overflow-scroll box-border",
+        "fixed bg-white overflow-y-scroll z-50 py-4 px-16 text-left rounded-lg overflow-scroll box-border",
         "InfoModal",
         visible ? "ModalOpen" : "ModalClosed"
     ];
@@ -44,7 +44,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         <XIcon className='h-5 w-5 text-gray-900 hover:text-green-500 duration-75 transition-all' />
                     </button>
                 </div>
-                <h2 className='text-gray-800 text-xl mb-4 font-medium'>ROUNDY PROSTATE CANCER RISK NOMOGRAM USER GUIDE</h2>
+                <h2 className='text-gray-800 text-xl my-4 font-semibold'>ROUNDY PROSTATE CANCER RISK NOMOGRAM USER GUIDE</h2>
                 <div className="InfoTextWrapper">
 
                     <p>
@@ -107,7 +107,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         decisions to control the cancer with the fewest side effects.
                         <br />
                         <br />
-                        <strong>Diagnosis Data Requirements Entered into The Nomogram</strong>
+                        <div className='text-gray-800 text-xl mb-4 text-center font-semibold'>Diagnosis Data Requirements Entered into The Nomogram</div>
 
                         <ol className='list-decimal ml-6'>
                             <li><strong>AGE</strong> at the time of diagnosis</li>
@@ -172,7 +172,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             </li>
                         </ol>
                         <div>
-                            <h2 className='w-full flex justify-start text-xl font-medium mb-2'>NCCN Risk Stratification</h2>
+                            <h2 className='text-gray-800 text-xl my-4 font-semibold'>NCCN Risk Stratification</h2>
                             <div className='flex flex-col justify-between border border-gray-800 rounded-md m-auto'>
                                 <div className="NoRisk" style={{ display: 'flex' }}>
                                     <h4 className='font-medium text-lg'>Very High Risk Factors</h4>
@@ -243,7 +243,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             </div>
                         </div>
                         <div>
-                            <strong>USING THE NOMOGRAM</strong>
+                            <div className='text-gray-800 text-xl my-4 text-center font-semibold'>Using the Nomogram</div>
                             <ol className='list-decimal ml-4'>
                                 <li className='ml-1 '>Enter the Age, PSA, Clinical Stage (from the DRE) and prostate size in ml, cc, or gm.</li>
                                 <li className='ml-1 '>Enter the biopsy core details.</li>
