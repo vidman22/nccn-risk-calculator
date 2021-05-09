@@ -173,7 +173,7 @@ const LandingPage = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [coresValid, setCoresValid] = useState(true);
-    const [showInfoModal, setShowInfoModal] = useState(true);
+    const [showInfoModal, setShowInfoModal] = useState(false);
     const [form, setForm] = useState(formData);
     const loadNumber = useRef<number>();
     const nodeRef = useRef(null)
@@ -229,6 +229,7 @@ const LandingPage = () => {
             }
             return;
         } else if (!hasParams) {
+            setShowInfoModal(true);
             return;
         }
 
@@ -298,7 +299,6 @@ const LandingPage = () => {
 
         newForm[name] = newElement;
         setForm(newForm);
-        validateForm();
     };
 
     const setVeryHighRiskFactorsHelper = useCallback(
