@@ -1,12 +1,9 @@
 .InfoModal{
     top: 5%;
-    overflow-y: scroll;
-    text-align: left;
     height: 90vh;
     line-height: 1.6rem;
     font-size: 1rem;
     left: 20%;
-    padding: 2rem 4rem;
     width: 60%;
 }
 

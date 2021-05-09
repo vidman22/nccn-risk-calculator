@@ -24,7 +24,7 @@ type Props = {
 export default function ShareLinkModal({ visible, onDismiss }: Props) {
     const [showCopied, setShowCopied] = useState(false);
     const cssClasses = [
-        "Modal",
+        "fixed bg-white overflow-y-scroll z-50 py-4 px-8 text-left rounded-lg overflow-scroll box-border",
         "InfoModal",
         visible ? "ModalOpen" : "ModalClosed"
     ];
@@ -79,13 +79,13 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
 
                     <div>
                         Side effects can include:
-                    <ol>
-                            <li>urinary incontinence – inability to control urine leakage</li>
-                            <li>sexual impotence – inability to achieve or maintain an erection for sex</li>
-                            <li>urinary stricture – difficulty to drain the bladder</li>
-                            <li>bowel bother – frequent bowel movements, blood in stool, pain</li>
-                            <li>infection – rare, but can be life threatening</li>
-                            <li>anesthesia risk – some treatments require anesthesia</li>
+                    <ol className='list-disc ml-8'>
+                            <li><span className='font-medium'>urinary incontinence</span> – inability to control urine leakage</li>
+                            <li><span className='font-medium'>sexual impotence</span> – inability to achieve or maintain an erection for sex</li>
+                            <li><span className='font-medium'>urinary stricture</span> – difficulty to drain the bladder</li>
+                            <li><span className='font-medium'>bowel bother</span> – frequent bowel movements, blood in stool, pain</li>
+                            <li><span className='font-medium'>infection</span> - rare, but can be life threatening</li>
+                            <li><span className='font-medium'>anesthesia risk</span> – some treatments require anesthesia</li>
                         </ol>
                     </div>
                     <div>
@@ -109,7 +109,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         <br />
                         <strong>Diagnosis Data Requirements Entered into The Nomogram</strong>
 
-                        <ol>
+                        <ol className='list-decimal ml-6'>
                             <li><strong>AGE</strong> at the time of diagnosis</li>
                             <li><strong>PSA</strong> at the time of diagnosis</li>
                             <li><strong>CLINICAL STAGE</strong> Clinical Stage refers to where cancer is in and around the prostate,
@@ -117,7 +117,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             urologist who determines the diagnosis. Ask the doctor or phone the doctor’s office to
                             obtain the Clinical Stage. Note: biopsy and imaging staging is not included in Clinical
                             Stage. It is DRE data only.
-                            <table>
+                            <table className='rounded-md'>
                                     <thead>
                                         <tr>
                                             <th>T1c</th>
@@ -161,7 +161,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                             Because there is no agreed universal format for writing the biopsy report, it can be
                             difficult for the lay person to identify the data for each core.
 
-                            <ul>
+                            <ul className='list-disc ml-8'>
                                     <li>At the doctor’s office appointment, ask the doctor to help enter the core data.</li>
                                     <li>Prostate Cancer Support groups often have members who are very well informed
                                     about prostate cancer and they can assist in entering the biopsy core data. One
