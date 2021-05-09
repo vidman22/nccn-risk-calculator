@@ -40,7 +40,7 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
             <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;
             <div className={cssClasses.join(' ')}>
                 <div className='relative'>
-                    <button style={{ top: '0rem', right: '-1rem' }} className='absolute' onClick={onDismiss}>
+                    <button style={{ top: '0rem', right: '0rem' }} className='absolute' onClick={onDismiss}>
                         <XIcon className='h-5 w-5 text-gray-900 hover:text-green-500 duration-75 transition-all' />
                     </button>
                 </div>
