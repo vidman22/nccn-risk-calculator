@@ -26,16 +26,9 @@
 }
 
 .Modal {
-    position: fixed;
     z-index: 200;
-    background-color: white;
-    padding: 2rem 2rem;
-    text-align: center;
-    border-radius: 8px;
-    box-sizing: border-box;
     top: 20%;
-    left: 17.5%;
-    width: 65%;
+    left: 10%;
     transition: all 0.3s ease-out;
 }
 

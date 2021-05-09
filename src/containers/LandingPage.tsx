@@ -655,7 +655,7 @@ const LandingPage = () => {
     }
 
     return (
-        <div className='w-full'>
+        <div className='w-full px-2'>
             <div className='flex items-center justify-center pt-8'>
                 <h1 className='text-2xl font-medium ml-3'>Prostate Cancer Risk Nomogram</h1>
                 <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' content='Click to see how this is is this calculated'>
@@ -702,12 +702,12 @@ const LandingPage = () => {
                 >
                     <Fade ref={nodeRef} >
                         {step === 0 &&
-                            <div className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-7/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6'>
+                            <div className='w-full my-4 sm:w-3/4 md:w-7/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6 sm:mx-auto'>
                                 <AppForm form={form} handleChange={handleChange} />
                             </div>
                         }
                         {step === 1 &&
-                            <div className='w-full mx-auto my-4 sm:mx-auto sm:w-3/4 md:w-10/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6'>
+                            <div className='w-full my-4 sm:w-3/4 md:w-10/12 rounded-lg shadow-lg bg-white px-2 sm:px-8 py-6 sm:mx-auto'>
                                 <CoreDataTable
                                     addCore={addCore}
                                     setCores={setCores}
