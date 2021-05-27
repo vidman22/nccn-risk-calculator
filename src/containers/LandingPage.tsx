@@ -36,7 +36,7 @@ import {
     N1,
     M1,
 } from '../data/riskConstants';
-import 'tippy.js/dist/svg-arrow.css';
+import Popout from './Popout';
 
 const Fade = styled.div`
   &.fade-enter {
@@ -183,6 +183,8 @@ const LandingPage = () => {
     const [highRiskFactors, setHighRiskFactors] = useState<HighRiskFactor>(highRiskFactorsData);
     const [vHighRiskFactors, setVHighRiskFactors] = useState<VHighRiskFactor>(vHighRiskFactorsData);
     const [step, setStep] = useState(0);
+    const [showPopout, setShowPopout] = useState(false);
+    const link = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/info' : 'https://prostatecancerrisk.org/info';
 
     const [result, setResult] = useState<Result>({
         corePercentagePositive: '',
@@ -655,15 +657,21 @@ const LandingPage = () => {
 
     return (
         <div className='w-full px-2 h-screen'>
+            <Popout
+                url={link}
+                title='Instructions'
+                visible={showPopout}
+                onClose={() => setShowPopout(false)}
+            >
+            </Popout>
             <div className='flex items-center justify-center pt-8'>
                 <Tippy showOnCreate className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' content='Click to see how this is is this calculated'>
-                    <Link
+                    <button
                         className="ml-2"
-                        to={'/info'}
-
+                        onClick={() => setShowPopout(s => !s)}
                     >
                         <FontAwesomeIcon className='text-gray-400' icon={faInfoCircle} />
-                    </Link>
+                    </button>
                 </Tippy>
                 <h1 className='text-2xl font-medium ml-3'>Prostate Cancer Risk Nomogram</h1>
             </div>
@@ -672,7 +680,7 @@ const LandingPage = () => {
                     <button
                         className='border border-gray-200 px-3 py-1 rounded mr-2 bg-white'
                         type='button'
-                        onClick={() => history.push('/info')}>
+                        onClick={() => setShowPopout(s => !s)}>
                         Instructions
                 </button>
                 </Tippy>
