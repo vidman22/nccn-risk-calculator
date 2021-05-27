@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { useLocation, Link, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import CoreDataTable from './CoreDataTable/CoreDataTable';
 import AppForm from './AppForm/AppForm';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -167,7 +167,6 @@ function useQuery() {
 
 const LandingPage = () => {
     const query = useQuery();
-    const history = useHistory();
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showAnalysis, setShowAnalysis] = useState(false);
@@ -665,18 +664,18 @@ const LandingPage = () => {
             >
             </Popout>
             <div className='flex items-center justify-center pt-8'>
-                <Tippy showOnCreate className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' content='Click to see how this is is this calculated'>
+                {/* <Tippy showOnCreate className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' content='Click to see how this is is this calculated'>
                     <button
                         className="ml-2"
                         onClick={() => setShowPopout(s => !s)}
                     >
                         <FontAwesomeIcon className='text-gray-400' icon={faInfoCircle} />
                     </button>
-                </Tippy>
+                </Tippy> */}
                 <h1 className='text-2xl font-medium ml-3'>Prostate Cancer Risk Nomogram</h1>
             </div>
             <div className='w-full sm:w-3/4 md:w-7/12 flex items-center justify-end m-auto mt-2'>
-                <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' duration={25} delay={25} placement={'bottom-start'} content='Click to see how this is is this calculated'>
+                <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' duration={25} delay={25} placement={'bottom-start'} content='Click for instructions and to see how this is is this calculated'>
                     <button
                         className='border border-gray-200 px-3 py-1 rounded mr-2 bg-white'
                         type='button'

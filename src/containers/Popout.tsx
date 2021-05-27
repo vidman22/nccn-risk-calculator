@@ -49,7 +49,7 @@ const OAuthPopout: React.FC<Props> = ({ title, url, visible, onClose, children }
                 externalWindow.current.close();
             }
         };
-    }, [ visible ]);
+    }, [ visible, title, url, onClose ]);
 
     if (!containerElement) {
         return null;
