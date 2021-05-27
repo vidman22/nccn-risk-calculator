@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import CoreDataTable from './CoreDataTable/CoreDataTable';
 import AppForm from './AppForm/AppForm';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../components/AnalysisModal/AnalysisModal';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
