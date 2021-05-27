@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { XIcon } from '@heroicons/react/solid';
 import {
     vHighRiskFactorsData,
     highRiskFactorsData,
@@ -16,37 +15,20 @@ import {
 } from '../../containers/LandingPage';
 import './InfoModal.css';
 
-type Props = {
-    visible: boolean;
-    onDismiss: () => void;
-}
-
-export default function ShareLinkModal({ visible, onDismiss }: Props) {
+export default function InfoPage() {
     const [showCopied, setShowCopied] = useState(false);
-    const cssClasses = [
-        "fixed bg-white overflow-y-scroll z-50 py-4 px-16 text-left rounded-lg overflow-scroll box-border",
-        "InfoModal",
-        visible ? "ModalOpen" : "ModalClosed"
-    ];
-    const cssBackDropClasses = ['Backdrop', visible ? 'BackdropOpen' : 'BackdropClosed'];
 
     useEffect(() => {
         setTimeout(() => {
             setShowCopied(false);
         }, 3000)
-    }, [showCopied])
-    return (
-        <>
-            <div className={cssBackDropClasses.join(' ')} onClick={onDismiss}></div>;
-            <div className={cssClasses.join(' ')}>
-                <div className='relative'>
-                    <button style={{ top: '0rem', right: '0rem' }} className='absolute' onClick={onDismiss}>
-                        <XIcon className='h-5 w-5 text-gray-900 hover:text-green-500 duration-75 transition-all' />
-                    </button>
-                </div>
-                <h2 className='text-gray-800 text-xl my-4 font-semibold'>ROUNDY PROSTATE CANCER RISK NOMOGRAM USER GUIDE</h2>
-                <div className="InfoTextWrapper">
+    }, [showCopied]);
 
+    return (
+        <div className='h-full'>
+            <div className="w-full sm:w-3/5  m-auto py-4 bg-white px-16 text-left rounded-lg overflow-scroll box-border">
+                <h2 className='text-gray-800 text-xl text-center my-4 font-semibold'>ROUNDY PROSTATE CANCER RISK NOMOGRAM USER GUIDE</h2>
+                <div className="InfoTextWrapper">
                     <p>
                         &emsp; This Nomogram is a software tool to stratify a patient’s risk of prostate cancer progression
                         from Very Low Risk to Very High Risk. The user is not required to understand the significance
@@ -107,9 +89,9 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                         decisions to control the cancer with the fewest side effects.
                         <br />
                         <br />
-                        <div className='text-gray-800 text-xl mb-4 text-center font-semibold'>Diagnosis Data Requirements Entered into The Nomogram</div>
+                        <div className='text-gray-800 text-xl mb-4 text-center font-semibold  m-auto'>Diagnosis Data Requirements Entered into The Nomogram</div>
 
-                        <ol className='list-decimal ml-6'>
+                        <ol className='list-decimal ml-6 w-4/5'>
                             <li><strong>AGE</strong> at the time of diagnosis</li>
                             <li><strong>PSA</strong> at the time of diagnosis</li>
                             <li><strong>CLINICAL STAGE</strong> Clinical Stage refers to where cancer is in and around the prostate,
@@ -260,6 +242,6 @@ export default function ShareLinkModal({ visible, onDismiss }: Props) {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

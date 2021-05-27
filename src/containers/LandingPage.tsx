@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useHistory } from 'react-router-dom';
 import CoreDataTable from './CoreDataTable/CoreDataTable';
 import AppForm from './AppForm/AppForm';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal';
 import AnalysisModal from '../components/AnalysisModal/AnalysisModal';
-import InfoModal from '../components/InfoModal/InfoModal';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { coreData, CoreData } from '../data/coreData';
@@ -37,6 +36,7 @@ import {
     N1,
     M1,
 } from '../data/riskConstants';
+import 'tippy.js/dist/svg-arrow.css';
 
 const Fade = styled.div`
   &.fade-enter {
@@ -167,11 +167,11 @@ function useQuery() {
 
 const LandingPage = () => {
     const query = useQuery();
+    const history = useHistory();
     const [saved, setSaved] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [coresValid, setCoresValid] = useState(true);
-    const [showInfoModal, setShowInfoModal] = useState(false);
     const [form, setForm] = useState(formData);
     const loadNumber = useRef<number>();
     const nodeRef = useRef(null)
@@ -225,7 +225,6 @@ const LandingPage = () => {
             }
             return;
         } else if (!hasParams) {
-            setShowInfoModal(true);
             return;
         }
 
@@ -655,38 +654,52 @@ const LandingPage = () => {
     }
 
     return (
-        <div className='w-full px-2'>
+        <div className='w-full px-2 h-screen'>
             <div className='flex items-center justify-center pt-8'>
-                <h1 className='text-2xl font-medium ml-3'>Prostate Cancer Risk Nomogram</h1>
-                <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' content='Click to see how this is is this calculated'>
-                    <button
+                <Tippy showOnCreate className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' content='Click to see how this is is this calculated'>
+                    <Link
                         className="ml-2"
-                        onClick={() => {
-                            setShowInfoModal(true)
-                        }}>
+                        to={'/info'}
+
+                    >
                         <FontAwesomeIcon className='text-gray-400' icon={faInfoCircle} />
-                    </button>
+                    </Link>
                 </Tippy>
+                <h1 className='text-2xl font-medium ml-3'>Prostate Cancer Risk Nomogram</h1>
             </div>
             <div className='w-full sm:w-3/4 md:w-7/12 flex items-center justify-end m-auto mt-2'>
-                <button
-                    className='border border-gray-200 px-3 py-1 rounded mr-2 bg-white'
-                    type='button'
-                    onClick={() => setShowConfirmation(true)}>
-                    Clear
+                <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' duration={25} delay={25} placement={'bottom-start'} content='Click to see how this is is this calculated'>
+                    <button
+                        className='border border-gray-200 px-3 py-1 rounded mr-2 bg-white'
+                        type='button'
+                        onClick={() => history.push('/info')}>
+                        Instructions
+                </button>
+                </Tippy>
+                <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' duration={25} delay={25} placement={'bottom-start'} content='Clear all data, even cores'>
+
+                    <button
+                        className='border border-gray-200 px-3 py-1 rounded mr-2 bg-white'
+                        type='button'
+                        onClick={() => setShowConfirmation(true)}>
+                        Clear
+                </button>
+                </Tippy>
+                <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' duration={25} delay={25} placement={'bottom-start'} content='Save all your inputted data'>
+
+                    <button
+                        className='border border-gray-200 px-3 py-1 rounded text-white bg-white'
+                        style={{ backgroundColor: "#0858B8" }}
+                        type='button'
+                        onClick={() => {
+                            localStorage.setItem("savedCores", "true");
+                            localStorage.setItem("cores", JSON.stringify(cores));
+                            localStorage.setItem("form", JSON.stringify(form));
+                            setSaved(true);
+                        }}>
+                        Save
                     </button>
-                <button
-                    className='border border-gray-200 px-3 py-1 rounded text-white bg-white'
-                    style={{ backgroundColor: "#0858B8" }}
-                    type='button'
-                    onClick={() => {
-                        localStorage.setItem("savedCores", "true");
-                        localStorage.setItem("cores", JSON.stringify(cores));
-                        localStorage.setItem("form", JSON.stringify(form));
-                        setSaved(true);
-                    }}>
-                    Save
-                    </button>
+                </Tippy>
             </div>
             {saved &&
                 <div style={{ top: '1rem', right: '2rem' }} className="absolute bg-gray-600 p-2 rounded text-white FadeCopied">
@@ -748,12 +761,6 @@ const LandingPage = () => {
                     </Fade>
                 </CSSTransition>
             </SwitchTransition>
-            {showInfoModal &&
-                <InfoModal
-                    visible={showInfoModal}
-                    onDismiss={() => setShowInfoModal(false)}
-                />
-            }
             {showAnalysis && (
                 <AnalysisModal
                     visible={showAnalysis}

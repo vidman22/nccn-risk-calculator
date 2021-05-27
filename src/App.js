@@ -1,5 +1,6 @@
 import React from 'react';
 import LandingPage from './containers/LandingPage';
+import InfoPage from './components/InfoModal/InfoModal';
 import {
     BrowserRouter as Router,
     Switch,
@@ -8,10 +9,13 @@ import {
 
 function App() {
     return (
-        <div className="block m-0 bg-gray-50 h-screen">
+        <div className="block m-0 bg-gray-50 h-auto">
             <Router>
                 <Switch>
-                    <Route path="/">
+                    <Route path="/info">
+                        <InfoPage />
+                    </Route>
+                    <Route exact path="/">
                         <LandingPage />
                     </Route>
                 </Switch>
