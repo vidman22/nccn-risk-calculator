@@ -60,7 +60,14 @@ export default function ShareLinkModal({
                     }
                 })
             })
-            pattern = pattern + "&age=" + (form.age.value || form.age.initialValue) + "&stage=" + (form.clinicalStage.value || form.clinicalStage.initialValue) + "&psa=" + (form.psa.value || form.psa.initialValue) + "&size=" + (form.prostateSize.value || form.prostateSize.initialValue) + "&cores=" + (form.totalCores.value || form.totalCores.initialValue);
+            pattern = pattern + "&age=" + (form.age.value || form.age.initialValue) + 
+                    "&stage=" + (form.clinicalStage.value || form.clinicalStage.initialValue) + 
+                    "&psa=" + (form.psa.value || form.psa.initialValue) + 
+                    "&size=" + (form.prostateSize.value || form.prostateSize.initialValue) +  
+                    "&month=" + (form.month.value || form.month.initialValue) +  
+                    "&day=" + (form.day.value || form.day.initialValue) +  
+                    "&year=" + (form.year.value || form.year.initialValue) +  
+                    "&cores=" + (form.totalCores.value || form.totalCores.initialValue);
             return window.location.origin + '/?' + pattern;
 
         }, [cores, form])

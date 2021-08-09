@@ -21,7 +21,6 @@
     "@types/react-router-dom": "^5.1.7",
     "react": "^17.0.2",
     "react-copy-to-clipboard": "^5.0.3",
-    "react-datepicker": "^3.8.0",
     "react-dom": "^17.0.2",
     "react-fast-compare": "^3.2.0",
     "react-router": "^5.2.0",

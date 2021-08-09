@@ -11,11 +11,11 @@ type Props = {
 
 const AppForm = ({ handleChange, form }: Props) => {
     return (
-        <div>
-            <div className='w-full flex flex-wrap flex-col justify-start items-center h-40'>
+        <div className='px-2'>
+            <div className='w-full flex flex-wrap flex-col justify-start items-center h-40 '>
                 {Object.keys(form).map((k, index) => {
                     const obj = form[k as keyof FormData];
-                    if (obj.options) {
+                    if (obj.options || obj.isDate) {
                         return null
                     }
                     return (
@@ -50,10 +50,10 @@ const AppForm = ({ handleChange, form }: Props) => {
                     );
                 })}
             </div>
-            <div className='relative flex flex-col w-full items-center justify-center'>
-                <div className='w-full flex flex-col justify-between items-start'>
-                    <div className='flex items-center'>
-                        <label className='text-lg w-full'>
+            <div className='relative flex w-full items-center justify-between'>
+                <div className='flex flex-1 flex-col justify-between items-start'>
+                    <div className='flex items-start justify-start'>
+                        <label className='text-lg'>
                             {form.clinicalStage.label}
                         </label>
                         <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={form.clinicalStage.description}>
@@ -63,7 +63,7 @@ const AppForm = ({ handleChange, form }: Props) => {
                         </Tippy>
                     </div>
                     <select
-                        className='w-full border border-gray-200 h-8 text-lg rounded-sm ml-1'
+                        className='w-40 border border-gray-200 h-8 text-lg rounded-sm'
                         name={'clinicalStage'}
                         value={form.clinicalStage.value}
                         onChange={handleChange}
@@ -76,6 +76,42 @@ const AppForm = ({ handleChange, form }: Props) => {
                     </select>
                 </div>
                 {!form.clinicalStage.validation.valid && <div style={{ top: '-6.25rem' }} className='absolute text-sm bg-white rounded p-4 shadow-lg font-medium text-red-500'>{form.clinicalStage.validation.msg}</div>}
+                <div className='flex flex-1 flex-col justify-center items-start ml-2'>
+                    <div className='flex flex-1 items-start'>
+                        <label className='text-lg'>
+                            Diagnosis Date
+                        </label>
+                        <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={'The date of diagnosis (MM-DD-YYYY)'}>
+                            <div className='ml-1'>
+                                <FontAwesomeIcon className='text-gray-400 ml-1' icon={faInfoCircle} />
+                            </div>
+                        </Tippy>
+                    </div>
+                    <div className='flex flex-1 justify-start items-center'>
+                        {Object.keys(form).map((k, index) => {
+                            const obj = form[k as keyof FormData];
+                            if (obj.isDate) {
+                                return (
+                                    <div key={k}>
+                                        <input
+                                            className='border border-gray-200 h-8 text-lg px-2 rounded-sm w-20 mr-2'
+                                            name={k}
+                                            minLength={parseInt(obj.min)}
+                                            maxLength={parseInt(obj.max)}
+                                            step={obj.step || "1"}
+                                            type={obj.type}
+                                            placeholder={obj.placeholder}
+                                            value={obj.value}
+                                            onChange={handleChange}
+                                        />
+                                        {!obj.validation.valid && <div style={{ bottom: '-1.25rem' }} className='absolute text-sm font-medium text-red-500'>{obj.validation.msg}</div>}
+                                    </div>
+                                )
+                            }
+                            return null;
+                        })}
+                    </div>
+                </div>
             </div>
         </div>
     );

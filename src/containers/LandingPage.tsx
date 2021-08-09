@@ -229,7 +229,6 @@ const LandingPage = () => {
 
         const queryArray = parseCores(query)
         const newForm = parseForm(query, form);
-
         let tmpObj = {} as any;
         queryArray.forEach((el: any) => {
             tmpObj[el.key] = el;
@@ -278,6 +277,7 @@ const LandingPage = () => {
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
         const value = e.target.value;
         const name = e.target.name as keyof FormData;
         const newForm = { ...form };
@@ -517,10 +517,34 @@ const LandingPage = () => {
                     isValid = false;
                 }
                 if (k === 'prostateSize') {
-                    if (parseInt(newElement.value) > 35) {
+                    if (parseInt(newElement.value) > 250 || parseInt(newElement.value) < 9) {
                         newValidation.valid = false;
                         newValidation.touched = true;
-                        newValidation.msg = "must be smaller than 35";
+                        newValidation.msg = "must be between 9 and 250";
+                        isValid = false;
+                    }
+                }
+                if (k === 'month') {
+                    if (parseInt(newElement.value) > 12 || parseInt(newElement.value) < 1 ) {
+                        newValidation.valid = false;
+                        newValidation.touched = true;
+                        newValidation.msg = "Invalid";
+                        isValid = false;
+                    }
+                }
+                if (k === 'day') {
+                    if (parseInt(newElement.value) > 31 || parseInt(newElement.value) < 1 ) {
+                        newValidation.valid = false;
+                        newValidation.touched = true;
+                        newValidation.msg = "Invalid";
+                        isValid = false;
+                    }
+                }
+                if (k === 'year') {
+                    if (parseInt(newElement.value) < 1970 ) {
+                        newValidation.valid = false;
+                        newValidation.touched = true;
+                        newValidation.msg = "Invalid";
                         isValid = false;
                     }
                 }
@@ -679,7 +703,7 @@ const LandingPage = () => {
                         type='button'
                         onClick={() => setShowPopout(s => !s)}>
                         Instructions
-                </button>
+                    </button>
                 </Tippy>
                 <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' duration={25} delay={25} placement={'bottom-start'} content='Clear all data, even cores'>
 
@@ -688,7 +712,7 @@ const LandingPage = () => {
                         type='button'
                         onClick={() => setShowConfirmation(true)}>
                         Clear
-                </button>
+                    </button>
                 </Tippy>
                 <Tippy className='bg-gray-400 opacity-90 text-white rounded-md px-2 cursor-pointer' duration={25} delay={25} placement={'bottom-start'} content='Save all your inputted data'>
 

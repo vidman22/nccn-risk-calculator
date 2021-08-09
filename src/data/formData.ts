@@ -23,6 +23,7 @@ export type ClinicalStage = 'T1a' | 'T1b' | 'T1c' | 'T2a' | 'T2b' | 'T2c' | 'T3a
 
 export interface FormValue {
     value: string;
+    isDate?: boolean;
     initialValue: string;
     type: string;
     step?: string;
@@ -40,6 +41,9 @@ export interface FormData {
     psa: FormValue;
     clinicalStage: FormValue;
     prostateSize: FormValue;
+    month: FormValue;
+    day: FormValue;
+    year: FormValue;
     totalCores: FormValue;
 }
 
@@ -93,17 +97,65 @@ export const formData = {
     prostateSize: {
         value: '',
         initialValue: '0',
-        type: "number",
+        type: 'number',
         validation: {
             touched: false,
             valid: true,
             msg: "",
         },
         label: "Prostate Size",
-        min: '10',
-        max: '35',
+        min: '9',
+        max: '250',
         placeholder: "0",
-        description: "Input the size of the prostate in cc (cubic centimeters), ml (milliliters), or grams.",
+        description: "Input the size of the prostate in cc (cubic centimeters)",
+    },
+    month: {
+        value: '',
+        isDate: true,
+        initialValue: '',
+        type: 'text',
+        validation: {
+            touched: false,
+            valid: true,
+            msg: '',
+        },
+        max: '2',
+        min: '2',
+        label: 'Month',
+        placeholder: 'MM',
+        description: 'Select the date of diagnosis',
+    },
+    day: {
+        value: '',
+        isDate: true,
+        initialValue: '',
+        type: 'text',
+        validation: {
+            touched: false,
+            valid: true,
+            msg: '',
+        },
+        max: '2',
+        min: '2',
+        label: 'Day',
+        placeholder: 'DD',
+        description: 'Select the date of diagnosis',
+    },
+    year: {
+        value: '',
+        isDate: true,
+        initialValue: '',
+        type: 'text',
+        validation: {
+            touched: false,
+            valid: true,
+            msg: '',
+        },
+        max: '4',
+        min: '4',
+        label: 'Year',
+        placeholder: 'YYYY',
+        description: 'Select the date of diagnosis',
     },
     clinicalStage: {
         value: 'T1c',

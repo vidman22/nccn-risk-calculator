@@ -76,7 +76,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
 
     return (
         <div className='relative'>
-            {showWarning && <span style={{right: 0}} className='absolute text-red-500 border-2 rounded px-2 border-red-400'>Gleason scores less than 3 are not factored into risk</span>}
+            {showWarning && <span style={{ right: 0 }} className='absolute text-red-500 border-2 rounded px-2 border-red-400'>Gleason scores less than 3 are not factored into risk</span>}
             <div className='flex items-center my-2'>
                 <h2 className='text-2xl font-medium'>Core Data</h2>
                 <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content='Enter only positive cores tested'>
@@ -110,7 +110,7 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                                     className='relative w-32 mr-2'
                                     key={index + k}
                                 >
-                                    {obj.validation.msg && <p style={{bottom: '-1.25rem'}} className='absolute text-red-500'>{obj.validation.msg}</p>}
+                                    {obj.validation.msg && <p style={{ bottom: '-1.25rem' }} className='absolute text-red-500'>{obj.validation.msg}</p>}
                                     <input
                                         className='h-8 px-2 text-lg border border-gray-200 rounded-sm w-full'
                                         name={k}
@@ -125,15 +125,21 @@ export default function CoreDataTable({ addCore, removeCore, setCores, cores, se
                                 </div>
                             )
                         })}
-                        <div className='w-12'>
-                            <DeleteIcon onClick={() => removeCore(rowIndex)} icon={faMinusCircle} />
-                        </div>
+                        <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={'Remove'}>
+                            <div className='w-12'>
+                                <DeleteIcon onClick={() => removeCore(rowIndex)} icon={faMinusCircle} />
+                            </div>
+                        </Tippy>
                     </div>
                     ))}
                 </div>
             </div>
             <div className='w-full flex justify-center mt-3'>
-                <Icon onClick={() => addCore()} icon={faPlusCircle} />
+                <Tippy className='bg-gray-400 text-white rounded-md px-2 cursor-pointer' content={'Add a new core'}>
+                    <div>
+                        <Icon onClick={() => addCore()} icon={faPlusCircle} className='h-12 w-12' />
+                    </div>
+                </Tippy>
             </div>
         </div>
     );

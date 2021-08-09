@@ -180,6 +180,30 @@ export const parseForm: (query: URLSearchParams, form: FormData ) => FormData = 
                 newPSA.validation = newPSAValidation;
                 newForm.psa = newPSA
                 break;
+            case 'month':
+                const newMonth = {...newForm.month};
+                const newMonthValidation = {...newMonth.validation};
+                newMonth.value = value;
+                newMonthValidation.valid = true;
+                newMonth.validation = newMonthValidation;
+                newForm.month = newMonth
+                break;
+            case 'day':
+                const newDay = {...newForm.day};
+                const newDayValidation = {...newDay.validation};
+                newDay.value = value;
+                newDayValidation.valid = true;
+                newDay.validation = newDayValidation;
+                newForm.day = newDay
+                break;
+            case 'year':
+                const newYear = {...newForm.year};
+                const newYearValidation = {...newYear.validation};
+                newYear.value = value;
+                newYearValidation.valid = true;
+                newYear.validation = newYearValidation;
+                newForm.year = newYear
+                break;
             case 'size':
                 const newSize = {...newForm.prostateSize};
                 const newSizeValidation = {...newSize.validation};
