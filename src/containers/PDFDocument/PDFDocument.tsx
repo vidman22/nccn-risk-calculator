@@ -174,7 +174,7 @@ const MyDocument = ({
                             })}
                         </View>
                     }
-                    {riskAssessment === INTERMEDIATE_LOW_RISK || riskAssessment === INTERMEDIATE_HIGH_RISK &&
+                    {(riskAssessment === INTERMEDIATE_LOW_RISK || riskAssessment === INTERMEDIATE_HIGH_RISK) &&
                         <View style={styles.riskBlock}>
                             <Text>Intermediate Risk Factors</Text>
                             {Object.keys(intRiskFactors).map((k: string, index: number) => {

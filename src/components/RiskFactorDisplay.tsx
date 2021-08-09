@@ -85,7 +85,7 @@ const RiskFactorDisplay = ({
                         })}
                     </div>
                 }
-                {riskAssessment === INTERMEDIATE_HIGH_RISK || riskAssessment === INTERMEDIATE_LOW_RISK &&
+                {(riskAssessment === INTERMEDIATE_HIGH_RISK || riskAssessment === INTERMEDIATE_LOW_RISK) &&
                     <div className={intClasses.join(" ")}>
                         <h4 className='font-medium text-lg'>Intermediate Risk Factors</h4>
                         {Object.keys(intRiskFactors).map((k: string, index: number) => {
