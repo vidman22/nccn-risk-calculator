@@ -118,7 +118,6 @@ const RiskFactorDisplay = ({
                         })}
                     </div>
                 }
-                <h2>CAPRA Score: {capra}</h2>
             </div>
         </>
     )

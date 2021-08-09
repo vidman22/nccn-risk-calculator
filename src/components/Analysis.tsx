@@ -52,28 +52,31 @@ const Analysis: React.FC<Props> = ({ result }: Props) => {
 
     return (
             <div className='border border-gray-800 rounded-lg p-2 flex flex-col h-full sm:h-32 flex-wrap text-left'>
-                <p>
+                <p className='mb-2'>
+                    <span className='font-medium'>CAPRA Score: </span>{result.capra}
+                </p>
+                <p className='mb-2'>
                     <span className='font-medium'>Percentage of Cores Positive: </span>{result.corePercentagePositive}%
                 </p>
-                <p>
+                <p className='mb-2'>
                     <span className='font-medium'>Highest Involved Percentage: </span>{result.maxInvolvedPercentage}%
                 </p>
-                <p>
+                <p className='mb-2'>
                     <span className='font-medium'>PSA Density: </span>{result.psaDensity}
                 </p>
-                <p>
+                <p className='mb-2'>
                     <span className='font-medium'>Max Primary: </span>{result.maxPrimary}
                 </p>
-                <p>
+                <p className='mb-2'>
                     <span className='font-medium'>Max Secondary: </span>{result.maxSecondary}
                 </p>
-                <p>
+                <p className='mb-2'>
                     <span className='font-medium'>Max Gleason Sum: </span>{result.maxGleasonSum}
                 </p>
-                <p>
+                <p className='mb-2'>
                     <span className='font-medium'>Number of Cores with 4/5 Grade Group: </span>{result.ggFourAndFiveCount}
                 </p>
-                <p>
+                <p className='mb-2'>
                     <span className='font-medium'>Max Grade Group: </span>{result.maxGradeGroup}
                 </p>
             </div>

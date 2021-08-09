@@ -228,6 +228,7 @@ const MyDocument = ({
                 <View style={styles.section} wrap={false}>
                     <Text>Results</Text>
                     <View style={styles.result}>
+                        <Text>CAPRA Score: {resultData.capra}</Text>
                         <Text>Percentage of Cores Positive: {resultData.corePercentagePositive}%</Text>
                         <Text>Max Involved Percentage: {resultData.maxInvolvedPercentage}%</Text>
                         <Text>PSA Density: {resultData.psaDensity}</Text>
@@ -237,7 +238,6 @@ const MyDocument = ({
                         <Text>Max Secondary: {resultData.maxSecondary}</Text>
                         <Text>Grade Group of 4 and 5 count: {resultData.ggFourAndFiveCount}</Text>
                         <Text>Risk Assessment: {getRisk(resultData.risk)}</Text>
-                        <Text>CAPRA Score: {resultData.capra}</Text>
                     </View>
                 </View>
 
