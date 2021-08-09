@@ -1,3 +1,4 @@
+export type Risks = typeof HIGH_RISK | typeof INTERMEDIATE_HIGH_RISK | typeof INTERMEDIATE_LOW_RISK | typeof LOW_RISK | typeof VERY_HIGH_RISK | typeof VERY_LOW_RISK | typeof INTERMEDIATE_RISK | '';
 export const HIGH_RISK = 'HIGH_RISK';
 export const VERY_HIGH_RISK = 'VERY_HIGH_RISK';
 export const LOW_RISK = 'LOW_RISK';

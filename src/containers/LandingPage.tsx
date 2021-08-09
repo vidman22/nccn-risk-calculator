@@ -513,7 +513,7 @@ const LandingPage = () => {
                 if (!newElement.value || newElement.value === "0") {
                     newValidation.valid = false;
                     newValidation.touched = true;
-                    newValidation.msg = "Please add a value";
+                    newValidation.msg = "Required";
                     isValid = false;
                 }
                 if (k === 'prostateSize') {

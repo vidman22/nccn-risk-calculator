@@ -4,6 +4,7 @@ import {
     INTERMEDIATE_LOW_RISK,
     INTERMEDIATE_RISK,
     LOW_RISK,
+    Risks,
     VERY_HIGH_RISK,
     VERY_LOW_RISK
 } from './data/riskConstants';
@@ -76,7 +77,7 @@ export const calculateNumIntRiskFactors = ({ maxGradeGroup, clinicalStage, psa }
     return numRF;
 }
 
-export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage, psa, clinicalStage, totalCoresPositive, numHighRiskFactors }: CalculateRiskParams) => {
+export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, psaDensity, maxInvolvedPercentage, psa, clinicalStage, totalCoresPositive, numHighRiskFactors }: CalculateRiskParams): Risks => {
     //'T1c', 'T1', 'T2a', 'T2b', 'T2c', 'T3a', 'T3b', 'T4';
     console.log("maxPrimary,", maxPrimary);
     console.log("maxGradeGroup", maxGradeGroup );
@@ -86,7 +87,7 @@ export const calculateRisk = ({ maxPrimary, maxGradeGroup, ggFourAndFiveCount, p
     console.log("psa", psa );
     console.log("clinicalStage", clinicalStage,);
     console.log("totalCoresPositive", totalCoresPositive);
-    let risk = '';
+    let risk: Risks = '';
     // This means at least two of the three high risk factors that should bump it to very high risk
     // If T3b goto Very High Risk ; ClinicalStage
     // If T4, goto Very High Risk ; ClinicalStage

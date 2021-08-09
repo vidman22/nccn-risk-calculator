@@ -8,7 +8,8 @@ import {
     INTERMEDIATE_HIGH_RISK,
     INTERMEDIATE_LOW_RISK,
     VERY_LOW_RISK,
-    INTERMEDIATE_RISK
+    INTERMEDIATE_RISK,
+    Risks,
 } from '../data/riskConstants';
 
 export interface Result {
@@ -20,14 +21,14 @@ export interface Result {
     maxPrimary: string,
     maxSecondary: string,
     ggFourAndFiveCount: string,
-    risk: string,
+    risk: Risks,
     capra: string,
 }
 
 type Props = {
     result: Result;
 }
-export const getRisk = (risk : string) => {
+export const getRisk = (risk : Risks) => {
     switch (risk) {
         case HIGH_RISK:
             return 'High Risk';
