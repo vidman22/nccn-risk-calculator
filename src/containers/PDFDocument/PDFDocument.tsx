@@ -221,6 +221,7 @@ const MyDocument = ({
                             <Text>Clinical Stage: {formData.clinicalStage.value || "0"}</Text>
                             <Text>Prostate Size: {formData.prostateSize.value || "0"}</Text>
                             <Text>Total Cores: {formData.totalCores.value || "0"}</Text>
+                            <Text>Diagnosis: {`${formData.month.value}/${formData.day.value}/${formData.year.value}` || 'unknown'}</Text>
                         </View>
                     </View>
                 </View>
