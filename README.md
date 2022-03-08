@@ -1,4 +1,4 @@
-### Prostate Cancer Risk
+# Prostate Cancer Risk
 Is a tool developed by Nathan Roundy to help prostate cancer patients understand their risks using popular nomograms
 
 This project is live [here](https://prostatecancerrisk.org). https://prostatecancerrisk.org
