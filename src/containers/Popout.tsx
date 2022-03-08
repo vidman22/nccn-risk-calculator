@@ -8,7 +8,7 @@ interface Props {
     onClose: () => void;
 }
 
-const OAuthPopout: React.FC<Props> = ({ title, url, visible, onClose, children }) => {
+const Popout: React.FC<Props> = ({ title, url, visible, onClose, children }) => {
     const externalWindow = useRef<Window | null>();
     const [ containerElement, setContainerElement ] = useState<HTMLElement | null>();
 
@@ -60,4 +60,4 @@ const OAuthPopout: React.FC<Props> = ({ title, url, visible, onClose, children }
     );
 };
 
-export default OAuthPopout;
+export default Popout;
