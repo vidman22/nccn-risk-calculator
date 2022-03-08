@@ -1,7 +1,9 @@
-# Getting Started with Create React App
+### Prostate Cancer Risk
+Is a tool developed by Nathan Roundy to help prostate cancer patients understand their risks using popular nomograms
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is live [here](https://prostatecancerrisk.org). https://prostatecancerrisk.org
 
+## For instructions on how to use the tool itself  - [instructions](https://prostatecancerrisk.org/info)
 ## Available Scripts
 
 In the project directory, you can run:
@@ -18,5 +20,4 @@ You will also see any lint errors in the console.
 
 Deploys the app via Netlify
 
-### Prostate Cancer Risk
-Is a tool developed by Nathan Roundy to help prostate cancer patients understand their risks using popular nomograms
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
